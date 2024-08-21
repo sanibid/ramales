@@ -68,6 +68,9 @@ class BlockViewDialog(QDialog, Ui_BlockDialog):
         segments = []
         for s in all_segs:
             segments.append(s)
+        segments = sorted(segments, key=lambda item:
+        (item[self.__get_idx_attr(segments_lyr, 'segments', 'branch_id')],
+         item[self.__get_idx_attr(segments_lyr, 'segments', 'segment_id')]))
         self.minDepth.blockSignals(True)
         self.minSlope.blockSignals(True)
         self.tableWidget.blockSignals(True)
@@ -105,6 +108,7 @@ class BlockViewDialog(QDialog, Ui_BlockDialog):
         # Set the table values
         totalLength = 0
         for i in range(segsCount):
+            print(segments[i].attributes()[1])
             if self.check(segments[i].attributes()[1]) != '':
                 totalLength = totalLength + self.__str_to_float_locale(
                     segments[i].attributes()[self.__get_idx_attr(segments_lyr, 'segments', 'length')])
@@ -477,19 +481,24 @@ class BlockViewDialog(QDialog, Ui_BlockDialog):
                     dwnBrLevelPrev = 0.00 if i == initial else self.__str_to_float_locale(
                         self.getTableValue((i - 1), "dwnBrLevel"))
                     if i == initial:
-                        upDepth = (minDepth if minDepth > critDepth else critDepth) if down_box != '' else ''  # H21 i==0
+                        upDepth = (
+                            minDepth if minDepth > critDepth else critDepth) if down_box != '' else ''  # H21 i==0
                         upBrLevel = (up_gl - upDepth) if down_box != '' else ''  # tocheck ''  #F21 i==0
                     else:
-                        upBrLevel = '' if down_box == '' else (0.00 if decimal.Decimal(length) == decimal.Decimal(0.00) else (
-                            dwnBrLevelPrev if (dwnDepthPrev > critDepth) else (up_gl - critDepth)))
+                        upBrLevel = '' if down_box == '' else (
+                            0.00 if decimal.Decimal(length) == decimal.Decimal(0.00) else (
+                                dwnBrLevelPrev if (dwnDepthPrev > critDepth) else (up_gl - critDepth)))
                         upDepth = (up_gl - upBrLevel) if down_box != '' else 0.00
-                    dwnBrLevel = '' if down_box == '' else (0.00 if decimal.Decimal(length) == decimal.Decimal(0.00) else (
-                        (down_gl - minDepth) if (upBrLevel - (down_gl - minDepth)) / length >= minSlope else (
-                                upBrLevel - length * minSlope - 0.0005)))  # G21
+                    dwnBrLevel = '' if down_box == '' else (
+                        0.00 if decimal.Decimal(length) == decimal.Decimal(0.00) else (
+                            (down_gl - minDepth) if (upBrLevel - (down_gl - minDepth)) / length >= minSlope else (
+                                    upBrLevel - length * minSlope - 0.0005)))  # G21
                     dwnDepth = (down_gl - dwnBrLevel) if down_box != '' else ''  # I21
                     model = 2.00  # J21 = 2 ->
-                    upRuleLvl = '' if down_box == '' else ('' if decimal.Decimal(length) == decimal.Decimal(0.00) else (model + upBrLevel))  # K21
-                    dwnRuleLvl = '' if down_box == '' else ('' if decimal.Decimal(length) == decimal.Decimal(0.00) else (model + dwnBrLevel))  # L21
+                    upRuleLvl = '' if down_box == '' else (
+                        '' if decimal.Decimal(length) == decimal.Decimal(0.00) else (model + upBrLevel))  # K21
+                    dwnRuleLvl = '' if down_box == '' else (
+                        '' if decimal.Decimal(length) == decimal.Decimal(0.00) else (model + dwnBrLevel))  # L21
                     slopeSection = '' if down_box == '' else round((upBrLevel - dwnBrLevel) * 100.00,
                                                                    1)  # N21 slopeSection
 

@@ -33,6 +33,9 @@ class ProducesReportOSXls:
         segments = []
         for s in all_segs:
             segments.append(s)
+        segments = sorted(segments, key=lambda item:
+        (item[self.__get_idx_attr(self.segments, 'segments', 'branch_id')],
+         item[self.__get_idx_attr(self.segments, 'segments', 'segment_id')]))
         branchs = []
         for feat in segments:
             branchs.append(feat[self.__get_idx_attr_segments('branch_id')])
