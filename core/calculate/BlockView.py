@@ -36,7 +36,8 @@ class BlockViewDialog(QDialog, Ui_BlockDialog):
             self.tr("upBrLevel"), self.tr("dwnBrLevel"), self.tr("upDepth"),
             self.tr("dwnDepth"), self.tr("model"), self.tr("upRuleLvl"),
             self.tr("dwnRuleLvl"), self.tr("critDepth"), self.tr("slopeSection"),
-            self.tr("pvc_diameter"), self.tr("pavement"), self.tr("obs"), self.tr("obstacles")
+            self.tr("pvc_diameter"), self.tr("pavement"), self.tr("Tubo de Queda"),
+            self.tr("obs"), self.tr("obstacles")
         ]
         self.tableWidget.setColumnCount(len(self.headers))
         self.tableWidget.setHorizontalHeaderLabels(self.headers)
@@ -183,10 +184,13 @@ class BlockViewDialog(QDialog, Ui_BlockDialog):
                                                  value=segments[i].attributes()[
                                                      self.__get_idx_attr(segments_lyr, 'segments',
                                                                          'paviment_2')]))))  # paviment
-            self.tableWidget.setItem(i, 17, QTableWidgetItem(
+            # self.tableWidget.setItem(i, 17, QTableWidgetItem(  # tubo queda
+            #     self.check(segments[i].attributes()[self.__get_idx_attr(segments_lyr, 'segments', 'fall_tube')])))
+            self.tableWidget.setItem(i, 17, QTableWidgetItem('0.0'))  # TODO: Pegar valor do tubo de queda da camada
+            self.tableWidget.setItem(i, 18, QTableWidgetItem(
                 self.check(segments[i].attributes()[self.__get_idx_attr(segments_lyr, 'segments', 'comments')]).replace(
                     'NULL', '')))  # node('comments'))))
-            self.tableWidget.setItem(i, 18, QTableWidgetItem(
+            self.tableWidget.setItem(i, 19, QTableWidgetItem(
                 self.concat2(
                     self.__get_key_map_of_values(layer=segments_lyr,
                                                  idx_col=self.__get_idx_attr(segments_lyr, 'segments', 'obstacle1'),
