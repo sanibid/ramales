@@ -15,6 +15,7 @@ class ProducesReportOSXls:
         self.data_json = None
         self.segments = None
         self.loc = QLocale()
+        self.MAX_COLUMN = 15
 
     def generate_report_os(self, local_file):
         local_file = os.path.normpath(local_file)
@@ -49,70 +50,97 @@ class ProducesReportOSXls:
             worksheet = workbook.add_sheet('R-' + str(branch), cell_overwrite_ok=True)
             worksheet.set_fit_num_pages(1)
             worksheet.show_grid = False
+
+            # CAIXA
             worksheet.col(0).width = 2000
             worksheet.col(1).width = 2100
+
+            # DISTÂNCIA
             worksheet.col(2).width = 1550
+
+            # COTA TERRENO
             worksheet.col(3).width = 1550
             worksheet.col(4).width = 1550
+
+            # COTA RAMAL
             worksheet.col(5).width = 1550
             worksheet.col(6).width = 1550
+
+            # PROFUNDIDADE
             worksheet.col(7).width = 1550
             worksheet.col(8).width = 1550
+
+            # GABARITO
             worksheet.col(9).width = 1550
+
+            # COTA RÉGUA
             worksheet.col(10).width = 1550
             worksheet.col(11).width = 1550
+
+            # PROF. CRÍTICA
             worksheet.col(12).width = 1550
+
+            # CAIM. TRECHO
             worksheet.col(13).width = 1550
+
+            # TUBO DE QUEDA
             worksheet.col(14).width = 2600
+
+            # OBS
+            worksheet.col(15).width = 2600
+
+
+
             worksheet.row(7).height_mismatch = True
             worksheet.row(7).height = 130
             worksheet.row(11).height_mismatch = True
             worksheet.row(11).height = 130
             worksheet.row(16).height_mismatch = True
             worksheet.row(16).height = 130
-            worksheet.write_merge(0, 2, 0, 14, '', BORDER_1)
+            worksheet.write_merge(0, 2, 0, self.MAX_COLUMN, '', BORDER_1)
             worksheet.write(4, 0, '', BORDER_LEFT)
-            worksheet.write(4, 14, '', BORDER_RIGHT)
-            worksheet.write_merge(3, 3, 0, 14, 'SISTEMA DE ESGOTAMENTO SANITÁRIO', TEXT_BOLD_CENTER_12_BORDER)
-            worksheet.write_merge(5, 5, 0, 14, 'ORDEM DE SERVIÇO PARA GABARITO - RAMAL', TEXT_BOLD_CENTER_10_RAMAL)
-            worksheet.write_merge(6, 6, 0, 14, list_block_values[10], TEXT_BOLD_CENTER_10_OS)
+            worksheet.write(4, self.MAX_COLUMN, '', BORDER_RIGHT)
+            worksheet.write_merge(3, 3, 0, self.MAX_COLUMN, 'SISTEMA DE ESGOTAMENTO SANITÁRIO', TEXT_BOLD_CENTER_12_BORDER)
+            worksheet.write_merge(5, 5, 0, self.MAX_COLUMN, 'ORDEM DE SERVIÇO PARA GABARITO - RAMAL', TEXT_BOLD_CENTER_10_RAMAL)
+            worksheet.write_merge(6, 6, 0, self.MAX_COLUMN, list_block_values[10], TEXT_BOLD_CENTER_10_OS)
 
             worksheet.write_merge(8, 8, 0, 1, 'QUADRA:', TEXT_BOLD_LEFT_12_QUADRA)
             worksheet.write(8, 2, list_block_values[1], TEXT_NORMAL_CENTER_12_QUADRA)
             worksheet.write_merge(8, 8, 3, 10, '', TEXT_NORMAL_LEFT_12_QUADRA)
             worksheet.write_merge(8, 8, 11, 12, 'RAMAL:', TEXT_BOLD_LEFT_12_RAMAL)
-            worksheet.write_merge(8, 8, 13, 14, 'R-' + str(branch), TEXT_NORMAL_CENTER_12_RAMAL)
+            worksheet.write_merge(8, 8, 13, self.MAX_COLUMN, 'R-' + str(branch), TEXT_NORMAL_CENTER_12_RAMAL)
             worksheet.write_merge(9, 9, 0, 1, 'BACIA:', TEXT_BOLD_LEFT_12_BACIA)
             worksheet.write_merge(9, 9, 2, 4, list_block_values[3], TEXT_NORMAL_CENTER_12_BACIA)
             worksheet.write_merge(9, 9, 5, 9, '', TEXT_NORMAL_CENTER_12_BACIA)
             worksheet.write_merge(9, 9, 10, 11, 'DATA:', TEXT_BOLD_LEFT_12_DATA)
-            worksheet.write_merge(9, 9, 12, 14,
+            worksheet.write_merge(9, 9, 12, self.MAX_COLUMN,
                                   str(list_block_values[2].toString(Qt.DefaultLocaleShortDate)).split()[0],
                                   TEXT_NORMAL_CENTER_12_DATA)
-            worksheet.write_merge(10, 10, 0, 1, 'PROF.MÍNIMA (m):', TEXT_NORMAL_RIGHT_PROF)
-            worksheet.write(10, 2, '', TEXT_NORMAL_CENTER_PROF)
-            worksheet.write_merge(10, 10, 3, 9, list_block_values[4], TEXT_NORMAL_CENTER_PROF)
+            worksheet.write_merge(10, 10, 0, 2, 'PROF.MÍNIMA (m):', TEXT_NORMAL_RIGHT_PROF)
+            worksheet.write(10, 3, '', TEXT_NORMAL_CENTER_PROF)
+            worksheet.write_merge(10, 10, 4, 8, list_block_values[4], TEXT_NORMAL_CENTER_PROF)
+            worksheet.write(10, 9, '', TEXT_NORMAL_CENTER_PROF)
             worksheet.write_merge(10, 10, 9, 13, 'DECLIVIDADE MÍNIMA (m/m):', TEXT_NORMAL_RIGHT_DECLIV)
-            worksheet.write(10, 14, list_block_values[5], TEXT_NORMAL_CENTER_DECLIV)
+            worksheet.write_merge(10, 10, self.MAX_COLUMN-1, self.MAX_COLUMN, list_block_values[5], TEXT_NORMAL_CENTER_DECLIV)
 
-            worksheet.write_merge(12, 12, 0, 14, 'QUANTITATIVOS', TEXT_BOLD_CENTER_12_QUANT)
+            worksheet.write_merge(12, 12, 0, self.MAX_COLUMN, 'QUANTITATIVOS', TEXT_BOLD_CENTER_12_QUANT)
             worksheet.write(13, 0, 'REV.:', TEXT_NORMAL_LEFT_REV)
             worksheet.write_merge(13, 13, 1, 2, list_block_values[6], TEXT_NORMAL_CENTER_REV)
             worksheet.write_merge(13, 13, 3, 4, 'Data Rev.:', TEXT_NORMAL_LEFT_DATA_REV)
             worksheet.write_merge(13, 13, 5, 7,
                                   str(list_block_values[7].toString(Qt.DefaultLocaleShortDate)).split()[0],
                                   TEXT_NORMAL_LEFT_DATA_REV)
-            worksheet.write_merge(13, 13, 8, 11, '', TEXT_NORMAL_LEFT_DATA_REV)
-            worksheet.write_merge(13, 13, 12, 13, 'Extensão total:', TEXT_NORMAL_LEFT_DATA_REV)
-            worksheet.write(13, 14, list_block_values[8], TEXT_NORMAL_CENTER_EXTEN)
+            worksheet.write_merge(13, 13, 8, self.MAX_COLUMN-3, '', TEXT_NORMAL_LEFT_DATA_REV)
+            worksheet.write_merge(13, 13, self.MAX_COLUMN-2, self.MAX_COLUMN-1, 'Extensão total:', TEXT_NORMAL_LEFT_DATA_REV)
+            worksheet.write(13, self.MAX_COLUMN, list_block_values[8], TEXT_NORMAL_CENTER_EXTEN)
             worksheet.write_merge(14, 14, 0, 7, '', TEXT_NORMAL_LEFT_NULL)
-            worksheet.write_merge(14, 14, 8, 11, '', TEXT_NORMAL_CENTER_NULL)
-            worksheet.write_merge(14, 14, 12, 13, 'Extensão ramal:', TEXT_NORMAL_LEFT_DATA_BRANCH)
+            worksheet.write_merge(14, 14, 8, self.MAX_COLUMN-3, '', TEXT_NORMAL_CENTER_NULL)
+            worksheet.write_merge(14, 14, self.MAX_COLUMN-2, self.MAX_COLUMN-1, 'Extensão ramal:', TEXT_NORMAL_LEFT_DATA_BRANCH)
 
             worksheet.write_merge(15, 15, 0, 3, '', TEXT_NORMAL_LEFT_TUBO)
             worksheet.write(15, 4, '', TEXT_NORMAL_CENTER_TUBO)
             worksheet.write_merge(15, 15, 5, 7, '', TEXT_NORMAL_MERGE_TUBO_L)
-            worksheet.write_merge(15, 15, 8, 14, '', TEXT_NORMAL_MERGE_TUBO_R)
+            worksheet.write_merge(15, 15, 8, self.MAX_COLUMN, '', TEXT_NORMAL_MERGE_TUBO_R)
 
             worksheet.write_merge(17, 18, 0, 1, 'CAIXA', TEXT_NORMAL_CENTER_CAIXA)
             worksheet.write_merge(17, 19, 2, 2, 'DISTÂNCIA (m)', TEXT_NORMAL_CENTER_HEADER_V)
@@ -123,7 +151,8 @@ class ProducesReportOSXls:
             worksheet.write_merge(17, 18, 10, 11, 'COTA RÉGUA (m)', TEXT_NORMAL_CENTER_HEADER_H)
             worksheet.write_merge(17, 19, 12, 12, 'PROF. CRÍTICA (m)', TEXT_NORMAL_CENTER_HEADER_V)
             worksheet.write_merge(17, 19, 13, 13, 'CAIM. TRECHO (cm)', TEXT_NORMAL_CENTER_HEADER_V)
-            worksheet.write_merge(17, 19, 14, 14, 'OBS', TEXT_NORMAL_CENTER_HEADER_OBS)
+            worksheet.write_merge(17, 19, 14, 14, 'TUBO DE QUEDA (m)', TEXT_NORMAL_CENTER_HEADER_V)
+            worksheet.write_merge(17, 19, 15, 15, 'OBS', TEXT_NORMAL_CENTER_HEADER_OBS)
             worksheet.write(19, 0, 'MONT.', TEXT_NORMAL_CENTER_HEADER_BOTTON_L)
             worksheet.write(19, 1, 'JUS.', TEXT_NORMAL_CENTER_HEADER_BOTTON_R)
             worksheet.write(19, 3, 'MONT.', TEXT_NORMAL_CENTER_HEADER_BOTTON_R)
@@ -182,47 +211,48 @@ class ProducesReportOSXls:
                                     NUMBER_NORMAL_CENTER_BODY_C)
                     worksheet.write(row, 13, self.__str_to_float_locale(feat[self.__get_idx_attr_segments('unevenness_segment')]),
                                     NUMBER_NORMAL_CENTER_BODY_C_0)
-                    worksheet.write(row, 14, str(self.get_element_layer_nodes(
+                    worksheet.write(row, 14, '0.00', NUMBER_NORMAL_CENTER_BODY_C)  # TODO: ATRIBUTO TUBO DE QUEDA
+                    worksheet.write(row, 15, str(self.get_element_layer_nodes(
                         node=feat[self.__get_idx_attr_segments('up_box')], name_attr='comments'))
                                     .replace('NULL', '').replace('0.0', ''),
                                     TEXT_NORMAL_CENTER_BODY_R)
                     row += 1
-            worksheet.write(14, 14, branch_length, TEXT_NORMAL_CENTER_BRANCH)
-            worksheet.write_merge(q_row, q_row, 0, 14, 'OBSERVAÇÕES', TEXT_BOLD_CENTER_OBS_0)
+            worksheet.write(14, self.MAX_COLUMN, branch_length, TEXT_NORMAL_CENTER_BRANCH)
+            worksheet.write_merge(q_row, q_row, 0, self.MAX_COLUMN, 'NOTAS', TEXT_BOLD_CENTER_OBS_0)
             q_row += 1
             worksheet.write(q_row, 0, 'Obs 1:', TEXT_NORMAL_CENTER_OBS_1)
-            worksheet.write_merge(q_row, q_row, 1, 14, '', TEXT_NORMAL_CENTER_OBS_2)
+            worksheet.write_merge(q_row, q_row, 1, self.MAX_COLUMN, '', TEXT_NORMAL_CENTER_OBS_2)
             q_row += 1
-            worksheet.write_merge(q_row, q_row, 0, 14, '', TEXT_NORMAL_CENTER_OBS_3)
+            worksheet.write_merge(q_row, q_row, 0, self.MAX_COLUMN, '', TEXT_NORMAL_CENTER_OBS_3)
             q_row += 1
             worksheet.write(q_row, 0, 'Obs 2:', TEXT_NORMAL_CENTER_OBS_1)
-            worksheet.write_merge(q_row, q_row, 1, 14, '', TEXT_NORMAL_CENTER_OBS_2)
+            worksheet.write_merge(q_row, q_row, 1, self.MAX_COLUMN, '', TEXT_NORMAL_CENTER_OBS_2)
             q_row += 1
-            worksheet.write_merge(q_row, q_row, 0, 14, '', TEXT_NORMAL_CENTER_OBS_3)
+            worksheet.write_merge(q_row, q_row, 0, self.MAX_COLUMN, '', TEXT_NORMAL_CENTER_OBS_3)
             q_row += 1
             worksheet.write(q_row, 0, 'Obs 3:', TEXT_NORMAL_CENTER_OBS_1)
-            worksheet.write_merge(q_row, q_row, 1, 14, '', TEXT_NORMAL_CENTER_OBS_2)
+            worksheet.write_merge(q_row, q_row, 1, self.MAX_COLUMN, '', TEXT_NORMAL_CENTER_OBS_2)
             q_row += 1
-            worksheet.write_merge(q_row, q_row, 0, 14, '', TEXT_NORMAL_CENTER_OBS_3)
+            worksheet.write_merge(q_row, q_row, 0, self.MAX_COLUMN, '', TEXT_NORMAL_CENTER_OBS_3)
             q_row += 1
             worksheet.write(q_row, 0, 'Obs 4:', TEXT_NORMAL_CENTER_OBS_1)
-            worksheet.write_merge(q_row, q_row, 1, 14, '', TEXT_NORMAL_CENTER_OBS_2)
+            worksheet.write_merge(q_row, q_row, 1, self.MAX_COLUMN, '', TEXT_NORMAL_CENTER_OBS_2)
             q_row += 1
-            worksheet.write_merge(q_row, q_row, 0, 14, '', TEXT_NORMAL_CENTER_OBS_3)
+            worksheet.write_merge(q_row, q_row, 0, self.MAX_COLUMN, '', TEXT_NORMAL_CENTER_OBS_3)
             q_row += 1
             worksheet.write(q_row, 0, 'Obs 5:', TEXT_NORMAL_CENTER_OBS_1)
-            worksheet.write_merge(q_row, q_row, 1, 14, '', TEXT_NORMAL_CENTER_OBS_2)
+            worksheet.write_merge(q_row, q_row, 1, self.MAX_COLUMN, '', TEXT_NORMAL_CENTER_OBS_2)
             q_row += 1
-            worksheet.write_merge(q_row, q_row, 0, 14, '', TEXT_NORMAL_CENTER_OBS_3)
+            worksheet.write_merge(q_row, q_row, 0, self.MAX_COLUMN, '', TEXT_NORMAL_CENTER_OBS_3)
             q_row += 1
-            worksheet.write_merge(q_row, q_row, 0, 14, '', TEXT_NORMAL_CENTER_OBS_3)
+            worksheet.write_merge(q_row, q_row, 0, self.MAX_COLUMN, '', TEXT_NORMAL_CENTER_OBS_3)
             q_row += 1
-            worksheet.write_merge(q_row, q_row, 0, 14, '', TEXT_NORMAL_CENTER_OBS_3)
+            worksheet.write_merge(q_row, q_row, 0, self.MAX_COLUMN, '', TEXT_NORMAL_CENTER_OBS_3)
             q_row += 1
             worksheet.write_merge(q_row, q_row, 0, 5, 'Emissão:', TEXT_NORMAL_LEFT_EMIS)
             worksheet.write_merge(q_row, q_row, 6, 9, 'Liberação:         /         /             ',
                                   TEXT_NORMAL_CENTER_LIB)
-            worksheet.write_merge(q_row, q_row, 10, 14,
+            worksheet.write_merge(q_row, q_row, 10, self.MAX_COLUMN,
                                   'Recebido:         /         /                                     ',
                                   TEXT_NORMAL_CENTER_REC)
             q_row += 1
@@ -231,13 +261,13 @@ class ProducesReportOSXls:
             worksheet.write(q_row, 6, 'Por:', TEXT_NORMAL_CENTER_LIB_POR)
             worksheet.write_merge(q_row, q_row, 7, 9, '____________________', TEXT_NORMAL_CENTER_EMIS_ROW)
             worksheet.write(q_row, 10, 'Por:', TEXT_NORMAL_CENTER_REC_POR)
-            worksheet.write_merge(q_row, q_row, 11, 14, '_____________________________',
+            worksheet.write_merge(q_row, q_row, 11, self.MAX_COLUMN, '_____________________________',
                                   TEXT_NORMAL_CENTER_REC_ROW)
             q_row += 1
             worksheet.write_merge(q_row, q_row, 0, 5, '                                      Projeto',
                                   TEXT_NORMAL_CENTER_EMIS_PROJ)
             worksheet.write_merge(q_row, q_row, 6, 9, '               Fiscalização', TEXT_NORMAL_CENTER_LIB_FIS)
-            worksheet.write_merge(q_row, q_row, 10, 14, '               Construtora', TEXT_NORMAL_CENTER_REC_CONS)
+            worksheet.write_merge(q_row, q_row, 10, self.MAX_COLUMN, '               Construtora', TEXT_NORMAL_CENTER_REC_CONS)
         workbook.save(local_file)
 
     def get_element_layer_nodes(self, node: str, name_attr: str):
@@ -340,7 +370,7 @@ TEXT_NORMAL_RIGHT_PROF = easyxf('font: name Arial, height 160; align: vert cente
 TEXT_NORMAL_CENTER_PROF = easyxf('font: name Arial, height 160; align: vert center, horiz center; '
                                  'borders: left 0, right 0, top 1, bottom 2;')
 TEXT_NORMAL_RIGHT_DECLIV = easyxf('font: name Arial, height 160; align: vert center, horiz right; '
-                                  'borders: left 0, right 0, top 1, bottom 2;')
+                                  'borders: left 1, right 0, top 1, bottom 2;')
 TEXT_NORMAL_CENTER_DECLIV = easyxf('font: name Arial, height 160; align: vert center, horiz center; '
                                    'borders: left 0, right 2, top 1, bottom 2;')
 TEXT_BOLD_CENTER_12_QUANT = easyxf('font: name Arial, height 240, bold True; '
