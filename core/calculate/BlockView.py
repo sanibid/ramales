@@ -186,7 +186,8 @@ class BlockViewDialog(QDialog, Ui_BlockDialog):
                                                                          'paviment_2')]))))  # paviment
             # self.tableWidget.setItem(i, 17, QTableWidgetItem(  # tubo queda
             #     self.check(segments[i].attributes()[self.__get_idx_attr(segments_lyr, 'segments', 'fall_tube')])))
-            self.tableWidget.setItem(i, 17, QTableWidgetItem('0.0'))  # TODO: Pegar valor do tubo de queda da camada
+            self.tableWidget.setItem(i, 17, QTableWidgetItem(self.check(segments[i].attributes()[
+                               self.__get_idx_attr(segments_lyr, 'segments', 'h_tq')])))
             self.tableWidget.setItem(i, 18, QTableWidgetItem(
                 self.check(segments[i].attributes()[self.__get_idx_attr(segments_lyr, 'segments', 'comments')]).replace(
                     'NULL', '')))  # node('comments'))))

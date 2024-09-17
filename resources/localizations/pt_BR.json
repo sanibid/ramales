@@ -57,7 +57,12 @@
     "coord_Xi": "coord_Xi",
     "coord_Yi": "coord_Yi",
     "coord_Xf": "coord_Xf",
-    "coord_Yf": "coord_Yf"
+    "coord_Yf": "coord_Yf",
+    "tq": "TQ",
+    "h_tq": "h_TQ",
+    "to_envelop": "envelopar_TQ",
+    "tq_link1": "TQ_conexao1",
+    "tq_link2": "TQ_conexao2"
   }],
   "blocks": ["quadra", {
     "id": "fid",

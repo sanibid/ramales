@@ -93,8 +93,8 @@ class CreateProjectDialog(QDialog):
                 NODES_LAYER_ID=self.dict_layers['nodes'],
                 SEGMENTS_LAYER_ID=self.dict_layers['segments'],
                 LINEAR_OBSTACLES_LAYER_ID=self.dict_layers['linear_obstacles'],
-                POINT_OBSTACLES_LAYER_ID=self.dict_layers['point_obstacles'],
-                ACCESSORIES_LAYER_ID=self.dict_layers['accessories']))
+                POINT_OBSTACLES_LAYER_ID=self.dict_layers['point_obstacles']
+                ))
             self.utils.show_dialog(title=self.tr('Criação sucedida'),
                                    message=self.tr('Projeto criado com sucesso!'),
                                    information=QMessageBox.Information)

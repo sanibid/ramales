@@ -211,7 +211,8 @@ class ProducesReportOSXls:
                                     NUMBER_NORMAL_CENTER_BODY_C)
                     worksheet.write(row, 13, self.__str_to_float_locale(feat[self.__get_idx_attr_segments('unevenness_segment')]),
                                     NUMBER_NORMAL_CENTER_BODY_C_0)
-                    worksheet.write(row, 14, '0.00', NUMBER_NORMAL_CENTER_BODY_C)  # TODO: ATRIBUTO TUBO DE QUEDA
+                    worksheet.write(row, 14, self.__str_to_float_locale(feat[self.__get_idx_attr_segments('h_tq')]),
+                                    NUMBER_NORMAL_CENTER_BODY_C)
                     worksheet.write(row, 15, str(self.get_element_layer_nodes(
                         node=feat[self.__get_idx_attr_segments('up_box')], name_attr='comments'))
                                     .replace('NULL', '').replace('0.0', ''),
