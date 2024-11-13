@@ -520,7 +520,7 @@ class BlockViewDialog(QDialog, Ui_BlockDialog):
         down_gl = self.__str_to_float_locale(self.getTableValue(i, "down_gl"))
         # model = self.to_float(self.getTableValue(i, "model"))
         critDepth = self.__str_to_float_locale(self.getTableValue(i, "critDepth"))
-        h_branch = self.__str_to_float_locale(self.getTableValue(0, "H Ramal"))
+        h_branch = - self.__str_to_float_locale(self.getTableValue(0, "H Ramal"))
         dwnDepthPrev = 0.00 if i == initial else self.__str_to_float_locale(
             self.getTableValue((i - 1), "dwnDepth"))
         dwnBrLevelPrev = 0.00 if i == initial else self.__str_to_float_locale(
@@ -533,9 +533,8 @@ class BlockViewDialog(QDialog, Ui_BlockDialog):
             upDepth = (up_gl - upBrLevel) if down_box != '' else 0.00
         dwnBrLevel = '' if down_box == '' else (
             0.00 if decimal.Decimal(length) == decimal.Decimal(0.00) else (
-                (down_gl - minSlope) if (up_gl - (down_gl)) / length >= minSlope else (
+                (down_gl - h_branch) if (up_gl - (down_gl)) / length >= minSlope else (
                         upBrLevel - length * minSlope - 0.0005)))  # G21
-        print(upBrLevel)
         dwnDepth = (down_gl - dwnBrLevel) if down_box != '' else ''  # I21
         model = 2.00  # J21 = 2 ->
         upRuleLvl = '' if down_box == '' else (
@@ -559,7 +558,6 @@ class BlockViewDialog(QDialog, Ui_BlockDialog):
             initial = grouped[key][0]
             for i in range(self.tableWidget.rowCount()):
                 if self.getTableValue(i, "branch") == key:
-                    # print(self.__get_json_attr(name_lyr='bool_air', attribute='enterrado'))
                     if (self.getTableValue(i, "Posição ramal") ==
                             self.__get_json_attr(name_lyr='bool_air', attribute='underground')): # tubo enterrado
                         upBrLevel, dwnBrLevel, upDepth, dwnDepth, model, upRuleLvl, slopeSection,critDepth, dwnRuleLvl = (
