@@ -124,12 +124,12 @@
     <message>
         <location filename="../views/BlockView.py" line="20"/>
         <source>upDepth</source>
-        <translation>Profundidade: Montante</translation>
+        <translation>Profundidade/Altura: Montante</translation>
     </message>
     <message>
         <location filename="../views/BlockView.py" line="21"/>
         <source>dwnDepth</source>
-        <translation>Profundidade: Jusante</translation>
+        <translation>Profundidade/Altura: Jusante</translation>
     </message>
     <message>
         <location filename="../views/BlockView.py" line="21"/>

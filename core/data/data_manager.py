@@ -31,11 +31,11 @@ class ProjectDataManager:
     @staticmethod
     def get_layers_id() -> LayersData:
         return LayersData(
-            BLOCKS_LAYER_ID=LayersInfoDAO.get_blocks_layer_id()[0],
-            NODES_LAYER_ID=LayersInfoDAO.get_nodes_layer_id()[0],
-            SEGMENTS_LAYER_ID=LayersInfoDAO.get_segments_layer_id()[0],
-            LINEAR_OBSTACLES_LAYER_ID=LayersInfoDAO.get_linear_obstacles_layer_id()[0],
-            POINT_OBSTACLES_LAYER_ID=LayersInfoDAO.get_point_obstacles_layer_id()[0]
+            BLOCKS_LAYER_ID='quadra_8b241a0c_9ae7_4de4_a4c3_5492c6a0ae95', #LayersInfoDAO.get_blocks_layer_id()[0],
+            NODES_LAYER_ID='caixas_3aa4568e_0320_4cd7_9d46_23301e83e344', #LayersInfoDAO.get_nodes_layer_id()[0],
+            SEGMENTS_LAYER_ID='trecho_02bfec5b_a476_4647_b15f_b87dd5800d80', #LayersInfoDAO.get_segments_layer_id()[0],
+            LINEAR_OBSTACLES_LAYER_ID='obst_lineares_4c64cb06_010a_4cbf_8037_01a856bbd75b', #LayersInfoDAO.get_linear_obstacles_layer_id()[0],
+            POINT_OBSTACLES_LAYER_ID='obst_pontuais_6d45d1a6_4e74_4077_8b9d_c7deaead46de'#LayersInfoDAO.get_point_obstacles_layer_id()[0]
         )
 
     @staticmethod

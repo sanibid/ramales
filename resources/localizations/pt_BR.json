@@ -1,5 +1,11 @@
 {
   "locale_name": "Português Brasil (pt_BR)",
+  "bool_air": ["",
+    {
+      "underground": "enterrado",
+      "overhead": "aéreo"
+    }
+  ],
   "layers": {
       "accessories": "acessorios",
       "blocks": "quadra",
@@ -26,7 +32,9 @@
     "coord_x": "coord_x",
     "coord_y": "coord_y",
     "critical_depth": "prof_critica",
-    "template": "gabarito"
+    "template": "gabarito",
+    "branch_position": "posicao_ramal",
+    "h_branch": "h_ramal"
   }],
   "segments":  ["trecho", {
     "id": "fid",
@@ -62,7 +70,9 @@
     "h_tq": "h_TQ",
     "to_envelop": "envelopar_TQ",
     "tq_link1": "TQ_conexao1",
-    "tq_link2": "TQ_conexao2"
+    "tq_link2": "TQ_conexao2",
+    "branch_position": "posicao_ramal",
+    "h_branch": "h_ramal"
   }],
   "blocks": ["quadra", {
     "id": "fid",

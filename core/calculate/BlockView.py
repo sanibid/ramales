@@ -9,7 +9,7 @@ from qgis._core import QgsProject, QgsApplication, QgsVectorLayer, QgsDefaultVal
 
 from ...core.data.data_manager import ProjectDataManager
 from ...gui.BlockDialogUi import Ui_BlockDialog
-from ...helpers.globals import get_language_file
+from ...helpers.globals import get_language_file, set_language_file
 from ...helpers.utils import Utils
 
 translate = QCoreApplication.translate
@@ -36,8 +36,9 @@ class BlockViewDialog(QDialog, Ui_BlockDialog):
             self.tr("upBrLevel"), self.tr("dwnBrLevel"), self.tr("upDepth"),
             self.tr("dwnDepth"), self.tr("model"), self.tr("upRuleLvl"),
             self.tr("dwnRuleLvl"), self.tr("critDepth"), self.tr("slopeSection"),
-            self.tr("pvc_diameter"), self.tr("pavement"), self.tr("Tubo de Queda"),
-            self.tr("obs"), self.tr("obstacles")
+            self.tr("pvc_diameter"), self.tr("pavement"), self.tr("obstacles"),
+            self.tr("Posição ramal"), self.tr("H Ramal"), self.tr("Tubo de Queda"),
+            self.tr("H Tubo Queda"), self.tr("obs")
         ]
         self.tableWidget.setColumnCount(len(self.headers))
         self.tableWidget.setHorizontalHeaderLabels(self.headers)
@@ -109,7 +110,6 @@ class BlockViewDialog(QDialog, Ui_BlockDialog):
         # Set the table values
         totalLength = 0
         for i in range(segsCount):
-            print(segments[i].attributes()[1])
             if self.check(segments[i].attributes()[1]) != '':
                 totalLength = totalLength + self.__str_to_float_locale(
                     segments[i].attributes()[self.__get_idx_attr(segments_lyr, 'segments', 'length')])
@@ -186,26 +186,42 @@ class BlockViewDialog(QDialog, Ui_BlockDialog):
                                                                          'paviment_2')]))))  # paviment
             # self.tableWidget.setItem(i, 17, QTableWidgetItem(  # tubo queda
             #     self.check(segments[i].attributes()[self.__get_idx_attr(segments_lyr, 'segments', 'fall_tube')])))
-            self.tableWidget.setItem(i, 17, QTableWidgetItem(self.check(segments[i].attributes()[
-                               self.__get_idx_attr(segments_lyr, 'segments', 'h_tq')])))
+            # self.tableWidget.setItem(i, 17, QTableWidgetItem(self.check(segments[i].attributes()[
+            #                    self.__get_idx_attr(segments_lyr, 'segments', 'h_tq')])))
+            # self.tableWidget.setItem(i, 18, QTableWidgetItem(
+            #     self.concat2(
+            #         self.__get_key_map_of_values(layer=segments_lyr,
+            #                                      idx_col=self.__get_idx_attr(segments_lyr, 'segments', 'obstacle1'),
+            #                                      value=segments[i].attributes()[
+            #                                          self.__get_idx_attr(segments_lyr, 'segments', 'obstacle1')]),
+            #         self.__get_key_map_of_values(layer=segments_lyr,
+            #                                      idx_col=self.__get_idx_attr(segments_lyr, 'segments', 'obstacle2'),
+            #                                      value=segments[i].attributes()[
+            #                                          self.__get_idx_attr(segments_lyr, 'segments', 'obstacle2')]),
+            #         self.__get_key_map_of_values(layer=segments_lyr,
+            #                                      idx_col=self.__get_idx_attr(segments_lyr, 'segments', 'obstacle3'),
+            #                                      value=segments[i].attributes()[
+            #                                          self.__get_idx_attr(segments_lyr, 'segments',
+            #                                                              'obstacle3')]))))  # 'obstacles'))))
             self.tableWidget.setItem(i, 18, QTableWidgetItem(
+                self.__get_key_map_of_values(layer=nodes_lyr,
+                                             idx_col=self.__get_idx_attr(nodes_lyr, 'nodes', 'branch_position'),
+                                             value=nodes[i].attributes()[
+                                                 self.__get_idx_attr(nodes_lyr, 'nodes', 'branch_position')])))  # node('posicao_ramal'))))
+            self.tableWidget.setItem(i, 19, QTableWidgetItem(
+                self.__float_to_str_locale(self.get_element_layer_nodes(
+                    node=segments[i].attributes()[self.__get_idx_attr(segments_lyr, 'segments', 'up_box')],
+                    name_attr=self.__get_json_attr('nodes', 'h_branch')), decimals=2)))  # node('h_ramal'))))
+            self.tableWidget.setItem(i, 20, QTableWidgetItem(
+                self.check(segments[i].attributes()[self.__get_idx_attr(segments_lyr, 'segments', 'tq')]).replace(
+                    'NULL', '')))
+            self.tableWidget.setItem(i, 21, QTableWidgetItem(
+                self.check(self.__float_to_str_locale(
+                    segments[i].attributes()[self.__get_idx_attr(segments_lyr, 'segments', 'h_TQ')], decimals=2).replace(
+                    'NULL', ''))))
+            self.tableWidget.setItem(i, 22, QTableWidgetItem(
                 self.check(segments[i].attributes()[self.__get_idx_attr(segments_lyr, 'segments', 'comments')]).replace(
                     'NULL', '')))  # node('comments'))))
-            self.tableWidget.setItem(i, 19, QTableWidgetItem(
-                self.concat2(
-                    self.__get_key_map_of_values(layer=segments_lyr,
-                                                 idx_col=self.__get_idx_attr(segments_lyr, 'segments', 'obstacle1'),
-                                                 value=segments[i].attributes()[
-                                                     self.__get_idx_attr(segments_lyr, 'segments', 'obstacle1')]),
-                    self.__get_key_map_of_values(layer=segments_lyr,
-                                                 idx_col=self.__get_idx_attr(segments_lyr, 'segments', 'obstacle2'),
-                                                 value=segments[i].attributes()[
-                                                     self.__get_idx_attr(segments_lyr, 'segments', 'obstacle2')]),
-                    self.__get_key_map_of_values(layer=segments_lyr,
-                                                 idx_col=self.__get_idx_attr(segments_lyr, 'segments', 'obstacle3'),
-                                                 value=segments[i].attributes()[
-                                                     self.__get_idx_attr(segments_lyr, 'segments',
-                                                                         'obstacle3')]))))  # 'obstacles'))))
         self.totalLength.setValue(round(totalLength, 2))
         # Resize of the rows and columns based on the content
         self.tableWidget.resizeColumnsToContents()
@@ -428,6 +444,7 @@ class BlockViewDialog(QDialog, Ui_BlockDialog):
     def __set_data_json(self):
         plg_dir = os.path.dirname(__file__)
         plg_dir = plg_dir.replace('core' + os.sep + 'calculate', 'resources' + os.sep + 'localizations' + os.sep)
+        set_language_file('pt_BR')
         lang = ProjectDataManager.get_language_project().LANGUAGE
         lang = lang if lang != '' else get_language_file()
         file_json = open(os.path.join(plg_dir, lang + '.json'), 'r')
@@ -462,6 +479,73 @@ class BlockViewDialog(QDialog, Ui_BlockDialog):
             self.__set_data_json()
         return self.data_json['raster']
 
+    def __calculate_underground(self, i, initial, minDepth, minSlope):
+        length = self.__str_to_float_locale(self.getTableValue(i, "length"))
+        up_gl = self.__str_to_float_locale(self.getTableValue(i, "up_gl"))
+        down_box = self.getTableValue(i, "down_box")
+        down_gl = self.__str_to_float_locale(self.getTableValue(i, "down_gl"))
+        # model = self.to_float(self.getTableValue(i, "model"))
+        critDepth = self.__str_to_float_locale(self.getTableValue(i, "critDepth"))
+        dwnDepthPrev = 0.00 if i == initial else self.__str_to_float_locale(
+            self.getTableValue((i - 1), "dwnDepth"))
+        dwnBrLevelPrev = 0.00 if i == initial else self.__str_to_float_locale(
+            self.getTableValue((i - 1), "dwnBrLevel"))
+        if i == initial:
+            upDepth = (
+                minDepth if minDepth > critDepth else critDepth) if down_box != '' else ''  # H21 i==0
+            upBrLevel = (up_gl - upDepth) if down_box != '' else ''  # tocheck ''  #F21 i==0
+        else:
+            upBrLevel = '' if down_box == '' else (
+                0.00 if decimal.Decimal(length) == decimal.Decimal(0.00) else (
+                    dwnBrLevelPrev if (dwnDepthPrev > critDepth) else (up_gl - critDepth)))
+            upDepth = (up_gl - upBrLevel) if down_box != '' else 0.00
+        dwnBrLevel = '' if down_box == '' else (
+            0.00 if decimal.Decimal(length) == decimal.Decimal(0.00) else (
+                (down_gl - minDepth) if (upBrLevel - (down_gl - minDepth)) / length >= minSlope else (
+                        upBrLevel - length * minSlope - 0.0005)))  # G21
+        dwnDepth = (down_gl - dwnBrLevel) if down_box != '' else ''  # I21
+        model = 2.00  # J21 = 2 ->
+        upRuleLvl = '' if down_box == '' else (
+            '' if decimal.Decimal(length) == decimal.Decimal(0.00) else (model + upBrLevel))  # K21
+        dwnRuleLvl = '' if down_box == '' else (
+            '' if decimal.Decimal(length) == decimal.Decimal(0.00) else (model + dwnBrLevel))  # L21
+        slopeSection = '' if down_box == '' else round((upBrLevel - dwnBrLevel) * 100.00,
+                                                       1)  # N21 slopeSection
+        return upBrLevel, dwnBrLevel, upDepth, dwnDepth, model, upRuleLvl, slopeSection,critDepth, dwnRuleLvl 
+
+    def __calculate_overhead(self, i, initial, minDepth, minSlope):
+        length = self.__str_to_float_locale(self.getTableValue(i, "length"))
+        up_gl = self.__str_to_float_locale(self.getTableValue(i, "up_gl"))
+        down_box = self.getTableValue(i, "down_box")
+        down_gl = self.__str_to_float_locale(self.getTableValue(i, "down_gl"))
+        # model = self.to_float(self.getTableValue(i, "model"))
+        critDepth = self.__str_to_float_locale(self.getTableValue(i, "critDepth"))
+        h_branch = self.__str_to_float_locale(self.getTableValue(0, "H Ramal"))
+        dwnDepthPrev = 0.00 if i == initial else self.__str_to_float_locale(
+            self.getTableValue((i - 1), "dwnDepth"))
+        dwnBrLevelPrev = 0.00 if i == initial else self.__str_to_float_locale(
+            self.getTableValue((i - 1), "dwnBrLevel"))
+        if i == initial:
+            upBrLevel = (up_gl - h_branch) if down_box != '' else ''  # tocheck ''  #F21 i==0
+            upDepth = -h_branch if down_box != '' else 0.00
+        else:
+            upBrLevel = '' if down_box == '' else dwnBrLevelPrev
+            upDepth = (up_gl - upBrLevel) if down_box != '' else 0.00
+        dwnBrLevel = '' if down_box == '' else (
+            0.00 if decimal.Decimal(length) == decimal.Decimal(0.00) else (
+                (down_gl - minSlope) if (up_gl - (down_gl)) / length >= minSlope else (
+                        upBrLevel - length * minSlope - 0.0005)))  # G21
+        print(upBrLevel)
+        dwnDepth = (down_gl - dwnBrLevel) if down_box != '' else ''  # I21
+        model = 2.00  # J21 = 2 ->
+        upRuleLvl = '' if down_box == '' else (
+            '' if decimal.Decimal(length) == decimal.Decimal(0.00) else (model + upBrLevel))  # K21
+        dwnRuleLvl = '' if down_box == '' else (
+            '' if decimal.Decimal(length) == decimal.Decimal(0.00) else (model + dwnBrLevel))  # L21
+        slopeSection = '' if down_box == '' else round((upBrLevel - dwnBrLevel) * 100.00,
+                                                       1)  # N21 slopeSection
+        return upBrLevel, dwnBrLevel, upDepth, dwnDepth, model, upRuleLvl, slopeSection,critDepth, dwnRuleLvl
+
     def calculate(self, branchName=None):
         self.tableWidget.blockSignals(True)
         minDepth = self.minDepth.value()
@@ -475,38 +559,14 @@ class BlockViewDialog(QDialog, Ui_BlockDialog):
             initial = grouped[key][0]
             for i in range(self.tableWidget.rowCount()):
                 if self.getTableValue(i, "branch") == key:
-                    length = self.__str_to_float_locale(self.getTableValue(i, "length"))
-                    up_gl = self.__str_to_float_locale(self.getTableValue(i, "up_gl"))
-                    down_box = self.getTableValue(i, "down_box")
-                    down_gl = self.__str_to_float_locale(self.getTableValue(i, "down_gl"))
-                    # model = self.to_float(self.getTableValue(i, "model"))
-                    critDepth = self.__str_to_float_locale(self.getTableValue(i, "critDepth"))
-                    dwnDepthPrev = 0.00 if i == initial else self.__str_to_float_locale(
-                        self.getTableValue((i - 1), "dwnDepth"))
-                    dwnBrLevelPrev = 0.00 if i == initial else self.__str_to_float_locale(
-                        self.getTableValue((i - 1), "dwnBrLevel"))
-                    if i == initial:
-                        upDepth = (
-                            minDepth if minDepth > critDepth else critDepth) if down_box != '' else ''  # H21 i==0
-                        upBrLevel = (up_gl - upDepth) if down_box != '' else ''  # tocheck ''  #F21 i==0
+                    # print(self.__get_json_attr(name_lyr='bool_air', attribute='enterrado'))
+                    if (self.getTableValue(i, "Posição ramal") ==
+                            self.__get_json_attr(name_lyr='bool_air', attribute='underground')): # tubo enterrado
+                        upBrLevel, dwnBrLevel, upDepth, dwnDepth, model, upRuleLvl, slopeSection,critDepth, dwnRuleLvl = (
+                            self.__calculate_underground(i, initial, minDepth, minSlope))
                     else:
-                        upBrLevel = '' if down_box == '' else (
-                            0.00 if decimal.Decimal(length) == decimal.Decimal(0.00) else (
-                                dwnBrLevelPrev if (dwnDepthPrev > critDepth) else (up_gl - critDepth)))
-                        upDepth = (up_gl - upBrLevel) if down_box != '' else 0.00
-                    dwnBrLevel = '' if down_box == '' else (
-                        0.00 if decimal.Decimal(length) == decimal.Decimal(0.00) else (
-                            (down_gl - minDepth) if (upBrLevel - (down_gl - minDepth)) / length >= minSlope else (
-                                    upBrLevel - length * minSlope - 0.0005)))  # G21
-                    dwnDepth = (down_gl - dwnBrLevel) if down_box != '' else ''  # I21
-                    model = 2.00  # J21 = 2 ->
-                    upRuleLvl = '' if down_box == '' else (
-                        '' if decimal.Decimal(length) == decimal.Decimal(0.00) else (model + upBrLevel))  # K21
-                    dwnRuleLvl = '' if down_box == '' else (
-                        '' if decimal.Decimal(length) == decimal.Decimal(0.00) else (model + dwnBrLevel))  # L21
-                    slopeSection = '' if down_box == '' else round((upBrLevel - dwnBrLevel) * 100.00,
-                                                                   1)  # N21 slopeSection
-
+                        upBrLevel, dwnBrLevel, upDepth, dwnDepth, model, upRuleLvl, slopeSection,critDepth, dwnRuleLvl = (
+                            self.__calculate_overhead(i, initial, minDepth, minSlope))
                     self.tableWidget.setItem(i, self.getColumnIndex('upBrLevel'),
                                              QTableWidgetItem(self.__float_to_str_locale(upBrLevel)))
                     self.tableWidget.setItem(i, self.getColumnIndex('dwnBrLevel'),
