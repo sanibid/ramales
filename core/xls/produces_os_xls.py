@@ -67,8 +67,8 @@ class ProducesReportOSXls:
             worksheet.col(6).width = 1550
 
             # PROFUNDIDADE
-            worksheet.col(7).width = 1550
-            worksheet.col(8).width = 1550
+            worksheet.col(7).width = 1700
+            worksheet.col(8).width = 1700
 
             # GABARITO
             worksheet.col(9).width = 1550
@@ -89,8 +89,6 @@ class ProducesReportOSXls:
             # OBS
             worksheet.col(15).width = 2600
 
-
-
             worksheet.row(7).height_mismatch = True
             worksheet.row(7).height = 130
             worksheet.row(11).height_mismatch = True
@@ -100,8 +98,10 @@ class ProducesReportOSXls:
             worksheet.write_merge(0, 2, 0, self.MAX_COLUMN, '', BORDER_1)
             worksheet.write(4, 0, '', BORDER_LEFT)
             worksheet.write(4, self.MAX_COLUMN, '', BORDER_RIGHT)
-            worksheet.write_merge(3, 3, 0, self.MAX_COLUMN, 'SISTEMA DE ESGOTAMENTO SANITÁRIO', TEXT_BOLD_CENTER_12_BORDER)
-            worksheet.write_merge(5, 5, 0, self.MAX_COLUMN, 'ORDEM DE SERVIÇO PARA GABARITO - RAMAL', TEXT_BOLD_CENTER_10_RAMAL)
+            worksheet.write_merge(3, 3, 0, self.MAX_COLUMN, 'SISTEMA DE ESGOTAMENTO SANITÁRIO',
+                                  TEXT_BOLD_CENTER_12_BORDER)
+            worksheet.write_merge(5, 5, 0, self.MAX_COLUMN, 'ORDEM DE SERVIÇO PARA GABARITO - RAMAL',
+                                  TEXT_BOLD_CENTER_10_RAMAL)
             worksheet.write_merge(6, 6, 0, self.MAX_COLUMN, list_block_values[10], TEXT_BOLD_CENTER_10_OS)
 
             worksheet.write_merge(8, 8, 0, 1, 'QUADRA:', TEXT_BOLD_LEFT_12_QUADRA)
@@ -121,7 +121,8 @@ class ProducesReportOSXls:
             worksheet.write_merge(10, 10, 4, 8, list_block_values[4], TEXT_NORMAL_CENTER_PROF)
             worksheet.write(10, 9, '', TEXT_NORMAL_CENTER_PROF)
             worksheet.write_merge(10, 10, 9, 13, 'DECLIVIDADE MÍNIMA (m/m):', TEXT_NORMAL_RIGHT_DECLIV)
-            worksheet.write_merge(10, 10, self.MAX_COLUMN-1, self.MAX_COLUMN, list_block_values[5], TEXT_NORMAL_CENTER_DECLIV)
+            worksheet.write_merge(10, 10, self.MAX_COLUMN - 1, self.MAX_COLUMN, list_block_values[5],
+                                  TEXT_NORMAL_CENTER_DECLIV)
 
             worksheet.write_merge(12, 12, 0, self.MAX_COLUMN, 'QUANTITATIVOS', TEXT_BOLD_CENTER_12_QUANT)
             worksheet.write(13, 0, 'REV.:', TEXT_NORMAL_LEFT_REV)
@@ -130,23 +131,45 @@ class ProducesReportOSXls:
             worksheet.write_merge(13, 13, 5, 7,
                                   str(list_block_values[7].toString(Qt.DefaultLocaleShortDate)).split()[0],
                                   TEXT_NORMAL_LEFT_DATA_REV)
-            worksheet.write_merge(13, 13, 8, self.MAX_COLUMN-3, '', TEXT_NORMAL_LEFT_DATA_REV)
-            worksheet.write_merge(13, 13, self.MAX_COLUMN-2, self.MAX_COLUMN-1, 'Extensão total:', TEXT_NORMAL_LEFT_DATA_REV)
+            worksheet.write_merge(13, 13, 8, self.MAX_COLUMN - 3, '', TEXT_NORMAL_LEFT_DATA_REV)
+            worksheet.write_merge(13, 13, self.MAX_COLUMN - 2, self.MAX_COLUMN - 1, 'Extensão total:',
+                                  TEXT_NORMAL_LEFT_DATA_REV)
             worksheet.write(13, self.MAX_COLUMN, list_block_values[8], TEXT_NORMAL_CENTER_EXTEN)
             worksheet.write_merge(14, 14, 0, 7, '', TEXT_NORMAL_LEFT_NULL)
-            worksheet.write_merge(14, 14, 8, self.MAX_COLUMN-3, '', TEXT_NORMAL_CENTER_NULL)
-            worksheet.write_merge(14, 14, self.MAX_COLUMN-2, self.MAX_COLUMN-1, 'Extensão ramal:', TEXT_NORMAL_LEFT_DATA_BRANCH)
+            worksheet.write_merge(14, 14, 8, self.MAX_COLUMN - 3, '', TEXT_NORMAL_CENTER_NULL)
+            worksheet.write_merge(14, 14, self.MAX_COLUMN - 2, self.MAX_COLUMN - 1, 'Extensão ramal:',
+                                  TEXT_NORMAL_LEFT_DATA_BRANCH)
 
-            worksheet.write_merge(15, 15, 0, 3, '', TEXT_NORMAL_LEFT_TUBO)
-            worksheet.write(15, 4, '', TEXT_NORMAL_CENTER_TUBO)
-            worksheet.write_merge(15, 15, 5, 7, '', TEXT_NORMAL_MERGE_TUBO_L)
-            worksheet.write_merge(15, 15, 8, self.MAX_COLUMN, '', TEXT_NORMAL_MERGE_TUBO_R)
+            branch_position = 1
+            h_branch = 0.00
+            for feat in segments:
+                if feat[self.__get_idx_attr_segments('branch_id')] == branch:
+                    branch_position = int(feat[self.__get_idx_attr_segments("branch_position")])
+                    if branch_position == 2:
+                        h_branch = self.get_element_layer_nodes(
+                            node=feat[self.__get_idx_attr_segments('up_box')], name_attr='h_branch')
+                    break
+            if branch_position == 2:
+                worksheet.write_merge(15, 15, 0, 7, '', TEXT_NORMAL_LEFT_NULL)
+                worksheet.write_merge(15, 15, 8, self.MAX_COLUMN - 3, '', TEXT_NORMAL_CENTER_NULL)
+                worksheet.write_merge(15, 15, self.MAX_COLUMN - 2, self.MAX_COLUMN - 1, 'H',
+                                      TEXT_NORMAL_LEFT_DATA_BRANCH)
+                # Get, from caixa in up_box, the h_branch
+                worksheet.write(15, self.MAX_COLUMN,
+                                h_branch,
+                                TEXT_NORMAL_CENTER_BRANCH)
+            else:
+
+                worksheet.write_merge(15, 15, 0, 3, '', TEXT_NORMAL_LEFT_TUBO)
+                worksheet.write(15, 4, '', TEXT_NORMAL_CENTER_TUBO)
+                worksheet.write_merge(15, 15, 5, 7, '', TEXT_NORMAL_MERGE_TUBO_L)
+                worksheet.write_merge(15, 15, 8, self.MAX_COLUMN, '', TEXT_NORMAL_MERGE_TUBO_R)
 
             worksheet.write_merge(17, 18, 0, 1, 'CAIXA', TEXT_NORMAL_CENTER_CAIXA)
             worksheet.write_merge(17, 19, 2, 2, 'DISTÂNCIA (m)', TEXT_NORMAL_CENTER_HEADER_V)
             worksheet.write_merge(17, 18, 3, 4, 'COTA TERRENO (m)', TEXT_NORMAL_CENTER_HEADER_H)
             worksheet.write_merge(17, 18, 5, 6, 'COTA RAMAL (m)', TEXT_NORMAL_CENTER_HEADER_H)
-            worksheet.write_merge(17, 18, 7, 8, 'PROFUNDIDADE (m)', TEXT_NORMAL_CENTER_HEADER_H)
+            worksheet.write_merge(17, 18, 7, 8, 'ALTURA / PROFUNDIDADE (m)', TEXT_NORMAL_CENTER_HEADER_H)
             worksheet.write_merge(17, 19, 9, 9, 'GABARITO (m)', TEXT_NORMAL_CENTER_HEADER_V)
             worksheet.write_merge(17, 18, 10, 11, 'COTA RÉGUA (m)', TEXT_NORMAL_CENTER_HEADER_H)
             worksheet.write_merge(17, 19, 12, 12, 'PROF. CRÍTICA (m)', TEXT_NORMAL_CENTER_HEADER_V)
@@ -166,7 +189,7 @@ class ProducesReportOSXls:
             q_row += 20
             row = 20
             branch_length = 0.00
-            for feat in segments:
+            for i, feat in enumerate(segments):
                 if feat[self.__get_idx_attr_segments('branch_id')] == branch:
                     worksheet.write(row, 0, str(feat[self.__get_idx_attr_segments('up_box')]),
                                     TEXT_NORMAL_CENTER_BODY_L)
@@ -181,9 +204,11 @@ class ProducesReportOSXls:
                     worksheet.write(row, 4, self.__str_to_float_locale(self.get_element_layer_nodes(
                         node=feat[self.__get_idx_attr_segments('down_box')], name_attr='q_terrain')),
                                     NUMBER_NORMAL_CENTER_BODY_C_000)
-                    worksheet.write(row, 5, self.__str_to_float_locale(feat[self.__get_idx_attr_segments('up_qproject')]),
+                    worksheet.write(row, 5,
+                                    self.__str_to_float_locale(feat[self.__get_idx_attr_segments('up_qproject')]),
                                     NUMBER_NORMAL_CENTER_BODY_C_000)
-                    worksheet.write(row, 6, self.__str_to_float_locale(feat[self.__get_idx_attr_segments('dwn_qproject')]),
+                    worksheet.write(row, 6,
+                                    self.__str_to_float_locale(feat[self.__get_idx_attr_segments('dwn_qproject')]),
                                     NUMBER_NORMAL_CENTER_BODY_C_000)
                     if row == 20:
                         worksheet.write(row, 7, self.__str_to_float_locale(self.get_element_layer_nodes(
@@ -209,14 +234,16 @@ class ProducesReportOSXls:
                     worksheet.write(row, 12, self.__str_to_float_locale(self.get_element_layer_nodes(
                         node=feat[self.__get_idx_attr_segments('up_box')], name_attr='critical_depth')),
                                     NUMBER_NORMAL_CENTER_BODY_C)
-                    worksheet.write(row, 13, self.__str_to_float_locale(feat[self.__get_idx_attr_segments('unevenness_segment')]),
+                    worksheet.write(row, 13, self.__str_to_float_locale(
+                        feat[self.__get_idx_attr_segments('unevenness_segment')]),
                                     NUMBER_NORMAL_CENTER_BODY_C_0)
                     worksheet.write(row, 14, self.__str_to_float_locale(feat[self.__get_idx_attr_segments('h_tq')]),
                                     NUMBER_NORMAL_CENTER_BODY_C)
-                    worksheet.write(row, 15, str(self.get_element_layer_nodes(
-                        node=feat[self.__get_idx_attr_segments('up_box')], name_attr='comments'))
-                                    .replace('NULL', '').replace('0.0', ''),
-                                    TEXT_NORMAL_CENTER_BODY_R)
+                    # TODO: Faltando isso no novo banco
+                    # worksheet.write(row, 15, str(self.get_element_layer_nodes(
+                    #     node=feat[self.__get_idx_attr_segments('up_box')], name_attr='comments'))
+                    #                 .replace('NULL', '').replace('0.0', ''),
+                    #                 TEXT_NORMAL_CENTER_BODY_R)
                     row += 1
             worksheet.write(14, self.MAX_COLUMN, branch_length, TEXT_NORMAL_CENTER_BRANCH)
             worksheet.write_merge(q_row, q_row, 0, self.MAX_COLUMN, 'NOTAS', TEXT_BOLD_CENTER_OBS_0)
@@ -268,7 +295,8 @@ class ProducesReportOSXls:
             worksheet.write_merge(q_row, q_row, 0, 5, '                                      Projeto',
                                   TEXT_NORMAL_CENTER_EMIS_PROJ)
             worksheet.write_merge(q_row, q_row, 6, 9, '               Fiscalização', TEXT_NORMAL_CENTER_LIB_FIS)
-            worksheet.write_merge(q_row, q_row, 10, self.MAX_COLUMN, '               Construtora', TEXT_NORMAL_CENTER_REC_CONS)
+            worksheet.write_merge(q_row, q_row, 10, self.MAX_COLUMN, '               Construtora',
+                                  TEXT_NORMAL_CENTER_REC_CONS)
         workbook.save(local_file)
 
     def get_element_layer_nodes(self, node: str, name_attr: str):
@@ -309,6 +337,10 @@ class ProducesReportOSXls:
     def __set_data_json(self):
         plg_dir = os.path.dirname(__file__)
         plg_dir = plg_dir.replace('core' + os.sep + 'xls', 'resources' + os.sep + 'localizations' + os.sep)
+        # TODO: Tirar 2 linhas abaixo após receber geopackage
+        from ..data.models import Language
+        ProjectDataManager.save_language_project(Language(LANGUAGE='pt_BR'))
+
         lang = ProjectDataManager.get_language_project().LANGUAGE
         lang = lang if lang != '' else get_language_file()
         file_json = open(os.path.join(plg_dir, lang + '.json'), 'r')
