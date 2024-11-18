@@ -40,6 +40,7 @@ class ProducesReportOSXls:
         branchs = []
         for feat in segments:
             branchs.append(feat[self.__get_idx_attr_segments('branch_id')])
+
         branchs = set(branchs)
         workbook = Workbook()
         for branch in branchs:
@@ -50,6 +51,17 @@ class ProducesReportOSXls:
             worksheet = workbook.add_sheet('R-' + str(branch), cell_overwrite_ok=True)
             worksheet.set_fit_num_pages(1)
             worksheet.show_grid = False
+
+            is_aerial = False
+            h_branch = 0.00
+            for feat in segments:
+                if feat[self.__get_idx_attr_segments('branch_id')] == branch:
+                    branch_position = int(feat[self.__get_idx_attr_segments("branch_position")])
+                    if branch_position == 2:
+                        is_aerial = True
+                        h_branch = self.get_element_layer_nodes(
+                            node=feat[self.__get_idx_attr_segments('up_box')], name_attr='h_branch')
+                    break
 
             # CAIXA
             worksheet.col(0).width = 2000
@@ -116,6 +128,7 @@ class ProducesReportOSXls:
             worksheet.write_merge(9, 9, 12, self.MAX_COLUMN,
                                   str(list_block_values[2].toString(Qt.DefaultLocaleShortDate)).split()[0],
                                   TEXT_NORMAL_CENTER_12_DATA)
+
             worksheet.write_merge(10, 10, 0, 2, 'PROF.MÍNIMA (m):', TEXT_NORMAL_RIGHT_PROF)
             worksheet.write(10, 3, '', TEXT_NORMAL_CENTER_PROF)
             worksheet.write_merge(10, 10, 4, 8, list_block_values[4], TEXT_NORMAL_CENTER_PROF)
@@ -140,16 +153,7 @@ class ProducesReportOSXls:
             worksheet.write_merge(14, 14, self.MAX_COLUMN - 2, self.MAX_COLUMN - 1, 'Extensão ramal:',
                                   TEXT_NORMAL_LEFT_DATA_BRANCH)
 
-            branch_position = 1
-            h_branch = 0.00
-            for feat in segments:
-                if feat[self.__get_idx_attr_segments('branch_id')] == branch:
-                    branch_position = int(feat[self.__get_idx_attr_segments("branch_position")])
-                    if branch_position == 2:
-                        h_branch = self.get_element_layer_nodes(
-                            node=feat[self.__get_idx_attr_segments('up_box')], name_attr='h_branch')
-                    break
-            if branch_position == 2:
+            if is_aerial:
                 worksheet.write_merge(15, 15, 0, 7, '', TEXT_NORMAL_LEFT_NULL)
                 worksheet.write_merge(15, 15, 8, self.MAX_COLUMN - 3, '', TEXT_NORMAL_CENTER_NULL)
                 worksheet.write_merge(15, 15, self.MAX_COLUMN - 2, self.MAX_COLUMN - 1, 'H',
@@ -159,7 +163,6 @@ class ProducesReportOSXls:
                                 h_branch,
                                 TEXT_NORMAL_CENTER_BRANCH)
             else:
-
                 worksheet.write_merge(15, 15, 0, 3, '', TEXT_NORMAL_LEFT_TUBO)
                 worksheet.write(15, 4, '', TEXT_NORMAL_CENTER_TUBO)
                 worksheet.write_merge(15, 15, 5, 7, '', TEXT_NORMAL_MERGE_TUBO_L)
