@@ -249,35 +249,37 @@ class ProducesReportOSXls:
             worksheet.write(14, self.MAX_COLUMN, branch_length, TEXT_NORMAL_CENTER_BRANCH)
             worksheet.write_merge(q_row, q_row, 0, self.MAX_COLUMN, 'NOTAS', TEXT_BOLD_CENTER_OBS_0)
             q_row += 1
-            worksheet.write(q_row, 0, 'Obs 1:', TEXT_NORMAL_CENTER_OBS_1)
-            worksheet.write_merge(q_row, q_row, 1, self.MAX_COLUMN, '', TEXT_NORMAL_CENTER_OBS_2)
-            q_row += 1
-            worksheet.write_merge(q_row, q_row, 0, self.MAX_COLUMN, '', TEXT_NORMAL_CENTER_OBS_3)
-            q_row += 1
-            worksheet.write(q_row, 0, 'Obs 2:', TEXT_NORMAL_CENTER_OBS_1)
-            worksheet.write_merge(q_row, q_row, 1, self.MAX_COLUMN, '', TEXT_NORMAL_CENTER_OBS_2)
-            q_row += 1
-            worksheet.write_merge(q_row, q_row, 0, self.MAX_COLUMN, '', TEXT_NORMAL_CENTER_OBS_3)
-            q_row += 1
-            worksheet.write(q_row, 0, 'Obs 3:', TEXT_NORMAL_CENTER_OBS_1)
-            worksheet.write_merge(q_row, q_row, 1, self.MAX_COLUMN, '', TEXT_NORMAL_CENTER_OBS_2)
-            q_row += 1
-            worksheet.write_merge(q_row, q_row, 0, self.MAX_COLUMN, '', TEXT_NORMAL_CENTER_OBS_3)
-            q_row += 1
-            worksheet.write(q_row, 0, 'Obs 4:', TEXT_NORMAL_CENTER_OBS_1)
-            worksheet.write_merge(q_row, q_row, 1, self.MAX_COLUMN, '', TEXT_NORMAL_CENTER_OBS_2)
-            q_row += 1
-            worksheet.write_merge(q_row, q_row, 0, self.MAX_COLUMN, '', TEXT_NORMAL_CENTER_OBS_3)
-            q_row += 1
-            worksheet.write(q_row, 0, 'Obs 5:', TEXT_NORMAL_CENTER_OBS_1)
-            worksheet.write_merge(q_row, q_row, 1, self.MAX_COLUMN, '', TEXT_NORMAL_CENTER_OBS_2)
-            q_row += 1
-            worksheet.write_merge(q_row, q_row, 0, self.MAX_COLUMN, '', TEXT_NORMAL_CENTER_OBS_3)
-            q_row += 1
-            worksheet.write_merge(q_row, q_row, 0, self.MAX_COLUMN, '', TEXT_NORMAL_CENTER_OBS_3)
-            q_row += 1
-            worksheet.write_merge(q_row, q_row, 0, self.MAX_COLUMN, '', TEXT_NORMAL_CENTER_OBS_3)
-            q_row += 1
+            worksheet.write_merge(q_row, q_row + 11, 0, self.MAX_COLUMN, '', TEXT_NOTES_SPACE)
+            q_row += 12
+            # worksheet.write(q_row, 0, 'Obs 1:', TEXT_NORMAL_CENTER_OBS_1)
+            # worksheet.write_merge(q_row, q_row, 1, self.MAX_COLUMN, '', TEXT_NORMAL_CENTER_OBS_2)
+            # q_row += 1
+            # worksheet.write_merge(q_row, q_row, 0, self.MAX_COLUMN, '', TEXT_NORMAL_CENTER_OBS_3)
+            # q_row += 1
+            # worksheet.write(q_row, 0, 'Obs 2:', TEXT_NORMAL_CENTER_OBS_1)
+            # worksheet.write_merge(q_row, q_row, 1, self.MAX_COLUMN, '', TEXT_NORMAL_CENTER_OBS_2)
+            # q_row += 1
+            # worksheet.write_merge(q_row, q_row, 0, self.MAX_COLUMN, '', TEXT_NORMAL_CENTER_OBS_3)
+            # q_row += 1
+            # worksheet.write(q_row, 0, 'Obs 3:', TEXT_NORMAL_CENTER_OBS_1)
+            # worksheet.write_merge(q_row, q_row, 1, self.MAX_COLUMN, '', TEXT_NORMAL_CENTER_OBS_2)
+            # q_row += 1
+            # worksheet.write_merge(q_row, q_row, 0, self.MAX_COLUMN, '', TEXT_NORMAL_CENTER_OBS_3)
+            # q_row += 1
+            # worksheet.write(q_row, 0, 'Obs 4:', TEXT_NORMAL_CENTER_OBS_1)
+            # worksheet.write_merge(q_row, q_row, 1, self.MAX_COLUMN, '', TEXT_NORMAL_CENTER_OBS_2)
+            # q_row += 1
+            # worksheet.write_merge(q_row, q_row, 0, self.MAX_COLUMN, '', TEXT_NORMAL_CENTER_OBS_3)
+            # q_row += 1
+            # worksheet.write(q_row, 0, 'Obs 5:', TEXT_NORMAL_CENTER_OBS_1)
+            # worksheet.write_merge(q_row, q_row, 1, self.MAX_COLUMN, '', TEXT_NORMAL_CENTER_OBS_2)
+            # q_row += 1
+            # worksheet.write_merge(q_row, q_row, 0, self.MAX_COLUMN, '', TEXT_NORMAL_CENTER_OBS_3)
+            # q_row += 1
+            # worksheet.write_merge(q_row, q_row, 0, self.MAX_COLUMN, '', TEXT_NORMAL_CENTER_OBS_3)
+            # q_row += 1
+            # worksheet.write_merge(q_row, q_row, 0, self.MAX_COLUMN, '', TEXT_NORMAL_CENTER_OBS_3)
+            # q_row += 1
             worksheet.write_merge(q_row, q_row, 0, 5, 'Emissão:', TEXT_NORMAL_LEFT_EMIS)
             worksheet.write_merge(q_row, q_row, 6, 9, 'Liberação:         /         /             ',
                                   TEXT_NORMAL_CENTER_LIB)
@@ -463,6 +465,9 @@ NUMBER_NORMAL_CENTER_BODY_C_0 = easyxf('font: name Arial, height 160; align: ver
                                        'borders: left 1, right 1, bottom 1;', num_format_str='#,##0.0')
 TEXT_NORMAL_CENTER_BODY_R = easyxf('font: name Arial, height 160; align: vert center, horiz center; '
                                    'borders: left 1, right 2, bottom 1;', num_format_str='#,##0.00')
+TEXT_NOTES_SPACE = easyxf('font: name Arial, height 240, bold True; '
+                                'align: vert center, horiz center; '
+                                'borders: left 2, right 2, top 2, bottom 2;')
 TEXT_BOLD_CENTER_OBS_0 = easyxf('font: name Arial, height 240, bold True; '
                                 'align: vert center, horiz center; '
                                 'borders: left 2, right 2, top 2, bottom 0;')
