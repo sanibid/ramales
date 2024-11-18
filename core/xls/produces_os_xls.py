@@ -239,11 +239,9 @@ class ProducesReportOSXls:
                                     NUMBER_NORMAL_CENTER_BODY_C_0)
                     worksheet.write(row, 14, self.__str_to_float_locale(feat[self.__get_idx_attr_segments('h_tq')]),
                                     NUMBER_NORMAL_CENTER_BODY_C)
-                    # TODO: Faltando isso no novo banco
-                    # worksheet.write(row, 15, str(self.get_element_layer_nodes(
-                    #     node=feat[self.__get_idx_attr_segments('up_box')], name_attr='comments'))
-                    #                 .replace('NULL', '').replace('0.0', ''),
-                    #                 TEXT_NORMAL_CENTER_BODY_R)
+                    worksheet.write(row, 15, str(feat[self.__get_idx_attr_segments('comments')])
+                                    .replace('NULL', '').replace('0.0', ''),
+                                    TEXT_NORMAL_CENTER_BODY_R)
                     row += 1
             worksheet.write(14, self.MAX_COLUMN, branch_length, TEXT_NORMAL_CENTER_BRANCH)
             worksheet.write_merge(q_row, q_row, 0, self.MAX_COLUMN, 'NOTAS', TEXT_BOLD_CENTER_OBS_0)
