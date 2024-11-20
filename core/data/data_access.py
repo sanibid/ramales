@@ -2,6 +2,8 @@ from abc import ABC, abstractmethod
 
 from qgis.core import QgsProject
 
+from typing import Tuple
+
 
 class DAO(ABC):
     KEY_DONE = 'done'
@@ -118,3 +120,97 @@ class CalculationInfoDAO(DAO):
     @classmethod
     def set_status_calculation(cls, status: bool):
         return cls.proj.writeEntryBool(cls.SCOPE, cls.KEY_CALCULATION_STATUS, status)
+
+
+class CostsDAO(DAO):
+    SCOPE = 'RamalesCostsScope'
+    KEY_TRENCH_WIDTH = 'TRENCH_WIDTH'
+    KEY_CRADLE_HEIGHT = 'CRADLE_HEIGHT'
+    KEY_WRAP_HEIGHT = 'WRAP_HEIGHT'
+    KEY_SOIL_PERCENT = 'SOIL_PERCENT'
+    KEY_ROCK_PERCENT = 'ROCK_PERCENT'
+    KEY_MANUAL_PERCENT = 'MANUAL_PERCENT'
+    KEY_MECHANICAL_PERCENT = 'MECHANICAL_PERCENT'
+    KEY_OWN_PERCENT = 'OWN_PERCENT'
+    KEY_CONTRIBUTION_PERCENT = 'CONTRIBUTION_PERCENT'
+    KEY_DISPOSAL_DISTANCE = 'DISPOSAL_DISTANCE'
+
+    @classmethod
+    def get_trench_width(cls) -> Tuple[float, bool]:
+        return cls.proj.readDoubleEntry(cls.SCOPE, cls.KEY_TRENCH_WIDTH)
+
+    @classmethod
+    def set_trench_width(cls, trench_width: float) -> bool:
+        return cls.proj.writeEntryDouble(cls.SCOPE, cls.KEY_TRENCH_WIDTH, trench_width)
+
+    @classmethod
+    def get_cradle_height(cls) -> Tuple[float, bool]:
+        return cls.proj.readDoubleEntry(cls.SCOPE, cls.KEY_CRADLE_HEIGHT)
+
+    @classmethod
+    def set_cradle_height(cls, cradle_height: float) -> bool:
+        return cls.proj.writeEntryDouble(cls.SCOPE, cls.KEY_CRADLE_HEIGHT, cradle_height)
+
+    @classmethod
+    def get_wrap_height(cls) -> Tuple[float, bool]:
+        return cls.proj.readDoubleEntry(cls.SCOPE, cls.KEY_WRAP_HEIGHT)
+
+    @classmethod
+    def set_wrap_height(cls, wrap_height: float) -> bool:
+        return cls.proj.writeEntryDouble(cls.SCOPE, cls.KEY_WRAP_HEIGHT, wrap_height)
+
+    @classmethod
+    def get_soil_percent(cls) -> Tuple[int, bool]:
+        return cls.proj.readNumEntry(cls.SCOPE, cls.KEY_SOIL_PERCENT)
+
+    @classmethod
+    def set_soil_percent(cls, soil_percent: int) -> bool:
+        return cls.proj.writeEntry(cls.SCOPE, cls.KEY_SOIL_PERCENT, soil_percent)
+
+    @classmethod
+    def get_rock_percent(cls) -> Tuple[int, bool]:
+        return cls.proj.readNumEntry(cls.SCOPE, cls.KEY_ROCK_PERCENT)
+
+    @classmethod
+    def set_rock_percent(cls, rock_percent: float) -> bool:
+        return cls.proj.writeEntry(cls.SCOPE, cls.KEY_ROCK_PERCENT, rock_percent)
+
+    @classmethod
+    def get_manual_percent(cls) -> Tuple[int, bool]:
+        return cls.proj.readNumEntry(cls.SCOPE, cls.KEY_MANUAL_PERCENT)
+
+    @classmethod
+    def set_manual_percent(cls, manual_percent: float) -> bool:
+        return cls.proj.writeEntry(cls.SCOPE, cls.KEY_MANUAL_PERCENT, manual_percent)
+
+    @classmethod
+    def get_mechanical_percent(cls) -> Tuple[int, bool]:
+        return cls.proj.readNumEntry(cls.SCOPE, cls.KEY_MECHANICAL_PERCENT)
+
+    @classmethod
+    def set_mechanical_percent(cls, mechanical_percent: float) -> bool:
+        return cls.proj.writeEntry(cls.SCOPE, cls.KEY_MECHANICAL_PERCENT, mechanical_percent)
+
+    @classmethod
+    def get_own_percent(cls) -> Tuple[int, bool]:
+        return cls.proj.readNumEntry(cls.SCOPE, cls.KEY_OWN_PERCENT)
+
+    @classmethod
+    def set_own_percent(cls, own_percent: float) -> bool:
+        return cls.proj.writeEntry(cls.SCOPE, cls.KEY_OWN_PERCENT, own_percent)
+
+    @classmethod
+    def get_contribution_percent(cls) -> Tuple[int, bool]:
+        return cls.proj.readNumEntry(cls.SCOPE, cls.KEY_CONTRIBUTION_PERCENT)
+
+    @classmethod
+    def set_contribution_percent(cls, contribution_percent: float) -> bool:
+        return cls.proj.writeEntry(cls.SCOPE, cls.KEY_CONTRIBUTION_PERCENT, contribution_percent)
+
+    @classmethod
+    def get_disposal_distance(cls) -> Tuple[int, bool]:
+        return cls.proj.readDoubleEntry(cls.SCOPE, cls.KEY_DISPOSAL_DISTANCE)
+
+    @classmethod
+    def set_disposal_distance(cls, disposal_distance: float) -> bool:
+        return cls.proj.writeEntryDouble(cls.SCOPE, cls.KEY_DISPOSAL_DISTANCE, disposal_distance)
