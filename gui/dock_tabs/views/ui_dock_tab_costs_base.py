@@ -1,6 +1,6 @@
 from PyQt5.QtCore import Qt, QCoreApplication
 from PyQt5.QtWidgets import QGroupBox, QGridLayout, QPushButton, QVBoxLayout, QSpinBox, QDoubleSpinBox, QLabel, \
-    QCheckBox
+    QCheckBox, QHBoxLayout, QFormLayout
 
 from ...custom_widgets.widgets import ThousandsSeparatorSpinBox
 from ..base.ui_dock_tab_base import DockTab
@@ -85,11 +85,18 @@ class DockTabCostsBase(DockTab):
         self.dsb_disposal_distance.setDecimals(2)
         self.dsb_disposal_distance.setSuffix(self.translate(' km'))
 
+        self.cb_show_data_costs = QCheckBox()
+        self.pb_report_costs = QPushButton()
+        self.pb_generate_xls_costs = QPushButton()
+
         self.vb_layoutCosts = QVBoxLayout()
         self.gl_layoutCostsPipe = QGridLayout()
         self.gl_layoutCostsTerrain = QGridLayout()
+        self.hb_layoutShowCosts = QHBoxLayout()
+        self.gl_layoutDataCosts = QGridLayout()
         self.gb_costsPipe = QGroupBox()
         self.gb_costsTerrain = QGroupBox()
+        self.gb_DataCosts = QGroupBox()
 
         self.set_logic()
 
@@ -151,6 +158,24 @@ class DockTabCostsBase(DockTab):
 
         self.gb_costsTerrain.setLayout(self.gl_layoutCostsPipe)
         self.vb_layoutCosts.addWidget(self.gb_costsTerrain)
+        self.cb_show_data_costs.setText(self.translate('Ver custos'))
+        self.pb_report_costs.setText(self.translate('Editar'))
+        self.pb_report_costs.setFixedSize(100, 25)
+        self.pb_generate_xls_costs.setText(self.translate('Gerar xls custos'))
+        self.pb_generate_xls_costs.setFixedSize(100, 25)
+        self.hb_layoutShowCosts.addWidget(self.cb_show_data_costs)
+        self.hb_layoutShowCosts.addWidget(self.pb_report_costs)
+        self.vb_layoutCosts.addLayout(self.hb_layoutShowCosts)
+        self.gl_layoutDataCosts.addWidget(QLabel(self.translate('Total serviços')), 0, 0)
+        self.gl_layoutDataCosts.addWidget(QLabel(''), 0, 1)
+        self.gl_layoutDataCosts.addWidget(QLabel(self.translate('Total materiais')), 1, 0)
+        self.gl_layoutDataCosts.addWidget(QLabel(''), 1, 1)
+        self.gl_layoutDataCosts.addWidget(QLabel(self.translate('Total geral')), 2, 0)
+        self.gl_layoutDataCosts.addWidget(QLabel(''), 2, 1)
+        self.gl_layoutDataCosts.addWidget(self.pb_generate_xls_costs, 3, 1)
+        self.gb_DataCosts.setLayout(self.gl_layoutDataCosts)
+        self.vb_layoutCosts.addWidget(self.gb_DataCosts)
+        self.gb_DataCosts.hide()
 
         spinbox_pairs = [
             (self.sb_soil, self.sb_rock),

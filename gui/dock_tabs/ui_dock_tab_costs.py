@@ -29,7 +29,7 @@ class DockTabCosts(DockTabCostsBase):
         self.dsb_trench_width.valueChanged.connect(self.on_data_changed)
         self.dsb_disposal_distance.valueChanged.connect(self.on_data_changed)
 
-        # self.rb_show_data_costs.toggled.connect(self.on_rb_costs_toggle)
+        self.cb_show_data_costs.toggled.connect(self.on_cb_costs_toggle)
         # self.repOutCosts.pb_saveEditCosts.clicked.connect(self.on_services_cost_update)
 
     def load_data(self):
@@ -73,6 +73,12 @@ class DockTabCosts(DockTabCostsBase):
     def reload(self):
         self.loaded_from_db = False
         self.load_data()
+
+    def on_cb_costs_toggle(self, checked: bool):
+        if self.cb_show_data_costs.isChecked():
+            self.gb_DataCosts.show()
+        else:
+            self.gb_DataCosts.hide()
 
     def on_data_changed(self):
         if not self.loaded_from_db:
