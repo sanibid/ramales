@@ -54,6 +54,7 @@ class LanguageDAO(DAO):
 class LayersInfoDAO(DAO):
     SCOPE = 'RamalesLayersInfoScope'
     KEY_BLOCKS_LAYER = 'BLOCKS_LAYER'
+    KEY_RESUME_FRAME_LAYER = 'RESUME_FRAME_LAYER'
     KEY_NODES_LAYER = 'NODES_LAYER'
     KEY_SEGMENTS_LAYER = 'SEGMENTS_LAYER'
     KEY_LINEAR_OBSTACLES_LAYER = 'LINEAR_OBSTACLES_LAYER'
@@ -63,6 +64,10 @@ class LayersInfoDAO(DAO):
     @classmethod
     def get_blocks_layer_id(cls):
         return cls.proj.readEntry(cls.SCOPE, cls.KEY_BLOCKS_LAYER, None)
+
+    @classmethod
+    def get_resume_frame_layer_id(cls):
+        return cls.proj.readEntry(cls.SCOPE, cls.KEY_RESUME_FRAME_LAYER, None)
 
     @classmethod
     def get_nodes_layer_id(cls):
@@ -87,6 +92,10 @@ class LayersInfoDAO(DAO):
     @classmethod
     def set_blocks_layer_id(cls, blocks_layer):
         return cls.proj.writeEntry(cls.SCOPE, cls.KEY_BLOCKS_LAYER, blocks_layer)
+
+    @classmethod
+    def set_resume_frame_layer_id(cls, resume_frame_layer):
+        return cls.proj.writeEntry(cls.SCOPE, cls.KEY_RESUME_FRAME_LAYER, resume_frame_layer)
 
     @classmethod
     def set_nodes_layer_id(cls, nodes_layer):

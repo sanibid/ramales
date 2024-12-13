@@ -4,6 +4,7 @@ from dataclasses import dataclass
 @dataclass
 class LayersData:
     BLOCKS_LAYER_ID: str = ''
+    RESUME_FRAME_LAYER_ID: str = ''
     NODES_LAYER_ID: str = ''
     SEGMENTS_LAYER_ID: str = ''
     LINEAR_OBSTACLES_LAYER_ID: str = ''
