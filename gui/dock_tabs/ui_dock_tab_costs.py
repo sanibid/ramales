@@ -28,6 +28,8 @@ class DockTabCosts(DockTabCostsBase):
         self.dsb_cradle_height.valueChanged.connect(self.on_data_changed)
         self.dsb_trench_width.valueChanged.connect(self.on_data_changed)
         self.dsb_disposal_distance.valueChanged.connect(self.on_data_changed)
+        self.dsb_soil_bulking.valueChanged.connect(self.on_data_changed)
+        self.dsb_rock_swelling.valueChanged.connect(self.on_data_changed)
 
         self.cb_show_data_costs.toggled.connect(self.on_cb_costs_toggle)
         # self.repOutCosts.pb_saveEditCosts.clicked.connect(self.on_services_cost_update)
@@ -52,6 +54,8 @@ class DockTabCosts(DockTabCostsBase):
             self.dsb_cradle_height.setValue(self.costs.CRADLE_HEIGHT)
             self.dsb_trench_width.setValue(self.costs.TRENCH_WIDTH)
             self.dsb_disposal_distance.setValue(self.costs.DISPOSAL_DISTANCE)
+            self.dsb_rock_swelling.setValue(self.costs.ROCK_SWELLING)
+            self.dsb_soil_bulking.setValue(self.costs.SOIL_BULKING)
         else:
             self.sb_soil.setValue(100)
             self.sb_rock.setValue(0)
@@ -63,6 +67,8 @@ class DockTabCosts(DockTabCostsBase):
             self.dsb_cradle_height.setValue(0)
             self.dsb_trench_width.setValue(0)
             self.dsb_disposal_distance.setValue(0)
+            self.dsb_rock_swelling.setValue(1)
+            self.dsb_soil_bulking.setValue(1)
 
     def load_costs_values(self):
         pass
@@ -93,7 +99,9 @@ class DockTabCosts(DockTabCostsBase):
             WRAP_HEIGHT=self.dsb_wrap_height.value(),
             CRADLE_HEIGHT=self.dsb_cradle_height.value(),
             TRENCH_WIDTH=self.dsb_trench_width.value(),
-            DISPOSAL_DISTANCE=self.dsb_disposal_distance.value()
+            DISPOSAL_DISTANCE=self.dsb_disposal_distance.value(),
+            SOIL_BULKING=self.dsb_soil_bulking.value(),
+            ROCK_SWELLING=self.dsb_rock_swelling.value()
         )
         # if self.costs is None:
         #     tmp_costs.services = Costs().services

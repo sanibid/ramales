@@ -134,6 +134,8 @@ class CostsDAO(DAO):
     KEY_OWN_PERCENT = 'OWN_PERCENT'
     KEY_CONTRIBUTION_PERCENT = 'CONTRIBUTION_PERCENT'
     KEY_DISPOSAL_DISTANCE = 'DISPOSAL_DISTANCE'
+    KEY_SOIL_BULKING = 'SOIL_BULKING'
+    KEY_ROCK_SWELLING = 'ROCK_SWELLING'
 
     @classmethod
     def get_trench_width(cls) -> Tuple[float, bool]:
@@ -172,7 +174,7 @@ class CostsDAO(DAO):
         return cls.proj.readNumEntry(cls.SCOPE, cls.KEY_ROCK_PERCENT)
 
     @classmethod
-    def set_rock_percent(cls, rock_percent: float) -> bool:
+    def set_rock_percent(cls, rock_percent: int) -> bool:
         return cls.proj.writeEntry(cls.SCOPE, cls.KEY_ROCK_PERCENT, rock_percent)
 
     @classmethod
@@ -180,7 +182,7 @@ class CostsDAO(DAO):
         return cls.proj.readNumEntry(cls.SCOPE, cls.KEY_MANUAL_PERCENT)
 
     @classmethod
-    def set_manual_percent(cls, manual_percent: float) -> bool:
+    def set_manual_percent(cls, manual_percent: int) -> bool:
         return cls.proj.writeEntry(cls.SCOPE, cls.KEY_MANUAL_PERCENT, manual_percent)
 
     @classmethod
@@ -188,7 +190,7 @@ class CostsDAO(DAO):
         return cls.proj.readNumEntry(cls.SCOPE, cls.KEY_MECHANICAL_PERCENT)
 
     @classmethod
-    def set_mechanical_percent(cls, mechanical_percent: float) -> bool:
+    def set_mechanical_percent(cls, mechanical_percent: int) -> bool:
         return cls.proj.writeEntry(cls.SCOPE, cls.KEY_MECHANICAL_PERCENT, mechanical_percent)
 
     @classmethod
@@ -196,7 +198,7 @@ class CostsDAO(DAO):
         return cls.proj.readNumEntry(cls.SCOPE, cls.KEY_OWN_PERCENT)
 
     @classmethod
-    def set_own_percent(cls, own_percent: float) -> bool:
+    def set_own_percent(cls, own_percent: int) -> bool:
         return cls.proj.writeEntry(cls.SCOPE, cls.KEY_OWN_PERCENT, own_percent)
 
     @classmethod
@@ -204,13 +206,30 @@ class CostsDAO(DAO):
         return cls.proj.readNumEntry(cls.SCOPE, cls.KEY_CONTRIBUTION_PERCENT)
 
     @classmethod
-    def set_contribution_percent(cls, contribution_percent: float) -> bool:
+    def set_contribution_percent(cls, contribution_percent: int) -> bool:
         return cls.proj.writeEntry(cls.SCOPE, cls.KEY_CONTRIBUTION_PERCENT, contribution_percent)
 
     @classmethod
-    def get_disposal_distance(cls) -> Tuple[int, bool]:
+    def get_disposal_distance(cls) -> Tuple[float, bool]:
         return cls.proj.readDoubleEntry(cls.SCOPE, cls.KEY_DISPOSAL_DISTANCE)
 
     @classmethod
     def set_disposal_distance(cls, disposal_distance: float) -> bool:
         return cls.proj.writeEntryDouble(cls.SCOPE, cls.KEY_DISPOSAL_DISTANCE, disposal_distance)
+
+    @classmethod
+    def get_soil_bulking(cls) -> Tuple[float, bool]:
+        return cls.proj.readDoubleEntry(cls.SCOPE, cls.KEY_SOIL_BULKING)
+
+    @classmethod
+    def set_soil_bulking(cls, soil_bulking: float) -> bool:
+        return cls.proj.writeEntryDouble(cls.SCOPE, cls.KEY_SOIL_BULKING, soil_bulking)
+
+    @classmethod
+    def get_rock_swelling(cls) -> Tuple[float, bool]:
+        return cls.proj.readDoubleEntry(cls.SCOPE, cls.KEY_ROCK_SWELLING)
+
+    @classmethod
+    def set_rock_swelling(cls, rock_swelling: float) -> bool:
+        return cls.proj.writeEntryDouble(cls.SCOPE, cls.KEY_ROCK_SWELLING, rock_swelling)
+
