@@ -88,5 +88,26 @@
     "rev_date": "rev_data",
     "total_length": "extensao_total",
     "os_name": "os_nome"
+  }],
+  "resume_frame": ["quadro_resumo", {
+    "id": "id",
+    "ext_trechos_DN100(m)": "ext_trechos_DN100(m)",
+    "ext_TQ_DN100": "ext_TQ_DN100",
+    "ext_total_DN100(m)\\n": "ext_total_DN100(m)\\n",
+    "ext_trechos_DN150(m)\\n": "ext_trechos_DN150(m)\\n",
+    "ext_TQ_DN150(m)\\n": "ext_TQ_DN150(m)\\n",
+    "ext_total_DN150(m)\\n": "ext_total_DN150(m)\\n",
+    "ext_total(m)\\n": "ext_total(m)\\n",
+    "cx_Ø40\\n": "cx_Ø40\\n",
+    "cx_Ø60\\n": "cx_Ø60\\n",
+    "cx_ret_tijolinho\\n": "cx_ret_tijolinho\\n",
+    "cx_ret_concreto\\n": "cx_ret_concreto\\n",
+    "TIL\\n": "TIL\\n",
+    "total_inspeção\\n": "total_inspeção\\n",
+    "selim\\n": "C90º\\n",
+    "TE\\n": "TE\\n",
+    "imoveis\\n": "imoveis\\n",
+    "economias\\n": "economias\\n",
+    "faixa_servidão": "faixa_servidão"
   }]
 }

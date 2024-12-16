@@ -3,7 +3,7 @@ import os
 import decimal
 
 from PyQt5.QtCore import QLocale, QVariant
-from PyQt5.QtWidgets import QDialog, QTableWidgetItem
+from PyQt5.QtWidgets import QDialog, QTableWidgetItem, QDoubleSpinBox
 from qgis.PyQt.QtCore import QCoreApplication
 from qgis._core import QgsProject, QgsApplication, QgsVectorLayer, QgsDefaultValue
 
@@ -170,9 +170,14 @@ class BlockViewDialog(QDialog, Ui_BlockDialog):
                 self.__float_to_str_locale(
                     segments[i].attributes()[self.__get_idx_attr(segments_lyr, 'segments', 'unevenness_segment')],
                     decimals=1)))  # node('slopeSec'))))
-            self.tableWidget.setItem(i, 15, QTableWidgetItem(
-                self.check(segments[i].attributes()[
-                               self.__get_idx_attr(segments_lyr, 'segments', 'pvc_diameter')])))  # 'pvc_diam'))))
+            dsb_pcv = QDoubleSpinBox()
+            dsb_pcv.setDecimals(0)
+            dsb_pcv.setSingleStep(10.00)
+            dsb_pcv.setRange(100.00, 160.00)
+            dsb_pcv.setValue(150.0)
+            dsb_pcv.setValue(segments[i].attributes()[
+                               self.__get_idx_attr(segments_lyr, 'segments', 'pvc_diameter')])
+            self.tableWidget.setCellWidget(i, 15, dsb_pcv)  # 'pvc_diam'))))
             self.tableWidget.setItem(i, 16, QTableWidgetItem(
                 self.concat1(
                     self.__get_key_map_of_values(layer=segments_lyr,
@@ -380,6 +385,8 @@ class BlockViewDialog(QDialog, Ui_BlockDialog):
                                           self.__str_to_float_locale(self.getTableValue(row, 'dwnBrLevel')))
             segments.changeAttributeValue(segment.id(), self.__get_idx_attr(segments, 'segments', 'unevenness_segment'),
                                           self.__str_to_float_locale(self.getTableValue(row, 'slopeSection')))
+            segments.changeAttributeValue(segment.id(), self.__get_idx_attr(segments, 'segments', 'pvc_diameter'),
+                                          self.__str_to_float_locale(self.getTableValuePvcDiameter(row, 'pvc_diameter')))
             row += 1
         segments.commitChanges()
         self.tableWidget.blockSignals(False)
@@ -418,6 +425,12 @@ class BlockViewDialog(QDialog, Ui_BlockDialog):
         index = self.getColumnIndex(columnName)
         item = self.tableWidget.item(row, index)
         return item.text() if item else None
+
+    def getTableValuePvcDiameter(self, row, columnName):
+        """ Returns value from single cell from table """
+        index = self.getColumnIndex(columnName)
+        item = self.tableWidget.cellWidget(row, index)
+        return item.value() if item else None
 
     def getColumnIndex(self, columnName):
         return self.headers.index(self.tr(columnName))
