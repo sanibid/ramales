@@ -88,7 +88,9 @@ class ProjectDataManager:
             MECHANICAL_PERCENT=CostsDAO.get_mechanical_percent()[0],
             OWN_PERCENT=CostsDAO.get_own_percent()[0],
             CONTRIBUTION_PERCENT=CostsDAO.get_contribution_percent()[0],
-            DISPOSAL_DISTANCE=CostsDAO.get_disposal_distance()[0]
+            DISPOSAL_DISTANCE=CostsDAO.get_disposal_distance()[0],
+            SOIL_BULKING=CostsDAO.get_soil_bulking()[0],
+            ROCK_SWELLING=CostsDAO.get_rock_swelling()[0]
         )
 
     @staticmethod
@@ -102,7 +104,9 @@ class ProjectDataManager:
                    CostsDAO.set_mechanical_percent(costs.MECHANICAL_PERCENT) and
                    CostsDAO.set_own_percent(costs.OWN_PERCENT) and
                    CostsDAO.set_contribution_percent(costs.CONTRIBUTION_PERCENT) and
-                   CostsDAO.set_disposal_distance(costs.DISPOSAL_DISTANCE))
+                   CostsDAO.set_disposal_distance(costs.DISPOSAL_DISTANCE) and
+                   CostsDAO.set_soil_bulking(costs.SOIL_BULKING) and
+                   CostsDAO.set_rock_swelling(costs.ROCK_SWELLING))
         if success:
             CostsDAO.set_done(True)
             return True

@@ -25,21 +25,24 @@ class DockTabCostsBase(DockTab):
         self.lb_txt_sizing = QLabel()
         self.lb_trench_width = QLabel()
         self.dsb_trench_width = QDoubleSpinBox()
-        self.dsb_trench_width.setMaximum(maximum)
+        self.dsb_trench_width.setMaximum(1)
         self.dsb_trench_width.setDecimals(2)
         self.dsb_trench_width.setSuffix(self.translate(' m'))
+        self.dsb_trench_width.setSingleStep(0.1)
 
         self.lb_cradle_height = QLabel()
         self.dsb_cradle_height = QDoubleSpinBox()
         self.dsb_cradle_height.setMaximum(maximum)
         self.dsb_cradle_height.setDecimals(2)
         self.dsb_cradle_height.setSuffix(self.translate(' m'))
+        self.dsb_cradle_height.setSingleStep(0.05)
 
         self.lb_wrap_height = QLabel()
         self.dsb_wrap_height = QDoubleSpinBox()
         self.dsb_wrap_height.setMaximum(maximum)
         self.dsb_wrap_height.setDecimals(2)
         self.dsb_wrap_height.setSuffix(self.translate(' m'))
+        self.dsb_wrap_height.setSingleStep(0.05)
 
         # Tipo de solo
         self.lb_txt_soil = QLabel()
@@ -52,6 +55,19 @@ class DockTabCostsBase(DockTab):
         self.sb_rock = QSpinBox()
         self.sb_rock.setMaximum(maxPerc)
         self.sb_rock.setSuffix(self.translate(' %'))
+
+        # Tipo de solo, empolamento
+        self.lb_soil_bulking = QLabel()
+        self.dsb_soil_bulking = QDoubleSpinBox()
+        self.dsb_soil_bulking.setMaximum(100)
+        self.dsb_soil_bulking.setDecimals(2)
+        self.dsb_soil_bulking.setSingleStep(0.1)
+
+        self.lb_rock_swelling = QLabel()
+        self.dsb_rock_swelling = QDoubleSpinBox()
+        self.dsb_rock_swelling.setMaximum(100)
+        self.dsb_rock_swelling.setDecimals(2)
+        self.dsb_rock_swelling.setSingleStep(0.1)
 
         # Tipo de escavação
         self.lb_txt_excavation = QLabel()
@@ -82,8 +98,9 @@ class DockTabCostsBase(DockTab):
         self.lb_disposal_distance = QLabel()
         self.dsb_disposal_distance = QDoubleSpinBox()
         self.dsb_disposal_distance.setMaximum(maximum)
-        self.dsb_disposal_distance.setDecimals(2)
+        self.dsb_disposal_distance.setDecimals(0)
         self.dsb_disposal_distance.setSuffix(self.translate(' km'))
+        self.dsb_disposal_distance.setSingleStep(5)
 
         self.cb_show_data_costs = QCheckBox()
         self.pb_report_costs = QPushButton()
@@ -123,12 +140,17 @@ class DockTabCostsBase(DockTab):
         self.lb_txt_soil.setFont(self.utils.formatBoldText())
         self.gl_layoutCostsPipe.addWidget(self.lb_txt_soil, 4, 0, 1, 2)
         self.lb_soil.setText(self.translate('Solo'))
+        self.lb_soil_bulking.setText(self.translate('Empolamento Solo'))
         self.gl_layoutCostsPipe.addWidget(self.lb_soil, 5, 0)
         self.gl_layoutCostsPipe.addWidget(self.sb_soil, 5, 1)
+        self.gl_layoutCostsPipe.addWidget(self.lb_soil_bulking, 5, 2)
+        self.gl_layoutCostsPipe.addWidget(self.dsb_soil_bulking, 5, 3)
         self.lb_rock.setText(self.translate('Rocha'))
         self.gl_layoutCostsPipe.addWidget(self.lb_rock, 6, 0)
         self.gl_layoutCostsPipe.addWidget(self.sb_rock, 6, 1)
-
+        self.lb_rock_swelling.setText(self.translate('Empolamento Rocha'))
+        self.gl_layoutCostsPipe.addWidget(self.lb_rock_swelling, 6, 2)
+        self.gl_layoutCostsPipe.addWidget(self.dsb_rock_swelling, 6, 3)
         self.lb_txt_excavation.setText(self.translate('Tipo de escavação:'))
         self.lb_txt_excavation.setFont(self.utils.formatBoldText())
         self.gl_layoutCostsPipe.addWidget(self.lb_txt_excavation, 7, 0, 1, 2)
