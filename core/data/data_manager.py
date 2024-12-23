@@ -1,4 +1,4 @@
-from .data_access import LayersInfoDAO, CalculationInfoDAO, LanguageDAO, LayerRasterDAO, CostsDAO
+from .data_access import LayersInfoDAO, CalculationInfoDAO, LanguageDAO, LayerRasterDAO, CostsDAO, SegmentsDAO
 from .models import LayersData, Language, LayerRaster, Costs
 
 
@@ -113,3 +113,12 @@ class ProjectDataManager:
     @staticmethod
     def is_costs_loaded():
         return CostsDAO.is_done()[0]
+
+    @classmethod
+    def get_all_segments(cls):
+        segs = SegmentsDAO(
+            segments_layer_id=cls.get_layers_id().SEGMENTS_LAYER_ID,
+            nodes_layer_id=cls.get_layers_id().NODES_LAYER_ID,
+            lang=cls.get_language_project().LANGUAGE
+        )
+        return segs.get_segments()
