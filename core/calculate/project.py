@@ -6,6 +6,7 @@ from qgis.core import *
 from ..data.data_manager import ProjectDataManager
 from ..calculate.BlockView import BlockViewDialog
 
+RESUME_FRAME_LAYER_NAME = 'RESUME_FRAME_LAYER'
 BLOCKS_LAYER_NAME = 'BLOCKS_LAYER'
 NODES_LAYER_NAME = 'NODES_LAYER'
 SEGMENTS_LAYER_NAME = 'SEGMENTS_LAYER'
@@ -125,6 +126,10 @@ class Project:
             return lyr
         return None
 
+    def getResumeFrameLayer(self):
+        """ Returns current SEGEMENTS layer """
+        return self.getLayer(ProjectDataManager.get_layers_id().RESUME_FRAME_LAYER_ID)
+
     def getSegmentsLayer(self):
         """ Returns current SEGEMENTS layer """
         return self.getLayer(ProjectDataManager.get_layers_id().SEGMENTS_LAYER_ID)
@@ -148,6 +153,12 @@ class Project:
     def setValue(self, key, value):
         """ Set project key->value variable """
         self.proj.writeEntry(self.plugin_id, key, value)
+
+    def setResumeFrameLayer(self, layerName):
+        """ Sets RESUME layer """
+        self.disconnectSignals(RESUME_FRAME_LAYER_NAME)
+        self.setValue(RESUME_FRAME_LAYER_NAME, layerName)
+        self.connectBlockSignals()
     
     def setBlocksLayer(self, layerName):
         """ Sets BLOCKS layer """

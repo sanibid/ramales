@@ -11,6 +11,8 @@ class LayersData:
     LINEAR_OBSTACLES_LAYER_ID: str = ''
     POINT_OBSTACLES_LAYER_ID: str = ''
     ACCESSORIES_LAYER_ID: str = ''
+    BUILDINGS_LAYER_ID: str = ''
+    SERVICE_LANE_LAYER_ID: str = ''
 
 
 @dataclass

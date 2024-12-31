@@ -37,7 +37,9 @@ class ProjectDataManager:
             SEGMENTS_LAYER_ID='trecho_d3a55605_34c0_4fce_a9ab_685eef1bb866',  #LayersInfoDAO.get_segments_layer_id()[0],
             LINEAR_OBSTACLES_LAYER_ID='obst_lineares_e7424001_fe89_4547_8fad_c45ef246262f',
             #LayersInfoDAO.get_linear_obstacles_layer_id()[0],
-            POINT_OBSTACLES_LAYER_ID='obst_pontuais_0eb3c544_d0f7_4b6a_9f9f_f1b5e41f2a18'
+            POINT_OBSTACLES_LAYER_ID='obst_pontuais_0eb3c544_d0f7_4b6a_9f9f_f1b5e41f2a18',
+            BUILDINGS_LAYER_ID='edificacoes_ee717607_c14e_4793_990d_cd8c4c498995',
+            SERVICE_LANE_LAYER_ID='faixa_servid_o_cb90a4c1_d8c7_425e_aef7_fe4dbdb18ce4'
             #LayersInfoDAO.get_point_obstacles_layer_id()[0]
         )
 
@@ -45,6 +47,8 @@ class ProjectDataManager:
     def save_layers_id(layers_data: LayersData):
         sucess = (LayersInfoDAO.set_blocks_layer_id(layers_data.BLOCKS_LAYER_ID) and
                   LayersInfoDAO.set_resume_frame_layer_id(layers_data.RESUME_FRAME_LAYER_ID) and
+                  LayersInfoDAO.set_resume_frame_layer_id(layers_data.BUILDINGS_LAYER_ID) and
+                  LayersInfoDAO.set_resume_frame_layer_id(layers_data.SERVICE_LANE_LAYER_ID) and
                   LayersInfoDAO.set_nodes_layer_id(layers_data.NODES_LAYER_ID) and
                   LayersInfoDAO.set_segments_layer_id(layers_data.SEGMENTS_LAYER_ID) and
                   LayersInfoDAO.set_linear_obstacles_layer_id(layers_data.LINEAR_OBSTACLES_LAYER_ID) and

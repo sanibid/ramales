@@ -64,6 +64,8 @@ class LayersInfoDAO(DAO):
     KEY_LINEAR_OBSTACLES_LAYER = 'LINEAR_OBSTACLES_LAYER'
     KEY_POINT_OBSTACLES_LAYER = 'POINT_OBSTACLES_LAYER'
     KEY_ACCESSORIES_LAYER = 'ACCESSORIES_LAYER'
+    KEY_BUILDINGS_LAYER = 'BUILDINGS_LAYER'
+    KEY_SERVICE_LANE_LAYER = 'SERVICE_LANE_LAYER'
 
     @classmethod
     def get_blocks_layer_id(cls):
@@ -72,6 +74,14 @@ class LayersInfoDAO(DAO):
     @classmethod
     def get_resume_frame_layer_id(cls):
         return cls.proj.readEntry(cls.SCOPE, cls.KEY_RESUME_FRAME_LAYER, None)
+
+    @classmethod
+    def get_buildings_layer_id(cls):
+        return cls.proj.readEntry(cls.SCOPE, cls.KEY_BUILDINGS_LAYER, None)
+
+    @classmethod
+    def get_service_lane_layer_id(cls):
+        return cls.proj.readEntry(cls.SCOPE, cls.KEY_SERVICE_LANE_LAYER, None)
 
     @classmethod
     def get_nodes_layer_id(cls):
@@ -100,6 +110,14 @@ class LayersInfoDAO(DAO):
     @classmethod
     def set_resume_frame_layer_id(cls, resume_frame_layer):
         return cls.proj.writeEntry(cls.SCOPE, cls.KEY_RESUME_FRAME_LAYER, resume_frame_layer)
+
+    @classmethod
+    def set_buildings_layer_id(cls, buildings_layer):
+        return cls.proj.writeEntry(cls.SCOPE, cls.KEY_BUILDINGS_LAYER, buildings_layer)
+
+    @classmethod
+    def set_service_lane_layer_id(cls, service_lane_layer):
+        return cls.proj.writeEntry(cls.SCOPE, cls.KEY_SERVICE_LANE_LAYER, service_lane_layer)
 
     @classmethod
     def set_nodes_layer_id(cls, nodes_layer):
