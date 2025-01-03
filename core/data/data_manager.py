@@ -1,4 +1,4 @@
-from .data_access import LayersInfoDAO, CalculationInfoDAO, LanguageDAO, LayerRasterDAO, CostsDAO
+from .data_access import LayersInfoDAO, CalculationInfoDAO, LanguageDAO, LayerRasterDAO, CostsDAO, SegmentsDAO
 from .models import LayersData, Language, LayerRaster, Costs
 
 
@@ -31,18 +31,24 @@ class ProjectDataManager:
     @staticmethod
     def get_layers_id() -> LayersData:
         return LayersData(
-            BLOCKS_LAYER_ID='quadra_8b241a0c_9ae7_4de4_a4c3_5492c6a0ae95',  #LayersInfoDAO.get_blocks_layer_id()[0],
-            NODES_LAYER_ID='caixas_3aa4568e_0320_4cd7_9d46_23301e83e344',  #LayersInfoDAO.get_nodes_layer_id()[0],
-            SEGMENTS_LAYER_ID='trecho_02bfec5b_a476_4647_b15f_b87dd5800d80',  #LayersInfoDAO.get_segments_layer_id()[0],
-            LINEAR_OBSTACLES_LAYER_ID='obst_lineares_4c64cb06_010a_4cbf_8037_01a856bbd75b',
+            BLOCKS_LAYER_ID='quadra_45c34d79_e344_4f67_b81c_1fafd1b261c9',  #LayersInfoDAO.get_blocks_layer_id()[0],
+            RESUME_FRAME_LAYER_ID='quadro_resumo_de7e1dfe_63d8_4e9a_b59d_4599817e22a6',
+            NODES_LAYER_ID='caixas_9f813299_3b9a_4328_8a07_380dbbfe5017',  #LayersInfoDAO.get_nodes_layer_id()[0],
+            SEGMENTS_LAYER_ID='trecho_d3a55605_34c0_4fce_a9ab_685eef1bb866',  #LayersInfoDAO.get_segments_layer_id()[0],
+            LINEAR_OBSTACLES_LAYER_ID='obst_lineares_e7424001_fe89_4547_8fad_c45ef246262f',
             #LayersInfoDAO.get_linear_obstacles_layer_id()[0],
-            POINT_OBSTACLES_LAYER_ID='obst_pontuais_6d45d1a6_4e74_4077_8b9d_c7deaead46de'
+            POINT_OBSTACLES_LAYER_ID='obst_pontuais_0eb3c544_d0f7_4b6a_9f9f_f1b5e41f2a18',
+            BUILDINGS_LAYER_ID='edificacoes_ee717607_c14e_4793_990d_cd8c4c498995',
+            SERVICE_LANE_LAYER_ID='faixa_servid_o_cb90a4c1_d8c7_425e_aef7_fe4dbdb18ce4'
             #LayersInfoDAO.get_point_obstacles_layer_id()[0]
         )
 
     @staticmethod
     def save_layers_id(layers_data: LayersData):
         sucess = (LayersInfoDAO.set_blocks_layer_id(layers_data.BLOCKS_LAYER_ID) and
+                  LayersInfoDAO.set_resume_frame_layer_id(layers_data.RESUME_FRAME_LAYER_ID) and
+                  LayersInfoDAO.set_resume_frame_layer_id(layers_data.BUILDINGS_LAYER_ID) and
+                  LayersInfoDAO.set_resume_frame_layer_id(layers_data.SERVICE_LANE_LAYER_ID) and
                   LayersInfoDAO.set_nodes_layer_id(layers_data.NODES_LAYER_ID) and
                   LayersInfoDAO.set_segments_layer_id(layers_data.SEGMENTS_LAYER_ID) and
                   LayersInfoDAO.set_linear_obstacles_layer_id(layers_data.LINEAR_OBSTACLES_LAYER_ID) and
@@ -86,7 +92,9 @@ class ProjectDataManager:
             MECHANICAL_PERCENT=CostsDAO.get_mechanical_percent()[0],
             OWN_PERCENT=CostsDAO.get_own_percent()[0],
             CONTRIBUTION_PERCENT=CostsDAO.get_contribution_percent()[0],
-            DISPOSAL_DISTANCE=CostsDAO.get_disposal_distance()[0]
+            DISPOSAL_DISTANCE=CostsDAO.get_disposal_distance()[0],
+            SOIL_BULKING=CostsDAO.get_soil_bulking()[0],
+            ROCK_SWELLING=CostsDAO.get_rock_swelling()[0]
         )
 
     @staticmethod
@@ -100,7 +108,9 @@ class ProjectDataManager:
                    CostsDAO.set_mechanical_percent(costs.MECHANICAL_PERCENT) and
                    CostsDAO.set_own_percent(costs.OWN_PERCENT) and
                    CostsDAO.set_contribution_percent(costs.CONTRIBUTION_PERCENT) and
-                   CostsDAO.set_disposal_distance(costs.DISPOSAL_DISTANCE))
+                   CostsDAO.set_disposal_distance(costs.DISPOSAL_DISTANCE) and
+                   CostsDAO.set_soil_bulking(costs.SOIL_BULKING) and
+                   CostsDAO.set_rock_swelling(costs.ROCK_SWELLING))
         if success:
             CostsDAO.set_done(True)
             return True
@@ -109,3 +119,12 @@ class ProjectDataManager:
     @staticmethod
     def is_costs_loaded():
         return CostsDAO.is_done()[0]
+
+    @classmethod
+    def get_all_segments(cls):
+        segs = SegmentsDAO(
+            segments_layer_id=cls.get_layers_id().SEGMENTS_LAYER_ID,
+            nodes_layer_id=cls.get_layers_id().NODES_LAYER_ID,
+            lang=cls.get_language_project().LANGUAGE
+        )
+        return segs.get_segments()

@@ -145,5 +145,5 @@ class Ui_BlockDialog(object):
 
 class ReadOnlyDelegate(QItemDelegate):
     def createEditor(self, parent, option, index):
-        if index.column() == 4 or index.column() == 5:
+        if index.column() == 4 or index.column() == 5 or index.column() == 15:
             return super().createEditor(parent, option, index)

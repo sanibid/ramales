@@ -3,9 +3,9 @@ import os
 import decimal
 
 from PyQt5.QtCore import QLocale, QVariant
-from PyQt5.QtWidgets import QDialog, QTableWidgetItem
+from PyQt5.QtWidgets import QDialog, QTableWidgetItem, QDoubleSpinBox
 from qgis.PyQt.QtCore import QCoreApplication
-from qgis._core import QgsProject, QgsApplication, QgsVectorLayer, QgsDefaultValue
+from qgis._core import QgsProject, QgsApplication, QgsVectorLayer, QgsDefaultValue, QgsFeature
 
 from ...core.data.data_manager import ProjectDataManager
 from ...gui.BlockDialogUi import Ui_BlockDialog
@@ -58,8 +58,14 @@ class BlockViewDialog(QDialog, Ui_BlockDialog):
         block_fields = [field.name() for field in block.fields()]
         block_values = [f.attributes() for f in block.getFeatures()]
         block_dict = dict(zip(block_fields, block_values[0]))
+        # resume = QgsProject.instance().mapLayer(ProjectDataManager.get_layers_id().RESUME_FRAME_LAYER_ID)
+        # resume_fields = [field.name() for field in resume.fields()]
+        # resume_values = [f.attributes() for f in resume.getFeatures()]
+        # resume_dict = dict(zip(resume_fields, resume_values))
         # list_block_values = list(block_dict.values())
         self.block_id = block_dict[self.__get_json_attr('blocks', 'id')]
+        # v = resume_dict[self.__get_json_attr('resume_frame', 'id')]
+        # print(v)
         nodes = []
         nodes_lyr = QgsProject.instance().mapLayer(ProjectDataManager.get_layers_id().NODES_LAYER_ID)
         all_nodes = nodes_lyr.getFeatures()
@@ -170,9 +176,14 @@ class BlockViewDialog(QDialog, Ui_BlockDialog):
                 self.__float_to_str_locale(
                     segments[i].attributes()[self.__get_idx_attr(segments_lyr, 'segments', 'unevenness_segment')],
                     decimals=1)))  # node('slopeSec'))))
-            self.tableWidget.setItem(i, 15, QTableWidgetItem(
-                self.check(segments[i].attributes()[
-                               self.__get_idx_attr(segments_lyr, 'segments', 'pvc_diameter')])))  # 'pvc_diam'))))
+            dsb_pcv = QDoubleSpinBox()
+            dsb_pcv.setDecimals(0)
+            dsb_pcv.setSingleStep(10.00)
+            dsb_pcv.setRange(100.00, 160.00)
+            dsb_pcv.setValue(150.0)
+            dsb_pcv.setValue(segments[i].attributes()[
+                                 self.__get_idx_attr(segments_lyr, 'segments', 'pvc_diameter')])
+            self.tableWidget.setCellWidget(i, 15, dsb_pcv)  # 'pvc_diam'))))
             self.tableWidget.setItem(i, 16, QTableWidgetItem(
                 self.concat1(
                     self.__get_key_map_of_values(layer=segments_lyr,
@@ -207,7 +218,8 @@ class BlockViewDialog(QDialog, Ui_BlockDialog):
             self.tableWidget.setItem(i, 17, QTableWidgetItem(
                 self.__get_key_map_of_values(layer=nodes_lyr,
                                              idx_col=self.__get_idx_attr(nodes_lyr, 'nodes', 'branch_position'),
-                                             value=segments[i].attributes()[self.__get_idx_attr(segments_lyr, 'nodes', 'branch_position')])))  # node('posicao_ramal'))))
+                                             value=segments[i].attributes()[self.__get_idx_attr(segments_lyr, 'nodes',
+                                                                                                'branch_position')])))  # node('posicao_ramal'))))
             self.tableWidget.setItem(i, 18, QTableWidgetItem(
                 self.__float_to_str_locale(self.get_element_layer_nodes(
                     node=segments[i].attributes()[self.__get_idx_attr(segments_lyr, 'segments', 'up_box')],
@@ -217,7 +229,8 @@ class BlockViewDialog(QDialog, Ui_BlockDialog):
                     'NULL', '')))
             self.tableWidget.setItem(i, 20, QTableWidgetItem(
                 self.check(self.__float_to_str_locale(
-                    segments[i].attributes()[self.__get_idx_attr(segments_lyr, 'segments', 'h_TQ')], decimals=2).replace(
+                    segments[i].attributes()[self.__get_idx_attr(segments_lyr, 'segments', 'h_TQ')],
+                    decimals=2).replace(
                     'NULL', ''))))
             self.tableWidget.setItem(i, 21, QTableWidgetItem(
                 self.check(segments[i].attributes()[self.__get_idx_attr(segments_lyr, 'segments', 'comments')]).replace(
@@ -380,12 +393,171 @@ class BlockViewDialog(QDialog, Ui_BlockDialog):
                                           self.__str_to_float_locale(self.getTableValue(row, 'dwnBrLevel')))
             segments.changeAttributeValue(segment.id(), self.__get_idx_attr(segments, 'segments', 'unevenness_segment'),
                                           self.__str_to_float_locale(self.getTableValue(row, 'slopeSection')))
+            segments.changeAttributeValue(segment.id(), self.__get_idx_attr(segments, 'segments', 'pvc_diameter'),
+                                          self.__str_to_float_locale(
+                                              self.getTableValuePvcDiameter(row, 'pvc_diameter')))
             row += 1
         segments.commitChanges()
         self.tableWidget.blockSignals(False)
         self.proj.showMessage('saved successfully')
         self.hide()
         ProjectDataManager.save_status_calculation(status=True)
+        self.save_resume_frame()
+
+    def save_resume_frame(self):
+        self.tableWidget.blockSignals(True)
+        resume_frame = self.proj.getResumeFrameLayer()
+        if not resume_frame.isEditable():
+            resume_frame.startEditing()
+            feature = QgsFeature(resume_frame.fields())
+            feat_exist = None
+            for feat in resume_frame.getFeatures():
+                feat_exist = feat.id()
+                break
+            ext_trechos_DN100 = self.__get_len_DN(100)
+            ext_TQ_DN100 = self.__get_len_tq_DN(100)
+            ext_trechos_DN150 = self.__get_len_DN(150)
+            ext_TQ_DN150 = self.__get_len_tq_DN(150)
+            cx_040 = self.__get_cx('DN40')
+            cx_060 = self.__get_cx('DN60')
+            cx_ret_brick = self.__get_cx('Retangular Tijolinho')
+            cx_ret_concrete = self.__get_cx('Retangular Concreto')
+            til = self.__get_cx('TIL_Terminal Inspeção-Limpeza')
+            attributes = {
+                self.__get_json_attr('resume_frame', 'ext_trechos_DN100(m)'): ext_trechos_DN100,
+                self.__get_json_attr('resume_frame', 'ext_TQ_DN100'): ext_TQ_DN100,
+                self.__get_json_attr('resume_frame', 'ext_total_DN100(m)'):
+                    (ext_trechos_DN100 + ext_TQ_DN100),
+                self.__get_json_attr('resume_frame', "ext_trechos_DN150(m)"): ext_trechos_DN150,
+                self.__get_json_attr('resume_frame', "ext_TQ_DN150(m)"): ext_TQ_DN150,
+                self.__get_json_attr('resume_frame', "ext_total_DN150(m)"):
+                    (ext_trechos_DN150 + ext_TQ_DN150),
+                self.__get_json_attr('resume_frame', "ext_total(m)"):
+                    (ext_trechos_DN100 + ext_TQ_DN100 + ext_trechos_DN150 + ext_TQ_DN150),
+                self.__get_json_attr('resume_frame', "cx_Ø40"): cx_040,
+                self.__get_json_attr('resume_frame', "cx_Ø60"): cx_060,
+                self.__get_json_attr('resume_frame', "cx_ret_tijolinho"): cx_ret_brick,
+                self.__get_json_attr('resume_frame', "cx_ret_concreto"): cx_ret_concrete,
+                self.__get_json_attr('resume_frame', "TIL"): til,
+                self.__get_json_attr('resume_frame', "total_inspeção"):
+                    (cx_040 + cx_060 + cx_ret_brick + cx_ret_concrete + til),
+                self.__get_json_attr('resume_frame', "selim"): self.__get_cx('Selim_Rede'),
+                self.__get_json_attr('resume_frame', "C90º"): self.__get_connections('C90°'),
+                self.__get_json_attr('resume_frame', "TE"): self.__get_connections('TE'),
+                self.__get_json_attr('resume_frame', "imoveis"): self.__get_count_buildings(),
+                self.__get_json_attr('resume_frame', "economias"): self.__get_count_economy(),
+                self.__get_json_attr('resume_frame', "faixa_servidão"): self.__get_length_service_lane(),
+            }
+            for field, value in attributes.items():
+                if feat_exist is not None:
+                    resume_frame.changeAttributeValue(feat_exist,
+                                                      self.__get_idx_attr(resume_frame, 'resume_frame', field),
+                                                      value)
+                else:
+                    feature.setAttribute(field, value)
+                    resume_frame.addFeature(feature)
+            resume_frame.commitChanges()
+
+    def __get_len_DN(self, dn):
+        total = 0.00
+        self.tableWidget.blockSignals(True)
+        grouped = {
+            k: [i for i in range(self.tableWidget.rowCount()) if self.getTableValue(i, "branch") == k]
+            for k in [self.getTableValue(i, "branch") for i in range(self.tableWidget.rowCount())]
+        }
+        for key in grouped:
+            for i in range(self.tableWidget.rowCount()):
+                if self.getTableValue(i, "branch") == key:
+                    if int(self.getTableValuePvcDiameter(i, 'pvc_diameter')) == int(dn):
+                        total += self.__str_to_float_locale(
+                            self.tableWidget.item(i, self.getColumnIndex('length')).text())
+                        # print(self.tableWidget.item(i, self.getColumnIndex('length')).text())
+        return total
+
+    def __get_len_tq_DN(self, dn):
+        total = 0.00
+        self.tableWidget.blockSignals(True)
+        grouped = {
+            k: [i for i in range(self.tableWidget.rowCount()) if self.getTableValue(i, "branch") == k]
+            for k in [self.getTableValue(i, "branch") for i in range(self.tableWidget.rowCount())]
+        }
+        for key in grouped:
+            for i in range(self.tableWidget.rowCount()):
+                if self.getTableValue(i, "branch") == key:
+                    if (int(self.getTableValuePvcDiameter(i, 'pvc_diameter')) == int(dn) and
+                            self.getTableValue(i, "Tubo de Queda") == 'True'):
+                        total += self.__str_to_float_locale(
+                            self.tableWidget.item(i, self.getColumnIndex('length')).text())
+        return total
+
+    def __get_cx(self, cx):
+        nodes_lyr = QgsProject.instance().mapLayer(ProjectDataManager.get_layers_id().NODES_LAYER_ID)
+        all_nodes = nodes_lyr.getFeatures()
+        nodes = []
+        for s in all_nodes:
+            nodes.append(s)
+        if not nodes_lyr.isValid():
+            raise ValueError(self.tr('Camada inválida!'))
+        count = 0
+        for i, feat in enumerate(nodes_lyr.getFeatures()):
+            item = (self.__get_key_map_of_values(layer=nodes_lyr,
+                                                 idx_col=self.__get_idx_attr(nodes_lyr, 'nodes', 'node_type'),
+                                                 value=nodes[i].attributes()[
+                                                     self.__get_idx_attr(nodes_lyr, 'nodes', 'node_type')]))
+            if item == cx:
+                count += 1
+        return count
+
+    def __get_connections(self, connector):
+        segments_lyr = QgsProject.instance().mapLayer(ProjectDataManager.get_layers_id().SEGMENTS_LAYER_ID)
+        all_segs = segments_lyr.getFeatures()
+        segments = []
+        for s in all_segs:
+            segments.append(s)
+        if not segments_lyr.isValid():
+            raise ValueError(self.tr('Camada inválida!'))
+        count = 0
+        for i, feat in enumerate(segments_lyr.getFeatures()):
+            if feat[self.__get_json_attr('segments', 'tq')]:
+                conn_1 = (self.__get_key_map_of_values(layer=segments_lyr,
+                                                       idx_col=self.__get_idx_attr(segments_lyr, 'segments', 'tq_link1'),
+                                                       value=segments[i].attributes()[
+                                                           self.__get_idx_attr(segments_lyr, 'segments', 'tq_link1')]))
+                conn_2 = (self.__get_key_map_of_values(layer=segments_lyr,
+                                                       idx_col=self.__get_idx_attr(segments_lyr, 'segments', 'tq_link2'),
+                                                       value=segments[i].attributes()[
+                                                           self.__get_idx_attr(segments_lyr, 'segments', 'tq_link2')]))
+                if conn_1 == connector:
+                    count += 1
+                if conn_2 == connector:
+                    count += 1
+        return count
+
+    def __get_count_buildings(self):
+        buildings_lyr = QgsProject.instance().mapLayer(ProjectDataManager.get_layers_id().BUILDINGS_LAYER_ID)
+        if not buildings_lyr.isValid():
+            raise ValueError(self.tr('Camada inválida!'))
+        return buildings_lyr.featureCount()
+
+    def __get_count_economy(self):
+        buildings_lyr = QgsProject.instance().mapLayer(ProjectDataManager.get_layers_id().BUILDINGS_LAYER_ID)
+        if not buildings_lyr.isValid():
+            raise ValueError(self.tr('Camada inválida!'))
+        count = 0
+        for feat in buildings_lyr.getFeatures():
+            count += feat[self.__get_json_attr('buildings', 'n_econ')]
+        return count
+
+    def __get_length_service_lane(self):
+        service_lane_lyr = QgsProject.instance().mapLayer(ProjectDataManager.get_layers_id().SERVICE_LANE_LAYER_ID)
+        if not service_lane_lyr.isValid():
+            raise ValueError(self.tr('Camada inválida!'))
+        length_service_lane = 0
+        for feat in service_lane_lyr.getFeatures():
+            length_service_lane = feat[self.__get_json_attr('service_lane', 'extensao')]
+            break
+        return length_service_lane
+
 
     def check(self, var):
         if QgsApplication.instance().locale() == 'pt_BR':
@@ -418,6 +590,12 @@ class BlockViewDialog(QDialog, Ui_BlockDialog):
         index = self.getColumnIndex(columnName)
         item = self.tableWidget.item(row, index)
         return item.text() if item else None
+
+    def getTableValuePvcDiameter(self, row, columnName):
+        """ Returns value from single cell from table """
+        index = self.getColumnIndex(columnName)
+        item = self.tableWidget.cellWidget(row, index)
+        return item.value() if item else None
 
     def getColumnIndex(self, columnName):
         return self.headers.index(self.tr(columnName))
@@ -511,7 +689,7 @@ class BlockViewDialog(QDialog, Ui_BlockDialog):
             '' if decimal.Decimal(length) == decimal.Decimal(0.00) else (model + dwnBrLevel))  # L21
         slopeSection = '' if down_box == '' else round((upBrLevel - dwnBrLevel) * 100.00,
                                                        1)  # N21 slopeSection
-        return upBrLevel, dwnBrLevel, upDepth, dwnDepth, model, upRuleLvl, slopeSection,critDepth, dwnRuleLvl 
+        return upBrLevel, dwnBrLevel, upDepth, dwnDepth, model, upRuleLvl, slopeSection, critDepth, dwnRuleLvl
 
     def __calculate_overhead(self, i, initial, minDepth, minSlope):
         length = self.__str_to_float_locale(self.getTableValue(i, "length"))
@@ -543,7 +721,7 @@ class BlockViewDialog(QDialog, Ui_BlockDialog):
             '' if decimal.Decimal(length) == decimal.Decimal(0.00) else (model + dwnBrLevel))  # L21
         slopeSection = '' if down_box == '' else round((upBrLevel - dwnBrLevel) * 100.00,
                                                        1)  # N21 slopeSection
-        return upBrLevel, dwnBrLevel, upDepth, dwnDepth, model, upRuleLvl, slopeSection,critDepth, dwnRuleLvl
+        return upBrLevel, dwnBrLevel, upDepth, dwnDepth, model, upRuleLvl, slopeSection, critDepth, dwnRuleLvl
 
     def calculate(self, branchName=None):
         self.tableWidget.blockSignals(True)
@@ -559,11 +737,11 @@ class BlockViewDialog(QDialog, Ui_BlockDialog):
             for i in range(self.tableWidget.rowCount()):
                 if self.getTableValue(i, "branch") == key:
                     if (self.getTableValue(i, "Posição ramal") ==
-                            self.__get_json_attr(name_lyr='bool_air', attribute='underground')): # tubo enterrado
-                        upBrLevel, dwnBrLevel, upDepth, dwnDepth, model, upRuleLvl, slopeSection,critDepth, dwnRuleLvl = (
+                            self.__get_json_attr(name_lyr='bool_air', attribute='underground')):  # tubo enterrado
+                        upBrLevel, dwnBrLevel, upDepth, dwnDepth, model, upRuleLvl, slopeSection, critDepth, dwnRuleLvl = (
                             self.__calculate_underground(i, initial, minDepth, minSlope))
                     else:
-                        upBrLevel, dwnBrLevel, upDepth, dwnDepth, model, upRuleLvl, slopeSection,critDepth, dwnRuleLvl = (
+                        upBrLevel, dwnBrLevel, upDepth, dwnDepth, model, upRuleLvl, slopeSection, critDepth, dwnRuleLvl = (
                             self.__calculate_overhead(i, initial, minDepth, minSlope))
                     self.tableWidget.setItem(i, self.getColumnIndex('upBrLevel'),
                                              QTableWidgetItem(self.__float_to_str_locale(upBrLevel)))

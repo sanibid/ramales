@@ -1,21 +1,20 @@
 from typing import Optional
 
-from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QMessageBox, QWidget
-from qgis.core import QgsMessageLog
-
+from ..generate_costs_ui import GenerateCostsUI
+from ...core.calculate.CostsCalculation import CostCalculation
+from .base.ui_dock_tab_costs_base import DockTabCostsBase
 from ...core.data.data_manager import ProjectDataManager
-#from ...core.costs import CostsCalculator
 from ...core.data.models import Costs
-from .views.ui_dock_tab_costs_base import DockTabCostsBase
 
 
 class DockTabCosts(DockTabCostsBase):
     def __init__(self, dock):
         super().__init__(dock)
-        # self.costs_calculator: Optional[CostsCalculator] = None
+        self.costs_calculator: Optional[CostCalculation] = None
         self.loaded_from_db = False
         self.costs: Optional[Costs] = None
+        self.costs_calculation = ''
+        self.generate_costs = GenerateCostsUI()
 
     def set_logic(self):
         self.sb_soil.valueChanged.connect(self.on_data_changed)
@@ -28,8 +27,12 @@ class DockTabCosts(DockTabCostsBase):
         self.dsb_cradle_height.valueChanged.connect(self.on_data_changed)
         self.dsb_trench_width.valueChanged.connect(self.on_data_changed)
         self.dsb_disposal_distance.valueChanged.connect(self.on_data_changed)
+        self.dsb_soil_bulking.valueChanged.connect(self.on_data_changed)
+        self.dsb_rock_swelling.valueChanged.connect(self.on_data_changed)
 
-        # self.rb_show_data_costs.toggled.connect(self.on_rb_costs_toggle)
+        self.cb_show_data_costs.toggled.connect(self.on_cb_costs_toggle)
+        self.pb_report_costs.clicked.connect(self.__show_report_costs)
+        self.pb_generate_xls_costs.clicked.connect(self.__generete_xls_costs)
         # self.repOutCosts.pb_saveEditCosts.clicked.connect(self.on_services_cost_update)
 
     def load_data(self):
@@ -52,6 +55,8 @@ class DockTabCosts(DockTabCostsBase):
             self.dsb_cradle_height.setValue(self.costs.CRADLE_HEIGHT)
             self.dsb_trench_width.setValue(self.costs.TRENCH_WIDTH)
             self.dsb_disposal_distance.setValue(self.costs.DISPOSAL_DISTANCE)
+            self.dsb_rock_swelling.setValue(self.costs.ROCK_SWELLING)
+            self.dsb_soil_bulking.setValue(self.costs.SOIL_BULKING)
         else:
             self.sb_soil.setValue(100)
             self.sb_rock.setValue(0)
@@ -63,6 +68,8 @@ class DockTabCosts(DockTabCostsBase):
             self.dsb_cradle_height.setValue(0)
             self.dsb_trench_width.setValue(0)
             self.dsb_disposal_distance.setValue(0)
+            self.dsb_rock_swelling.setValue(1)
+            self.dsb_soil_bulking.setValue(1)
 
     def load_costs_values(self):
         pass
@@ -73,6 +80,12 @@ class DockTabCosts(DockTabCostsBase):
     def reload(self):
         self.loaded_from_db = False
         self.load_data()
+
+    def on_cb_costs_toggle(self, checked: bool):
+        if self.cb_show_data_costs.isChecked():
+            self.gb_DataCosts.show()
+        else:
+            self.gb_DataCosts.hide()
 
     def on_data_changed(self):
         if not self.loaded_from_db:
@@ -87,7 +100,9 @@ class DockTabCosts(DockTabCostsBase):
             WRAP_HEIGHT=self.dsb_wrap_height.value(),
             CRADLE_HEIGHT=self.dsb_cradle_height.value(),
             TRENCH_WIDTH=self.dsb_trench_width.value(),
-            DISPOSAL_DISTANCE=self.dsb_disposal_distance.value()
+            DISPOSAL_DISTANCE=self.dsb_disposal_distance.value(),
+            SOIL_BULKING=self.dsb_soil_bulking.value(),
+            ROCK_SWELLING=self.dsb_rock_swelling.value()
         )
         # if self.costs is None:
         #     tmp_costs.services = Costs().services
@@ -132,6 +147,14 @@ class DockTabCosts(DockTabCostsBase):
         #                                    entranceData=self.project_data)
         # else:
         #     self.load_costs_calculator()
+
+    def __show_report_costs(self):
+        self.rep_out_costs.loadReportCosts(self.costs_calculation)
+        self.rep_out_costs.showReportCosts()
+
+    def __generete_xls_costs(self):
+        self.generate_costs.show_generate_costs()
+
 
     def showReportCosts(self):
         pass
