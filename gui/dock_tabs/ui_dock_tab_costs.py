@@ -1,23 +1,20 @@
 from typing import Optional
 
-from pprint import pprint
-from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QMessageBox, QWidget
-from qgis.core import QgsMessageLog
-
-from ...core.data.data_manager import ProjectDataManager
-#from ...core.costs import CostsCalculator
-from ...core.data.models import Costs
+from ..generate_costs_ui import GenerateCostsUI
+from ...core.calculate.CostsCalculation import CostCalculation
 from .base.ui_dock_tab_costs_base import DockTabCostsBase
+from ...core.data.data_manager import ProjectDataManager
+from ...core.data.models import Costs
 
 
 class DockTabCosts(DockTabCostsBase):
     def __init__(self, dock):
         super().__init__(dock)
-        # self.costs_calculator: Optional[CostsCalculator] = None
+        self.costs_calculator: Optional[CostCalculation] = None
         self.loaded_from_db = False
         self.costs: Optional[Costs] = None
         self.costs_calculation = ''
+        self.generate_costs = GenerateCostsUI()
 
     def set_logic(self):
         self.sb_soil.valueChanged.connect(self.on_data_changed)
@@ -35,6 +32,7 @@ class DockTabCosts(DockTabCostsBase):
 
         self.cb_show_data_costs.toggled.connect(self.on_cb_costs_toggle)
         self.pb_report_costs.clicked.connect(self.__show_report_costs)
+        self.pb_generate_xls_costs.clicked.connect(self.__generete_xls_costs)
         # self.repOutCosts.pb_saveEditCosts.clicked.connect(self.on_services_cost_update)
 
     def load_data(self):
@@ -153,6 +151,10 @@ class DockTabCosts(DockTabCostsBase):
     def __show_report_costs(self):
         self.rep_out_costs.loadReportCosts(self.costs_calculation)
         self.rep_out_costs.showReportCosts()
+
+    def __generete_xls_costs(self):
+        self.generate_costs.show_generate_costs()
+
 
     def showReportCosts(self):
         pass
