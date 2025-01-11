@@ -1,5 +1,3 @@
-import json
-import os
 import decimal
 
 from PyQt5.QtCore import QLocale, QVariant
@@ -9,7 +7,6 @@ from qgis._core import QgsProject, QgsApplication, QgsVectorLayer, QgsDefaultVal
 
 from ...core.data.data_manager import ProjectDataManager
 from ...gui.BlockDialogUi import Ui_BlockDialog
-from ...helpers.globals import get_language_file, set_language_file
 from ...helpers.utils import Utils
 
 translate = QCoreApplication.translate
@@ -63,8 +60,8 @@ class BlockViewDialog(QDialog, Ui_BlockDialog):
         # resume_values = [f.attributes() for f in resume.getFeatures()]
         # resume_dict = dict(zip(resume_fields, resume_values))
         # list_block_values = list(block_dict.values())
-        self.block_id = block_dict[self.__get_json_attr('blocks', 'id')]
-        # v = resume_dict[self.__get_json_attr('resume_frame', 'id')]
+        self.block_id = block_dict[self.utils.get_json_attr('blocks', 'id')]
+        # v = resume_dict[self.utils.get_json_attr('resume_frame', 'id')]
         # print(v)
         nodes = []
         nodes_lyr = QgsProject.instance().mapLayer(ProjectDataManager.get_layers_id().NODES_LAYER_ID)
@@ -77,30 +74,30 @@ class BlockViewDialog(QDialog, Ui_BlockDialog):
         for s in all_segs:
             segments.append(s)
         segments = sorted(segments, key=lambda item:
-        (item[self.__get_idx_attr(segments_lyr, 'segments', 'branch_id')],
-         item[self.__get_idx_attr(segments_lyr, 'segments', 'segment_id')]))
+        (item[self.utils.get_idx_attr(segments_lyr, 'segments', 'branch_id')],
+         item[self.utils.get_idx_attr(segments_lyr, 'segments', 'segment_id')]))
         self.minDepth.blockSignals(True)
         self.minSlope.blockSignals(True)
         self.tableWidget.blockSignals(True)
         self.revision.setText(
-            self.check(block_dict[self.__get_json_attr('blocks', 'revision')]))  # block_dict['revisao']))
+            self.check(block_dict[self.utils.get_json_attr('blocks', 'revision')]))  # block_dict['revisao']))
         self.blockName.setText(
-            self.check(block_dict[self.__get_json_attr('blocks', 'name')]))  # block_dict['user_name']))
-        if block_dict[self.__get_json_attr('blocks', 'date')]:  # block_dict['data']:
-            self.date.setDate(block_dict[self.__get_json_attr('blocks', 'date')].date())  # block_dict['data'])
-        if block_dict[self.__get_json_attr('blocks', 'rev_date')]:  # block_dict['rev_data']:
-            self.revisionDate.setDate(block_dict[self.__get_json_attr('blocks', 'rev_date')].date())
+            self.check(block_dict[self.utils.get_json_attr('blocks', 'name')]))  # block_dict['user_name']))
+        if block_dict[self.utils.get_json_attr('blocks', 'date')]:  # block_dict['data']:
+            self.date.setDate(block_dict[self.utils.get_json_attr('blocks', 'date')].date())  # block_dict['data'])
+        if block_dict[self.utils.get_json_attr('blocks', 'rev_date')]:  # block_dict['rev_data']:
+            self.revisionDate.setDate(block_dict[self.utils.get_json_attr('blocks', 'rev_date')].date())
         self.watershed.setText(
-            self.check(block_dict[self.__get_json_attr('blocks', 'watershed')]))  # block_dict['bacia']))
-        if block_dict[self.__get_json_attr('blocks', 'total_length')]:  # block_dict['extensao_total']:
-            self.totalLength.setValue(float(block_dict[self.__get_json_attr('blocks', 'total_length')]))
-        if block_dict[self.__get_json_attr('blocks', 'min_depth')]:  # block_dict['prof_min']:
-            self.minDepth.setValue(block_dict[self.__get_json_attr('blocks', 'min_depth')])
-        if block_dict[self.__get_json_attr('blocks', 'min_slope')]:  # block_dict['decl_min']:
-            self.minSlope.setValue(block_dict[self.__get_json_attr('blocks', 'min_slope')])
+            self.check(block_dict[self.utils.get_json_attr('blocks', 'watershed')]))  # block_dict['bacia']))
+        if block_dict[self.utils.get_json_attr('blocks', 'total_length')]:  # block_dict['extensao_total']:
+            self.totalLength.setValue(float(block_dict[self.utils.get_json_attr('blocks', 'total_length')]))
+        if block_dict[self.utils.get_json_attr('blocks', 'min_depth')]:  # block_dict['prof_min']:
+            self.minDepth.setValue(block_dict[self.utils.get_json_attr('blocks', 'min_depth')])
+        if block_dict[self.utils.get_json_attr('blocks', 'min_slope')]:  # block_dict['decl_min']:
+            self.minSlope.setValue(block_dict[self.utils.get_json_attr('blocks', 'min_slope')])
         self.observations.setPlainText(
-            self.check(block_dict[self.__get_json_attr('blocks', 'comments')]))  # block_dict['comments']))
-        self.os_name_le.setText(self.check(block_dict[self.__get_json_attr('blocks', 'os_name')]))
+            self.check(block_dict[self.utils.get_json_attr('blocks', 'comments')]))  # block_dict['comments']))
+        self.os_name_le.setText(self.check(block_dict[self.utils.get_json_attr('blocks', 'os_name')]))
         # Add block name if is new record
         if is_new:
             _name = nodes[0]['blocks'] if len(nodes) > 0 else 'Undefined'
@@ -117,64 +114,64 @@ class BlockViewDialog(QDialog, Ui_BlockDialog):
         totalLength = 0
         for i in range(segsCount):
             if self.check(segments[i].attributes()[1]) != '':
-                totalLength = totalLength + self.__str_to_float_locale(
-                    segments[i].attributes()[self.__get_idx_attr(segments_lyr, 'segments', 'length')])
+                totalLength = totalLength + self.utils.str_to_float_locale(
+                    segments[i].attributes()[self.utils.get_idx_attr(segments_lyr, 'segments', 'length')])
             self.tableWidget.setItem(i, 0, QTableWidgetItem(self.check(
-                segments[i].attributes()[self.__get_idx_attr(segments_lyr, 'segments', 'branch_id')])))  # ramal_id
+                segments[i].attributes()[self.utils.get_idx_attr(segments_lyr, 'segments', 'branch_id')])))  # ramal_id
             self.tableWidget.setItem(i, 1, QTableWidgetItem(self.check(
                 segments[i].attributes()[
-                    self.__get_idx_attr(segments_lyr, 'segments', 'up_box')])))  # node('up_box'))))
+                    self.utils.get_idx_attr(segments_lyr, 'segments', 'up_box')])))  # node('up_box'))))
             self.tableWidget.setItem(i, 2, QTableWidgetItem(self.check(
                 segments[i].attributes()[
-                    self.__get_idx_attr(segments_lyr, 'segments', 'down_box')])))  # node('cx_jusante'))))
+                    self.utils.get_idx_attr(segments_lyr, 'segments', 'down_box')])))  # node('cx_jusante'))))
             self.tableWidget.setItem(i, 3, QTableWidgetItem(
                 self.__float_to_str_locale(
-                    segments[i].attributes()[self.__get_idx_attr(segments_lyr, 'segments', 'length')],
+                    segments[i].attributes()[self.utils.get_idx_attr(segments_lyr, 'segments', 'length')],
                     2)))  # node('length'))))
             self.tableWidget.setItem(i, 4, QTableWidgetItem(
                 self.__float_to_str_locale(
-                    self.get_element_layer_nodes(
-                        node=segments[i].attributes()[self.__get_idx_attr(segments_lyr, 'segments', 'up_box')],
-                        name_attr=self.__get_json_attr('nodes',
+                    self.utils.get_element_layer_nodes(
+                        node=segments[i].attributes()[self.utils.get_idx_attr(segments_lyr, 'segments', 'up_box')],
+                        name_attr=self.utils.get_json_attr('nodes',
                                                        'q_terrain')))))  # node('up_gl')))) #cota de terreno montate
             self.tableWidget.setItem(i, 5, QTableWidgetItem(
-                self.__float_to_str_locale(self.get_element_layer_nodes(
-                    node=segments[i].attributes()[self.__get_idx_attr(segments_lyr, 'segments', 'down_box')],
-                    name_attr=self.__get_json_attr('nodes',
+                self.__float_to_str_locale(self.utils.get_element_layer_nodes(
+                    node=segments[i].attributes()[self.utils.get_idx_attr(segments_lyr, 'segments', 'down_box')],
+                    name_attr=self.utils.get_json_attr('nodes',
                                                    'q_terrain')))))  # node('down_gl')))) # cota terreno jusanta
             self.tableWidget.setItem(i, 6, QTableWidgetItem(
                 self.check(segments[i].attributes()[
-                               self.__get_idx_attr(segments_lyr, 'segments', 'up_qproject')])))  # node('upBrLevel'))))
+                               self.utils.get_idx_attr(segments_lyr, 'segments', 'up_qproject')])))  # node('upBrLevel'))))
             self.tableWidget.setItem(i, 7, QTableWidgetItem(
-                self.check(segments[i].attributes()[self.__get_idx_attr(segments_lyr, 'segments',
+                self.check(segments[i].attributes()[self.utils.get_idx_attr(segments_lyr, 'segments',
                                                                         'dwn_qproject')])))  # node('dwnBrLevel'))))
             self.tableWidget.setItem(i, 8, QTableWidgetItem(
-                self.check(self.utils.formatNum2Dec(self.__str_to_float_locale(
-                    self.get_element_layer_nodes(
-                        node=segments[i].attributes()[self.__get_idx_attr(segments_lyr, 'segments', 'up_box')],
-                        name_attr=self.__get_json_attr('nodes', 'depth')))))))  # node('upDepth'))))
+                self.check(self.utils.formatNum2Dec(self.utils.str_to_float_locale(
+                    self.utils.get_element_layer_nodes(
+                        node=segments[i].attributes()[self.utils.get_idx_attr(segments_lyr, 'segments', 'up_box')],
+                        name_attr=self.utils.get_json_attr('nodes', 'depth')))))))  # node('upDepth'))))
             self.tableWidget.setItem(i, 9, QTableWidgetItem(
-                self.check(self.utils.formatNum2Dec(self.__str_to_float_locale(
-                    self.get_element_layer_nodes(
-                        node=segments[i].attributes()[self.__get_idx_attr(segments_lyr, 'segments', 'down_box')],
-                        name_attr=self.__get_json_attr('nodes', 'depth')))))))  # node('dwnDepth'))))
+                self.check(self.utils.formatNum2Dec(self.utils.str_to_float_locale(
+                    self.utils.get_element_layer_nodes(
+                        node=segments[i].attributes()[self.utils.get_idx_attr(segments_lyr, 'segments', 'down_box')],
+                        name_attr=self.utils.get_json_attr('nodes', 'depth')))))))  # node('dwnDepth'))))
             self.tableWidget.setItem(i, 10, QTableWidgetItem(
                 self.__float_to_str_locale(value=2.00, decimals=2)))  # node('gabarito'))))
             self.tableWidget.setItem(i, 11, QTableWidgetItem(
-                self.check(self.get_element_layer_nodes(
-                    node=segments[i].attributes()[self.__get_idx_attr(segments_lyr, 'segments', 'up_box')],
-                    name_attr=self.__get_json_attr('nodes', 'q_rule')))))  # node('upRuleLvl'))))
+                self.check(self.utils.get_element_layer_nodes(
+                    node=segments[i].attributes()[self.utils.get_idx_attr(segments_lyr, 'segments', 'up_box')],
+                    name_attr=self.utils.get_json_attr('nodes', 'q_rule')))))  # node('upRuleLvl'))))
             self.tableWidget.setItem(i, 12, QTableWidgetItem(
-                self.check(self.get_element_layer_nodes(
-                    node=segments[i].attributes()[self.__get_idx_attr(segments_lyr, 'segments', 'down_box')],
-                    name_attr=self.__get_json_attr('nodes', 'q_rule')))))  # node('dwnRuleLvl'))))
+                self.check(self.utils.get_element_layer_nodes(
+                    node=segments[i].attributes()[self.utils.get_idx_attr(segments_lyr, 'segments', 'down_box')],
+                    name_attr=self.utils.get_json_attr('nodes', 'q_rule')))))  # node('dwnRuleLvl'))))
             self.tableWidget.setItem(i, 13, QTableWidgetItem(
-                self.__float_to_str_locale(self.get_element_layer_nodes(
-                    node=segments[i].attributes()[self.__get_idx_attr(segments_lyr, 'segments', 'up_box')],
-                    name_attr=self.__get_json_attr('nodes', 'critical_depth')), decimals=2)))  # node('prof_critica'))))
+                self.__float_to_str_locale(self.utils.get_element_layer_nodes(
+                    node=segments[i].attributes()[self.utils.get_idx_attr(segments_lyr, 'segments', 'up_box')],
+                    name_attr=self.utils.get_json_attr('nodes', 'critical_depth')), decimals=2)))  # node('prof_critica'))))
             self.tableWidget.setItem(i, 14, QTableWidgetItem(
                 self.__float_to_str_locale(
-                    segments[i].attributes()[self.__get_idx_attr(segments_lyr, 'segments', 'unevenness_segment')],
+                    segments[i].attributes()[self.utils.get_idx_attr(segments_lyr, 'segments', 'unevenness_segment')],
                     decimals=1)))  # node('slopeSec'))))
             dsb_pcv = QDoubleSpinBox()
             dsb_pcv.setDecimals(0)
@@ -182,58 +179,58 @@ class BlockViewDialog(QDialog, Ui_BlockDialog):
             dsb_pcv.setRange(100.00, 160.00)
             dsb_pcv.setValue(150.0)
             dsb_pcv.setValue(segments[i].attributes()[
-                                 self.__get_idx_attr(segments_lyr, 'segments', 'pvc_diameter')])
+                                 self.utils.get_idx_attr(segments_lyr, 'segments', 'pvc_diameter')])
             self.tableWidget.setCellWidget(i, 15, dsb_pcv)  # 'pvc_diam'))))
             self.tableWidget.setItem(i, 16, QTableWidgetItem(
                 self.concat1(
                     self.__get_key_map_of_values(layer=segments_lyr,
-                                                 idx_col=self.__get_idx_attr(segments_lyr, 'segments', 'paviment_1'),
+                                                 idx_col=self.utils.get_idx_attr(segments_lyr, 'segments', 'paviment_1'),
                                                  value=segments[i].attributes()[
-                                                     self.__get_idx_attr(segments_lyr, 'segments', 'paviment_1')]),
+                                                     self.utils.get_idx_attr(segments_lyr, 'segments', 'paviment_1')]),
                     self.__get_key_map_of_values(layer=segments_lyr,
-                                                 idx_col=self.__get_idx_attr(segments_lyr, 'segments', 'paviment_2'),
+                                                 idx_col=self.utils.get_idx_attr(segments_lyr, 'segments', 'paviment_2'),
                                                  value=segments[i].attributes()[
-                                                     self.__get_idx_attr(segments_lyr, 'segments',
+                                                     self.utils.get_idx_attr(segments_lyr, 'segments',
                                                                          'paviment_2')]))))  # paviment
             # TODO: REMOVER
             # self.tableWidget.setItem(i, 17, QTableWidgetItem(  # tubo queda
-            #     self.check(segments[i].attributes()[self.__get_idx_attr(segments_lyr, 'segments', 'fall_tube')])))
+            #     self.check(segments[i].attributes()[self.utils.get_idx_attr(segments_lyr, 'segments', 'fall_tube')])))
             # self.tableWidget.setItem(i, 17, QTableWidgetItem(self.check(segments[i].attributes()[
-            #                    self.__get_idx_attr(segments_lyr, 'segments', 'h_tq')])))
+            #                    self.utils.get_idx_attr(segments_lyr, 'segments', 'h_tq')])))
             # self.tableWidget.setItem(i, 18, QTableWidgetItem(
             #     self.concat2(
             #         self.__get_key_map_of_values(layer=segments_lyr,
-            #                                      idx_col=self.__get_idx_attr(segments_lyr, 'segments', 'obstacle1'),
+            #                                      idx_col=self.utils.get_idx_attr(segments_lyr, 'segments', 'obstacle1'),
             #                                      value=segments[i].attributes()[
-            #                                          self.__get_idx_attr(segments_lyr, 'segments', 'obstacle1')]),
+            #                                          self.utils.get_idx_attr(segments_lyr, 'segments', 'obstacle1')]),
             #         self.__get_key_map_of_values(layer=segments_lyr,
-            #                                      idx_col=self.__get_idx_attr(segments_lyr, 'segments', 'obstacle2'),
+            #                                      idx_col=self.utils.get_idx_attr(segments_lyr, 'segments', 'obstacle2'),
             #                                      value=segments[i].attributes()[
-            #                                          self.__get_idx_attr(segments_lyr, 'segments', 'obstacle2')]),
+            #                                          self.utils.get_idx_attr(segments_lyr, 'segments', 'obstacle2')]),
             #         self.__get_key_map_of_values(layer=segments_lyr,
-            #                                      idx_col=self.__get_idx_attr(segments_lyr, 'segments', 'obstacle3'),
+            #                                      idx_col=self.utils.get_idx_attr(segments_lyr, 'segments', 'obstacle3'),
             #                                      value=segments[i].attributes()[
-            #                                          self.__get_idx_attr(segments_lyr, 'segments',
+            #                                          self.utils.get_idx_attr(segments_lyr, 'segments',
             #                                                              'obstacle3')]))))  # 'obstacles'))))
             self.tableWidget.setItem(i, 17, QTableWidgetItem(
                 self.__get_key_map_of_values(layer=nodes_lyr,
-                                             idx_col=self.__get_idx_attr(nodes_lyr, 'nodes', 'branch_position'),
-                                             value=segments[i].attributes()[self.__get_idx_attr(segments_lyr, 'nodes',
+                                             idx_col=self.utils.get_idx_attr(nodes_lyr, 'nodes', 'branch_position'),
+                                             value=segments[i].attributes()[self.utils.get_idx_attr(segments_lyr, 'nodes',
                                                                                                 'branch_position')])))  # node('posicao_ramal'))))
             self.tableWidget.setItem(i, 18, QTableWidgetItem(
-                self.__float_to_str_locale(self.get_element_layer_nodes(
-                    node=segments[i].attributes()[self.__get_idx_attr(segments_lyr, 'segments', 'up_box')],
-                    name_attr=self.__get_json_attr('nodes', 'h_branch')), decimals=2)))  # node('h_ramal'))))
+                self.__float_to_str_locale(self.utils.get_element_layer_nodes(
+                    node=segments[i].attributes()[self.utils.get_idx_attr(segments_lyr, 'segments', 'up_box')],
+                    name_attr=self.utils.get_json_attr('nodes', 'h_branch')), decimals=2)))  # node('h_ramal'))))
             self.tableWidget.setItem(i, 19, QTableWidgetItem(
-                self.check(segments[i].attributes()[self.__get_idx_attr(segments_lyr, 'segments', 'tq')]).replace(
+                self.check(segments[i].attributes()[self.utils.get_idx_attr(segments_lyr, 'segments', 'tq')]).replace(
                     'NULL', '')))
             self.tableWidget.setItem(i, 20, QTableWidgetItem(
                 self.check(self.__float_to_str_locale(
-                    segments[i].attributes()[self.__get_idx_attr(segments_lyr, 'segments', 'h_TQ')],
+                    segments[i].attributes()[self.utils.get_idx_attr(segments_lyr, 'segments', 'h_TQ')],
                     decimals=2).replace(
                     'NULL', ''))))
             self.tableWidget.setItem(i, 21, QTableWidgetItem(
-                self.check(segments[i].attributes()[self.__get_idx_attr(segments_lyr, 'segments', 'comments')]).replace(
+                self.check(segments[i].attributes()[self.utils.get_idx_attr(segments_lyr, 'segments', 'comments')]).replace(
                     'NULL', '')))  # node('comments'))))
         self.totalLength.setValue(round(totalLength, 2))
         # Resize of the rows and columns based on the content
@@ -272,13 +269,13 @@ class BlockViewDialog(QDialog, Ui_BlockDialog):
             return str(str1) + ' - ' + str(str2)
         return str(str1).replace('NULL', '')
 
-    def get_element_layer_nodes(self, node: str, name_attr: str):
-        nodes_lyr = QgsProject.instance().mapLayer(ProjectDataManager.get_layers_id().NODES_LAYER_ID)
-        all_nodes = nodes_lyr.getFeatures()
-        for n in all_nodes:
-            if n.attributes()[self.__get_idx_attr(nodes_lyr, 'nodes', 'name')] == node:
-                return n.attributes()[self.__get_idx_attr(nodes_lyr, 'nodes', name_attr)]
-        return
+    # def get_element_layer_nodes(self, node: str, name_attr: str):
+    #     nodes_lyr = QgsProject.instance().mapLayer(ProjectDataManager.get_layers_id().NODES_LAYER_ID)
+    #     all_nodes = nodes_lyr.getFeatures()
+    #     for n in all_nodes:
+    #         if n.attributes()[self.utils.get_idx_attr(nodes_lyr, 'nodes', 'name')] == node:
+    #             return n.attributes()[self.utils.get_idx_attr(nodes_lyr, 'nodes', name_attr)]
+    #     return
 
     def save(self):
         self.tableWidget.blockSignals(True)
@@ -287,43 +284,43 @@ class BlockViewDialog(QDialog, Ui_BlockDialog):
             blocks.startEditing()
         blocks.changeAttributeValue(
             self.block_id,
-            blocks.fields().lookupField(self.__get_json_attr('blocks', 'name')),
+            blocks.fields().lookupField(self.utils.get_json_attr('blocks', 'name')),
             self.blockName.text())
         blocks.changeAttributeValue(
             self.block_id,
-            blocks.fields().lookupField(self.__get_json_attr('blocks', 'date')),
+            blocks.fields().lookupField(self.utils.get_json_attr('blocks', 'date')),
             self.date.dateTime())
         blocks.changeAttributeValue(
             self.block_id,
-            blocks.fields().lookupField(self.__get_json_attr('blocks', 'rev_date')),
+            blocks.fields().lookupField(self.utils.get_json_attr('blocks', 'rev_date')),
             self.revisionDate.dateTime())
         blocks.changeAttributeValue(
             self.block_id,
-            blocks.fields().lookupField(self.__get_json_attr('blocks', 'watershed')),
+            blocks.fields().lookupField(self.utils.get_json_attr('blocks', 'watershed')),
             self.watershed.text())
         blocks.changeAttributeValue(
             self.block_id,
-            blocks.fields().lookupField(self.__get_json_attr('blocks', 'total_length')),
+            blocks.fields().lookupField(self.utils.get_json_attr('blocks', 'total_length')),
             self.totalLength.value())
         blocks.changeAttributeValue(
             self.block_id,
-            blocks.fields().lookupField(self.__get_json_attr('blocks', 'min_depth')),
+            blocks.fields().lookupField(self.utils.get_json_attr('blocks', 'min_depth')),
             self.minDepth.value())
         blocks.changeAttributeValue(
             self.block_id,
-            blocks.fields().lookupField(self.__get_json_attr('blocks', 'min_slope')),
+            blocks.fields().lookupField(self.utils.get_json_attr('blocks', 'min_slope')),
             self.minSlope.value())
         blocks.changeAttributeValue(
             self.block_id,
-            blocks.fields().lookupField(self.__get_json_attr('blocks', 'revision')),
+            blocks.fields().lookupField(self.utils.get_json_attr('blocks', 'revision')),
             self.revision.text())
         blocks.changeAttributeValue(
             self.block_id,
-            blocks.fields().lookupField(self.__get_json_attr('blocks', 'comments')),
+            blocks.fields().lookupField(self.utils.get_json_attr('blocks', 'comments')),
             self.observations.toPlainText())
         blocks.changeAttributeValue(
             self.block_id,
-            blocks.fields().lookupField(self.__get_json_attr('blocks', 'os_name')),
+            blocks.fields().lookupField(self.utils.get_json_attr('blocks', 'os_name')),
             self.os_name_le.text())
         blocks.commitChanges()
         nodes = self.proj.getNodesLayer()
@@ -331,70 +328,70 @@ class BlockViewDialog(QDialog, Ui_BlockDialog):
             nodes.startEditing()
         default_value = QgsDefaultValue(expression='', applyOnUpdate=False)
 
-        name_ex = nodes.defaultValueDefinition(self.__get_idx_attr(nodes, 'nodes', 'name')).expression()
-        q_terrain_ex = nodes.defaultValueDefinition(self.__get_idx_attr(nodes, 'nodes', 'q_terrain')).expression()
+        name_ex = nodes.defaultValueDefinition(self.utils.get_idx_attr(nodes, 'nodes', 'name')).expression()
+        q_terrain_ex = nodes.defaultValueDefinition(self.utils.get_idx_attr(nodes, 'nodes', 'q_terrain')).expression()
         raster = ProjectDataManager.get_layer_raster().LAYER_RASTER
         if ProjectDataManager.get_layer_raster().LAYER_RASTER == '':
             q_terrain_ex = q_terrain_ex.replace(self.__get_raster_express(), raster)
         else:
             q_terrain_ex = q_terrain_ex.replace(ProjectDataManager.get_layer_raster().LAYER_RASTER,
                                                 raster)
-        nodes.setDefaultValueDefinition(self.__get_idx_attr(nodes, 'nodes', 'name'), default_value)
-        nodes.setDefaultValueDefinition(self.__get_idx_attr(nodes, 'nodes', 'q_terrain'), default_value)
+        nodes.setDefaultValueDefinition(self.utils.get_idx_attr(nodes, 'nodes', 'name'), default_value)
+        nodes.setDefaultValueDefinition(self.utils.get_idx_attr(nodes, 'nodes', 'q_terrain'), default_value)
         box_list = []
         for node in self.current_nodes:
             row = 0
             while row < self.tableWidget.rowCount():
-                if (node[self.__get_idx_attr(nodes, 'nodes', 'name')] ==
+                if (node[self.utils.get_idx_attr(nodes, 'nodes', 'name')] ==
                         self.getTableValue(row, 'up_box') and
-                        node[self.__get_idx_attr(nodes, 'nodes', 'name')] not in box_list):
-                    nodes.changeAttributeValue(node.id(), self.__get_idx_attr(nodes, 'nodes', 'q_terrain'),
-                                               self.__str_to_float_locale(self.getTableValue(row, 'up_gl')), 2)
-                    nodes.changeAttributeValue(node.id(), self.__get_idx_attr(nodes, 'nodes', 'depth'),
-                                               self.__str_to_float_locale(self.getTableValue(row, 'upDepth')), 2)
-                    nodes.changeAttributeValue(node.id(), self.__get_idx_attr(nodes, 'nodes', 'q_rule'),
-                                               self.__str_to_float_locale(self.getTableValue(row, 'upRuleLvl')), 3)
-                    # nodes.changeAttributeValue(node.id(), self.__get_idx_attr(nodes, 'nodes', 'critical_depth'),
-                    #                            self.__str_to_float_locale(self.getTableValue(row, 'critDepth')), 2)
-                    nodes.changeAttributeValue(node.id(), self.__get_idx_attr(nodes, 'nodes', 'template'),
-                                               self.__str_to_float_locale(self.getTableValue(row, 'model')), 2)
-                    box_list.append(node[self.__get_idx_attr(nodes, 'nodes', 'name')])
-                if (node[self.__get_idx_attr(nodes, 'nodes', 'name')] ==
+                        node[self.utils.get_idx_attr(nodes, 'nodes', 'name')] not in box_list):
+                    nodes.changeAttributeValue(node.id(), self.utils.get_idx_attr(nodes, 'nodes', 'q_terrain'),
+                                               self.utils.str_to_float_locale(self.getTableValue(row, 'up_gl')), 2)
+                    nodes.changeAttributeValue(node.id(), self.utils.get_idx_attr(nodes, 'nodes', 'depth'),
+                                               self.utils.str_to_float_locale(self.getTableValue(row, 'upDepth')), 2)
+                    nodes.changeAttributeValue(node.id(), self.utils.get_idx_attr(nodes, 'nodes', 'q_rule'),
+                                               self.utils.str_to_float_locale(self.getTableValue(row, 'upRuleLvl')), 3)
+                    # nodes.changeAttributeValue(node.id(), self.utils.get_idx_attr(nodes, 'nodes', 'critical_depth'),
+                    #                            self.utils.str_to_float_locale(self.getTableValue(row, 'critDepth')), 2)
+                    nodes.changeAttributeValue(node.id(), self.utils.get_idx_attr(nodes, 'nodes', 'template'),
+                                               self.utils.str_to_float_locale(self.getTableValue(row, 'model')), 2)
+                    box_list.append(node[self.utils.get_idx_attr(nodes, 'nodes', 'name')])
+                if (node[self.utils.get_idx_attr(nodes, 'nodes', 'name')] ==
                         self.getTableValue(row, 'down_box') and
-                        node[self.__get_idx_attr(nodes, 'nodes', 'name')] not in box_list):
-                    nodes.changeAttributeValue(node.id(), self.__get_idx_attr(nodes, 'nodes', 'q_terrain'),
-                                               self.__str_to_float_locale(self.getTableValue(row, 'down_gl')), 2)
-                    nodes.changeAttributeValue(node.id(), self.__get_idx_attr(nodes, 'nodes', 'depth'),
-                                               self.__str_to_float_locale(self.getTableValue(row, 'dwnDepth')), 2)
-                    nodes.changeAttributeValue(node.id(), self.__get_idx_attr(nodes, 'nodes', 'q_rule'),
-                                               self.__str_to_float_locale(self.getTableValue(row, 'dwnRuleLvl')), 3)
-                    # nodes.changeAttributeValue(node.id(), self.__get_idx_attr(nodes, 'nodes', 'critical_depth'),
-                    #                            self.__str_to_float_locale(self.getTableValue(row, 'critDepth')), 2)
-                    nodes.changeAttributeValue(node.id(), self.__get_idx_attr(nodes, 'nodes', 'template'),
-                                               self.__str_to_float_locale(self.getTableValue(row, 'model')), 2)
-                    box_list.append(node[self.__get_idx_attr(nodes, 'nodes', 'name')])
+                        node[self.utils.get_idx_attr(nodes, 'nodes', 'name')] not in box_list):
+                    nodes.changeAttributeValue(node.id(), self.utils.get_idx_attr(nodes, 'nodes', 'q_terrain'),
+                                               self.utils.str_to_float_locale(self.getTableValue(row, 'down_gl')), 2)
+                    nodes.changeAttributeValue(node.id(), self.utils.get_idx_attr(nodes, 'nodes', 'depth'),
+                                               self.utils.str_to_float_locale(self.getTableValue(row, 'dwnDepth')), 2)
+                    nodes.changeAttributeValue(node.id(), self.utils.get_idx_attr(nodes, 'nodes', 'q_rule'),
+                                               self.utils.str_to_float_locale(self.getTableValue(row, 'dwnRuleLvl')), 3)
+                    # nodes.changeAttributeValue(node.id(), self.utils.get_idx_attr(nodes, 'nodes', 'critical_depth'),
+                    #                            self.utils.str_to_float_locale(self.getTableValue(row, 'critDepth')), 2)
+                    nodes.changeAttributeValue(node.id(), self.utils.get_idx_attr(nodes, 'nodes', 'template'),
+                                               self.utils.str_to_float_locale(self.getTableValue(row, 'model')), 2)
+                    box_list.append(node[self.utils.get_idx_attr(nodes, 'nodes', 'name')])
                 row += 1
         nodes.commitChanges()
 
         default_value.setExpression(name_ex)
         default_value.setApplyOnUpdate(True)
-        nodes.setDefaultValueDefinition(self.__get_idx_attr(nodes, 'nodes', 'name'), default_value)
+        nodes.setDefaultValueDefinition(self.utils.get_idx_attr(nodes, 'nodes', 'name'), default_value)
         default_value.setExpression(q_terrain_ex)
         default_value.setApplyOnUpdate(True)
-        nodes.setDefaultValueDefinition(self.__get_idx_attr(nodes, 'nodes', 'q_terrain'), default_value)
+        nodes.setDefaultValueDefinition(self.utils.get_idx_attr(nodes, 'nodes', 'q_terrain'), default_value)
         segments = self.proj.getSegmentsLayer()
         if not segments.isEditable():
             segments.startEditing()
         row = 0
         for segment in self.current_segments:
-            segments.changeAttributeValue(segment.id(), self.__get_idx_attr(segments, 'segments', 'up_qproject'),
-                                          self.__str_to_float_locale(self.getTableValue(row, 'upBrLevel')))
-            segments.changeAttributeValue(segment.id(), self.__get_idx_attr(segments, 'segments', 'dwn_qproject'),
-                                          self.__str_to_float_locale(self.getTableValue(row, 'dwnBrLevel')))
-            segments.changeAttributeValue(segment.id(), self.__get_idx_attr(segments, 'segments', 'unevenness_segment'),
-                                          self.__str_to_float_locale(self.getTableValue(row, 'slopeSection')))
-            segments.changeAttributeValue(segment.id(), self.__get_idx_attr(segments, 'segments', 'pvc_diameter'),
-                                          self.__str_to_float_locale(
+            segments.changeAttributeValue(segment.id(), self.utils.get_idx_attr(segments, 'segments', 'up_qproject'),
+                                          self.utils.str_to_float_locale(self.getTableValue(row, 'upBrLevel')))
+            segments.changeAttributeValue(segment.id(), self.utils.get_idx_attr(segments, 'segments', 'dwn_qproject'),
+                                          self.utils.str_to_float_locale(self.getTableValue(row, 'dwnBrLevel')))
+            segments.changeAttributeValue(segment.id(), self.utils.get_idx_attr(segments, 'segments', 'unevenness_segment'),
+                                          self.utils.str_to_float_locale(self.getTableValue(row, 'slopeSection')))
+            segments.changeAttributeValue(segment.id(), self.utils.get_idx_attr(segments, 'segments', 'pvc_diameter'),
+                                          self.utils.str_to_float_locale(
                                               self.getTableValuePvcDiameter(row, 'pvc_diameter')))
             row += 1
         segments.commitChanges()
@@ -424,34 +421,34 @@ class BlockViewDialog(QDialog, Ui_BlockDialog):
             cx_ret_concrete = self.__get_cx('Retangular Concreto')
             til = self.__get_cx('TIL_Terminal Inspeção-Limpeza')
             attributes = {
-                self.__get_json_attr('resume_frame', 'ext_trechos_DN100(m)'): ext_trechos_DN100,
-                self.__get_json_attr('resume_frame', 'ext_TQ_DN100'): ext_TQ_DN100,
-                self.__get_json_attr('resume_frame', 'ext_total_DN100(m)'):
+                self.utils.get_json_attr('resume_frame', 'ext_trechos_DN100(m)'): ext_trechos_DN100,
+                self.utils.get_json_attr('resume_frame', 'ext_TQ_DN100'): ext_TQ_DN100,
+                self.utils.get_json_attr('resume_frame', 'ext_total_DN100(m)'):
                     (ext_trechos_DN100 + ext_TQ_DN100),
-                self.__get_json_attr('resume_frame', "ext_trechos_DN150(m)"): ext_trechos_DN150,
-                self.__get_json_attr('resume_frame', "ext_TQ_DN150(m)"): ext_TQ_DN150,
-                self.__get_json_attr('resume_frame', "ext_total_DN150(m)"):
+                self.utils.get_json_attr('resume_frame', "ext_trechos_DN150(m)"): ext_trechos_DN150,
+                self.utils.get_json_attr('resume_frame', "ext_TQ_DN150(m)"): ext_TQ_DN150,
+                self.utils.get_json_attr('resume_frame', "ext_total_DN150(m)"):
                     (ext_trechos_DN150 + ext_TQ_DN150),
-                self.__get_json_attr('resume_frame', "ext_total(m)"):
+                self.utils.get_json_attr('resume_frame', "ext_total(m)"):
                     (ext_trechos_DN100 + ext_TQ_DN100 + ext_trechos_DN150 + ext_TQ_DN150),
-                self.__get_json_attr('resume_frame', "cx_Ø40"): cx_040,
-                self.__get_json_attr('resume_frame', "cx_Ø60"): cx_060,
-                self.__get_json_attr('resume_frame', "cx_ret_tijolinho"): cx_ret_brick,
-                self.__get_json_attr('resume_frame', "cx_ret_concreto"): cx_ret_concrete,
-                self.__get_json_attr('resume_frame', "TIL"): til,
-                self.__get_json_attr('resume_frame', "total_inspeção"):
+                self.utils.get_json_attr('resume_frame', "cx_Ø40"): cx_040,
+                self.utils.get_json_attr('resume_frame', "cx_Ø60"): cx_060,
+                self.utils.get_json_attr('resume_frame', "cx_ret_tijolinho"): cx_ret_brick,
+                self.utils.get_json_attr('resume_frame', "cx_ret_concreto"): cx_ret_concrete,
+                self.utils.get_json_attr('resume_frame', "TIL"): til,
+                self.utils.get_json_attr('resume_frame', "total_inspeção"):
                     (cx_040 + cx_060 + cx_ret_brick + cx_ret_concrete + til),
-                self.__get_json_attr('resume_frame', "selim"): self.__get_cx('Selim_Rede'),
-                self.__get_json_attr('resume_frame', "C90º"): self.__get_connections('C90°'),
-                self.__get_json_attr('resume_frame', "TE"): self.__get_connections('TE'),
-                self.__get_json_attr('resume_frame', "imoveis"): self.__get_count_buildings(),
-                self.__get_json_attr('resume_frame', "economias"): self.__get_count_economy(),
-                self.__get_json_attr('resume_frame', "faixa_servidão"): self.__get_length_service_lane(),
+                self.utils.get_json_attr('resume_frame', "selim"): self.__get_cx('Selim_Rede'),
+                self.utils.get_json_attr('resume_frame', "C90º"): self.__get_connections('C90°'),
+                self.utils.get_json_attr('resume_frame', "TE"): self.__get_connections('TE'),
+                self.utils.get_json_attr('resume_frame', "imoveis"): self.__get_count_buildings(),
+                self.utils.get_json_attr('resume_frame', "economias"): self.__get_count_economy(),
+                self.utils.get_json_attr('resume_frame', "faixa_servidão"): self.__get_length_service_lane(),
             }
             for field, value in attributes.items():
                 if feat_exist is not None:
                     resume_frame.changeAttributeValue(feat_exist,
-                                                      self.__get_idx_attr(resume_frame, 'resume_frame', field),
+                                                      self.utils.get_idx_attr(resume_frame, 'resume_frame', field),
                                                       value)
                 else:
                     feature.setAttribute(field, value)
@@ -468,11 +465,11 @@ class BlockViewDialog(QDialog, Ui_BlockDialog):
         for key in grouped:
             for i in range(self.tableWidget.rowCount()):
                 if self.getTableValue(i, "branch") == key:
-                    if int(self.getTableValuePvcDiameter(i, 'pvc_diameter')) == int(dn):
-                        total += self.__str_to_float_locale(
+                    if int(self.getTableValuePvcDiameter(i, 'pvc_diameter')) - int(dn) <= 10:
+                        total += self.utils.str_to_float_locale(
                             self.tableWidget.item(i, self.getColumnIndex('length')).text())
                         # print(self.tableWidget.item(i, self.getColumnIndex('length')).text())
-        return total
+        return round(total, 2)
 
     def __get_len_tq_DN(self, dn):
         total = 0.00
@@ -484,11 +481,11 @@ class BlockViewDialog(QDialog, Ui_BlockDialog):
         for key in grouped:
             for i in range(self.tableWidget.rowCount()):
                 if self.getTableValue(i, "branch") == key:
-                    if (int(self.getTableValuePvcDiameter(i, 'pvc_diameter')) == int(dn) and
+                    if (int(self.getTableValuePvcDiameter(i, 'pvc_diameter')) - int(dn) <= 10 and
                             self.getTableValue(i, "Tubo de Queda") == 'True'):
-                        total += self.__str_to_float_locale(
+                        total += self.utils.str_to_float_locale(
                             self.tableWidget.item(i, self.getColumnIndex('length')).text())
-        return total
+        return round(total, 2)
 
     def __get_cx(self, cx):
         nodes_lyr = QgsProject.instance().mapLayer(ProjectDataManager.get_layers_id().NODES_LAYER_ID)
@@ -501,9 +498,9 @@ class BlockViewDialog(QDialog, Ui_BlockDialog):
         count = 0
         for i, feat in enumerate(nodes_lyr.getFeatures()):
             item = (self.__get_key_map_of_values(layer=nodes_lyr,
-                                                 idx_col=self.__get_idx_attr(nodes_lyr, 'nodes', 'node_type'),
+                                                 idx_col=self.utils.get_idx_attr(nodes_lyr, 'nodes', 'node_type'),
                                                  value=nodes[i].attributes()[
-                                                     self.__get_idx_attr(nodes_lyr, 'nodes', 'node_type')]))
+                                                     self.utils.get_idx_attr(nodes_lyr, 'nodes', 'node_type')]))
             if item == cx:
                 count += 1
         return count
@@ -518,15 +515,15 @@ class BlockViewDialog(QDialog, Ui_BlockDialog):
             raise ValueError(self.tr('Camada inválida!'))
         count = 0
         for i, feat in enumerate(segments_lyr.getFeatures()):
-            if feat[self.__get_json_attr('segments', 'tq')]:
+            if feat[self.utils.get_json_attr('segments', 'tq')]:
                 conn_1 = (self.__get_key_map_of_values(layer=segments_lyr,
-                                                       idx_col=self.__get_idx_attr(segments_lyr, 'segments', 'tq_link1'),
+                                                       idx_col=self.utils.get_idx_attr(segments_lyr, 'segments', 'tq_link1'),
                                                        value=segments[i].attributes()[
-                                                           self.__get_idx_attr(segments_lyr, 'segments', 'tq_link1')]))
+                                                           self.utils.get_idx_attr(segments_lyr, 'segments', 'tq_link1')]))
                 conn_2 = (self.__get_key_map_of_values(layer=segments_lyr,
-                                                       idx_col=self.__get_idx_attr(segments_lyr, 'segments', 'tq_link2'),
+                                                       idx_col=self.utils.get_idx_attr(segments_lyr, 'segments', 'tq_link2'),
                                                        value=segments[i].attributes()[
-                                                           self.__get_idx_attr(segments_lyr, 'segments', 'tq_link2')]))
+                                                           self.utils.get_idx_attr(segments_lyr, 'segments', 'tq_link2')]))
                 if conn_1 == connector:
                     count += 1
                 if conn_2 == connector:
@@ -545,7 +542,7 @@ class BlockViewDialog(QDialog, Ui_BlockDialog):
             raise ValueError(self.tr('Camada inválida!'))
         count = 0
         for feat in buildings_lyr.getFeatures():
-            count += feat[self.__get_json_attr('buildings', 'n_econ')]
+            count += feat[self.utils.get_json_attr('buildings', 'n_econ')]
         return count
 
     def __get_length_service_lane(self):
@@ -554,7 +551,7 @@ class BlockViewDialog(QDialog, Ui_BlockDialog):
             raise ValueError(self.tr('Camada inválida!'))
         length_service_lane = 0
         for feat in service_lane_lyr.getFeatures():
-            length_service_lane = feat[self.__get_json_attr('service_lane', 'extensao')]
+            length_service_lane = feat[self.utils.get_json_attr('service_lane', 'extensao')]
             break
         return length_service_lane
 
@@ -603,70 +600,71 @@ class BlockViewDialog(QDialog, Ui_BlockDialog):
     # def to_float(self, str, default=0):
     #     return float(str.replace(',', '.')) if str != '' else default
 
-    def __str_to_float_locale(self, value: str) -> float:
-        # if QgsApplication.instance().locale() == 'pt_BR':
-        if type(value) is str and len(value) > 0:
-            if value[-1].isnumeric():
-                return self.loc.toFloat(value)[0]
-            return 0.00
-        elif type(value) is float:
-            return value
-        else:
-            return 0.00
+    # def __str_to_float_locale(self, value: str) -> float:
+    #     # if QgsApplication.instance().locale() == 'pt_BR':
+    #     if type(value) is str and len(value) > 0:
+    #         if value[-1].isnumeric():
+    #             return self.loc.toFloat(value)[0]
+    #         return 0.00
+    #     elif type(value) is float:
+    #         return value
+    #     else:
+    #         return 0.00
 
     def __float_to_str_locale(self, value: float, decimals=3):
         if type(value) is float:  # != '' and value != 'NULL':
             return self.loc.toString(value, 'd', decimals)
         return str(value)
 
-    def __set_data_json(self):
-        plg_dir = os.path.dirname(__file__)
-        plg_dir = plg_dir.replace('core' + os.sep + 'calculate', 'resources' + os.sep + 'localizations' + os.sep)
-        set_language_file('pt_BR')
-        lang = ProjectDataManager.get_language_project().LANGUAGE
-        lang = lang if lang != '' else get_language_file()
-        file_json = open(os.path.join(plg_dir, lang + '.json'), 'r')
-        self.data_json = json.load(file_json)
-        file_json.close()
-
-    def __get_json_attr(self, name_lyr: str, attribute: str):
-        if self.data_json is None:
-            self.__set_data_json()
-        lyr = self.data_json[name_lyr][1]
-
-        def get_key(val):
-            for k, v in lyr.items():
-                if v == val:
-                    return k
-            return
-
-        try:
-            return lyr[attribute]
-        except KeyError:
-            att = get_key(attribute)
-            if att is not None:
-                return lyr[att]
-            return
-
-    def __get_idx_attr(self, layer: QgsVectorLayer, name_lyr: str, name_attr: str):
-        attrs = layer.fields().names()
-        return attrs.index(self.__get_json_attr(name_lyr, name_attr))
+    # def __set_data_json(self):
+    #     plg_dir = os.path.dirname(__file__)
+    #     plg_dir = plg_dir.replace('core' + os.sep + 'calculate', 'resources' + os.sep + 'localizations' + os.sep)
+    #     set_language_file('pt_BR') #TODO: remover set antes com o novo gpkg
+    #     lang = ProjectDataManager.get_language_project().LANGUAGE
+    #     lang = lang if lang != '' else get_language_file()
+    #     file_json = open(os.path.join(plg_dir, lang + '.json'), 'r')
+    #     self.data_json = json.load(file_json)
+    #     file_json.close()
+    #
+    # def __get_json_attr(self, name_lyr: str, attribute: str):
+    #     if self.data_json is None:
+    #         self.__set_data_json()
+    #     lyr = self.data_json[name_lyr][1]
+    #
+    #     def get_key(val):
+    #         for k, v in lyr.items():
+    #             if v == val:
+    #                 return k
+    #         return
+    #
+    #     try:
+    #         return lyr[attribute]
+    #     except KeyError:
+    #         att = get_key(attribute)
+    #         if att is not None:
+    #             return lyr[att]
+    #         return
+    #
+    # def __get_idx_attr(self, layer: QgsVectorLayer, name_lyr: str, name_attr: str):
+    #     attrs = layer.fields().names()
+    #     return attrs.index(self.utils.get_json_attr(name_lyr, name_attr))
 
     def __get_raster_express(self):
-        if self.data_json is None:
-            self.__set_data_json()
-        return self.data_json['raster']
+        # if self.data_json is None:
+        #     self.__set_data_json()
+        #     self.utils.data_json
+        return self.utils.data_json['raster']
 
     def __calculate_underground(self, i, initial, minDepth, minSlope):
-        length = self.__str_to_float_locale(self.getTableValue(i, "length"))
-        up_gl = self.__str_to_float_locale(self.getTableValue(i, "up_gl"))
+        length = self.utils.str_to_float_locale(self.getTableValue(i, "length"))
+        up_gl = self.utils.str_to_float_locale(self.getTableValue(i, "up_gl"))
         down_box = self.getTableValue(i, "down_box")
-        down_gl = self.__str_to_float_locale(self.getTableValue(i, "down_gl"))
+        down_gl = self.utils.str_to_float_locale(self.getTableValue(i, "down_gl"))
         # model = self.to_float(self.getTableValue(i, "model"))
-        critDepth = self.__str_to_float_locale(self.getTableValue(i, "critDepth"))
-        dwnDepthPrev = 0.00 if i == initial else self.__str_to_float_locale(
+        critDepth = self.utils.str_to_float_locale(self.getTableValue(i, "critDepth"))
+        dwnDepthPrev = 0.00 if i == initial else self.utils.str_to_float_locale(
             self.getTableValue((i - 1), "dwnDepth"))
-        dwnBrLevelPrev = 0.00 if i == initial else self.__str_to_float_locale(
+        dwnBrLevelPrev = 0.00 if i == initial else self.utils.str_to_float_locale(
             self.getTableValue((i - 1), "dwnBrLevel"))
         if i == initial:
             upDepth = (
@@ -692,16 +690,16 @@ class BlockViewDialog(QDialog, Ui_BlockDialog):
         return upBrLevel, dwnBrLevel, upDepth, dwnDepth, model, upRuleLvl, slopeSection, critDepth, dwnRuleLvl
 
     def __calculate_overhead(self, i, initial, minDepth, minSlope):
-        length = self.__str_to_float_locale(self.getTableValue(i, "length"))
-        up_gl = self.__str_to_float_locale(self.getTableValue(i, "up_gl"))
+        length = self.utils.str_to_float_locale(self.getTableValue(i, "length"))
+        up_gl = self.utils.str_to_float_locale(self.getTableValue(i, "up_gl"))
         down_box = self.getTableValue(i, "down_box")
-        down_gl = self.__str_to_float_locale(self.getTableValue(i, "down_gl"))
+        down_gl = self.utils.str_to_float_locale(self.getTableValue(i, "down_gl"))
         # model = self.to_float(self.getTableValue(i, "model"))
-        critDepth = self.__str_to_float_locale(self.getTableValue(i, "critDepth"))
-        h_branch = - self.__str_to_float_locale(self.getTableValue(initial, "H Ramal"))
-        dwnDepthPrev = 0.00 if i == initial else self.__str_to_float_locale(
+        critDepth = self.utils.str_to_float_locale(self.getTableValue(i, "critDepth"))
+        h_branch = - self.utils.str_to_float_locale(self.getTableValue(initial, "H Ramal"))
+        dwnDepthPrev = 0.00 if i == initial else self.utils.str_to_float_locale(
             self.getTableValue((i - 1), "dwnDepth"))
-        dwnBrLevelPrev = 0.00 if i == initial else self.__str_to_float_locale(
+        dwnBrLevelPrev = 0.00 if i == initial else self.utils.str_to_float_locale(
             self.getTableValue((i - 1), "dwnBrLevel"))
         if i == initial:
             upBrLevel = (up_gl - h_branch) if down_box != '' else ''  # tocheck ''  #F21 i==0
@@ -737,7 +735,7 @@ class BlockViewDialog(QDialog, Ui_BlockDialog):
             for i in range(self.tableWidget.rowCount()):
                 if self.getTableValue(i, "branch") == key:
                     if (self.getTableValue(i, "Posição ramal") ==
-                            self.__get_json_attr(name_lyr='bool_air', attribute='underground')):  # tubo enterrado
+                            self.utils.get_json_attr(name_lyr='bool_air', attribute='underground')):  # tubo enterrado
                         upBrLevel, dwnBrLevel, upDepth, dwnDepth, model, upRuleLvl, slopeSection, critDepth, dwnRuleLvl = (
                             self.__calculate_underground(i, initial, minDepth, minSlope))
                     else:
