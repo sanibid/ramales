@@ -49,4 +49,5 @@ class GenerateCostsUI:
         self.produces_costs.generate_report_costs(local_file=self.le_select_folder.text())
         self.utils.show_dialog(title='SaniHub Ramales', message=self.tr('Arquivo gerado com sucesso'),
                                information=QMessageBox.Information)
+        self.le_select_folder.clear()
         self.windows.close()

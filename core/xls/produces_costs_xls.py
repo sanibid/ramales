@@ -1,12 +1,11 @@
-import json
-
-from PyQt5.QtCore import Qt, QLocale, QCoreApplication
-from qgis._core import QgsProject, QgsVectorLayer
-from xlwt import Workbook, easyxf
 import os
 
-from ...helpers.globals import get_language_file
+from PyQt5.QtCore import QLocale, QCoreApplication
+from qgis._core import QgsProject
+from xlwt import Workbook, easyxf
+
 from ...core.data.data_manager import ProjectDataManager
+from ...helpers.utils import Utils
 
 
 class ProducesReportCostsXls:
@@ -20,32 +19,33 @@ class ProducesReportCostsXls:
         self.segments = None
         self.loc = QLocale()
         self.MAX_COLUMN = 6
+        self.utils = Utils()
 
     def generate_report_costs(self, local_file):
         local_file = os.path.normpath(local_file)
-        block = QgsProject.instance().mapLayer(ProjectDataManager.get_layers_id().BLOCKS_LAYER_ID)
-        block_fields = [field.name() for field in block.fields()]
-        block_values = [f.attributes() for f in block.getFeatures()]
-        block_dict = dict(zip(block_fields, block_values[0]))
-        list_block_values = list(block_dict.values())
-        nodes = []
-        nodes_lyr = QgsProject.instance().mapLayer(ProjectDataManager.get_layers_id().NODES_LAYER_ID)
-        all_nodes = nodes_lyr.getFeatures()
-        for n in all_nodes:
-            nodes.append(n)
+        blocks = QgsProject.instance().mapLayer(ProjectDataManager.get_layers_id().BLOCKS_LAYER_ID)
+        blocks_fields = [field.name() for field in blocks.fields()]
+        blocks_values = [f.attributes() for f in blocks.getFeatures()]
+        blocks_dict = dict(zip(blocks_fields, blocks_values[0]))
+        # list_block_values = list(blocks_dict.values())
+        node = []
+        node_lyr = QgsProject.instance().mapLayer(ProjectDataManager.get_layers_id().NODES_LAYER_ID)
+        all_node = node_lyr.getFeatures()
+        for n in all_node:
+            node.append(n)
         self.segments = QgsProject.instance().mapLayer(ProjectDataManager.get_layers_id().SEGMENTS_LAYER_ID)
-        all_segs = self.segments.getFeatures()
-        segments = []
-        for s in all_segs:
-            segments.append(s)
-        segments = sorted(segments, key=lambda item:
-        (item[self.__get_idx_attr(self.segments, 'segments', 'branch_id')],
-         item[self.__get_idx_attr(self.segments, 'segments', 'segment_id')]))
-        branchs = []
-        for feat in segments:
-            branchs.append(feat[self.__get_idx_attr_segments('branch_id')])
+        all_seg = self.segments.getFeatures()
+        segment = []
+        for s in all_seg:
+            segment.append(s)
+        segment = sorted(segment, key=lambda item:
+        (item[self.utils.get_idx_attr(self.segments, 'segments', 'branch_id')],
+         item[self.utils.get_idx_attr(self.segments, 'segments', 'segment_id')]))
+        branch = []
+        for feat in segment:
+            branch.append(feat[self.utils.get_idx_attr_segments('branch_id')])
 
-        branchs = set(branchs)
+        branch = set(branch)
         workbook = Workbook()
         worksheet = workbook.add_sheet('CUSTOS', cell_overwrite_ok=True)
         worksheet.set_fit_num_pages(1)
@@ -478,64 +478,6 @@ class ProducesReportCostsXls:
 
         workbook.save(local_file)
 
-    def get_element_layer_nodes(self, node: str, name_attr: str):
-        nodes_lyr = QgsProject.instance().mapLayer(ProjectDataManager.get_layers_id().NODES_LAYER_ID)
-        all_nodes = nodes_lyr.getFeatures()
-        for n in all_nodes:
-            if n.attributes()[self.__get_idx_attr(nodes_lyr, 'nodes', 'name')] == node:
-                return n.attributes()[self.__get_idx_attr(nodes_lyr, 'nodes', name_attr)]
-        return
-
-    def __get_idx_attr(self, layer: QgsVectorLayer, name_lyr: str, name_attr: str):
-        attrs = layer.fields().names()
-        return attrs.index(self.__get_json_attr(name_lyr, name_attr))
-
-    def __get_idx_attr_segments(self, name_attr: str):
-        attrs = self.segments.fields().names()
-        return attrs.index(self.__get_json_attr('segments', name_attr))
-
-    def __get_json_attr(self, name_lyr: str, attribute: str):
-        if self.data_json is None:
-            self.__set_data_json()
-        lyr = self.data_json[name_lyr][1]
-
-        def get_key(val):
-            for k, v in lyr.items():
-                if v == val:
-                    return k
-            return
-
-        try:
-            return lyr[attribute]
-        except KeyError:
-            att = get_key(attribute)
-            if att is not None:
-                return lyr[att]
-            return
-
-    def __set_data_json(self):
-        plg_dir = os.path.dirname(__file__)
-        plg_dir = plg_dir.replace('core' + os.sep + 'xls', 'resources' + os.sep + 'localizations' + os.sep)
-        # TODO: Tirar 2 linhas abaixo após receber geopackage
-        from ..data.models import Language
-        ProjectDataManager.save_language_project(Language(LANGUAGE='pt_BR'))
-
-        lang = ProjectDataManager.get_language_project().LANGUAGE
-        lang = lang if lang != '' else get_language_file()
-        file_json = open(os.path.join(plg_dir, lang + '.json'), 'r')
-        self.data_json = json.load(file_json)
-        file_json.close()
-
-    def __str_to_float_locale(self, value: str) -> float:
-        # if QgsApplication.instance().locale() == 'pt_BR':
-        if type(value) is str and len(value) > 0:
-            if value[-1].isnumeric():
-                return self.loc.toFloat(value)[0]
-            return 0.00
-        elif type(value) is float:
-            return value
-        else:
-            return 0.00
 
 
 TEXT_BOLD_CENTER_12_BORDER = easyxf('font: name Arial, height 240, bold True; '

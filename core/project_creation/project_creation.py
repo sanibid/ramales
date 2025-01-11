@@ -73,6 +73,7 @@ def generate_project(local: str,
     group = project.layerTreeRoot().addGroup(utils.tr('SaniHUB Ramales'))
     root = project.layerTreeRoot()
     for i, layer_info in enumerate(conn):
+        layer_name = layer_info.GetName()
         layer = QgsVectorLayer(path_out_file + "|layername=" + layer_info.GetName(), layer_info.GetName(), 'ogr')
         crs = layer.crs()
         crs.createFromOgcWmsCrs(f"{srid_type}:{srid}")
@@ -84,8 +85,11 @@ def generate_project(local: str,
 
             # Close the layers
             node = root.findLayer(layer.id())
-            node.setExpanded(True)
-            node.setExpanded(False)
+            if layer_name == 'quadro_resumo': #TODO: pegar nome da camada via json
+                node.setItemVisibilityChecked(True)
+            else:
+                node.setExpanded(True)
+                node.setExpanded(False)
 
     project.write(qgis_path)
 

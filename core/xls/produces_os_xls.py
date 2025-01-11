@@ -5,6 +5,7 @@ from qgis._core import QgsProject, QgsVectorLayer
 from xlwt import Workbook, easyxf
 import os
 
+from ...helpers.utils import Utils
 from ...helpers.globals import get_language_file
 from ...core.data.data_manager import ProjectDataManager
 
@@ -16,6 +17,7 @@ class ProducesReportOSXls:
         self.segments = None
         self.loc = QLocale()
         self.MAX_COLUMN = 15
+        self.utils = Utils()
 
     def generate_report_os(self, local_file):
         local_file = os.path.normpath(local_file)
@@ -35,18 +37,18 @@ class ProducesReportOSXls:
         for s in all_segs:
             segments.append(s)
         segments = sorted(segments, key=lambda item:
-        (item[self.__get_idx_attr(self.segments, 'segments', 'branch_id')],
-         item[self.__get_idx_attr(self.segments, 'segments', 'segment_id')]))
+        (item[self.utils.get_idx_attr(self.segments, 'segments', 'branch_id')],
+         item[self.utils.get_idx_attr(self.segments, 'segments', 'segment_id')]))
         branchs = []
         for feat in segments:
-            branchs.append(feat[self.__get_idx_attr_segments('branch_id')])
+            branchs.append(feat[self.utils.get_idx_attr_segments('branch_id')])
 
         branchs = set(branchs)
         workbook = Workbook()
         for branch in branchs:
             q_row = 0
             for feat in segments:
-                if feat[self.__get_idx_attr_segments('branch_id')] == branch:
+                if feat[self.utils.get_idx_attr_segments('branch_id')] == branch:
                     q_row += 1
             worksheet = workbook.add_sheet('R-' + str(branch), cell_overwrite_ok=True)
             worksheet.set_fit_num_pages(1)
@@ -55,12 +57,12 @@ class ProducesReportOSXls:
             is_aerial = False
             h_branch = 0.00
             for feat in segments:
-                if feat[self.__get_idx_attr_segments('branch_id')] == branch:
-                    branch_position = int(feat[self.__get_idx_attr_segments("branch_position")])
+                if feat[self.utils.get_idx_attr_segments('branch_id')] == branch:
+                    branch_position = int(feat[self.utils.get_idx_attr_segments("branch_position")])
                     if branch_position == 2:
                         is_aerial = True
-                        h_branch = self.get_element_layer_nodes(
-                            node=feat[self.__get_idx_attr_segments('up_box')], name_attr='h_branch')
+                        h_branch = self.utils.get_element_layer_nodes(
+                            node=feat[self.utils.get_idx_attr_segments('up_box')], name_attr='h_branch')
                     break
 
             # CAIXA
@@ -193,56 +195,56 @@ class ProducesReportOSXls:
             row = 20
             branch_length = 0.00
             for i, feat in enumerate(segments):
-                if feat[self.__get_idx_attr_segments('branch_id')] == branch:
-                    worksheet.write(row, 0, str(feat[self.__get_idx_attr_segments('up_box')]),
+                if feat[self.utils.get_idx_attr_segments('branch_id')] == branch:
+                    worksheet.write(row, 0, str(feat[self.utils.get_idx_attr_segments('up_box')]),
                                     TEXT_NORMAL_CENTER_BODY_L)
-                    worksheet.write(row, 1, str(feat[self.__get_idx_attr_segments('down_box')]),
+                    worksheet.write(row, 1, str(feat[self.utils.get_idx_attr_segments('down_box')]),
                                     NUMBER_NORMAL_CENTER_BODY_C)
-                    worksheet.write(row, 2, self.__str_to_float_locale(feat[self.__get_idx_attr_segments('length')]),
+                    worksheet.write(row, 2, self.utils.str_to_float_locale(feat[self.utils.get_idx_attr_segments('length')]),
                                     NUMBER_NORMAL_CENTER_BODY_C)
-                    branch_length += self.__str_to_float_locale(feat[self.__get_idx_attr_segments('length')])
-                    worksheet.write(row, 3, self.__str_to_float_locale(self.get_element_layer_nodes(
-                        node=feat[self.__get_idx_attr_segments('up_box')], name_attr='q_terrain')),
+                    branch_length += self.utils.str_to_float_locale(feat[self.utils.get_idx_attr_segments('length')])
+                    worksheet.write(row, 3, self.utils.str_to_float_locale(self.utils.get_element_layer_nodes(
+                        node=feat[self.utils.get_idx_attr_segments('up_box')], name_attr='q_terrain')),
                                     NUMBER_NORMAL_CENTER_BODY_C_000)
-                    worksheet.write(row, 4, self.__str_to_float_locale(self.get_element_layer_nodes(
-                        node=feat[self.__get_idx_attr_segments('down_box')], name_attr='q_terrain')),
+                    worksheet.write(row, 4, self.utils.str_to_float_locale(self.utils.get_element_layer_nodes(
+                        node=feat[self.utils.get_idx_attr_segments('down_box')], name_attr='q_terrain')),
                                     NUMBER_NORMAL_CENTER_BODY_C_000)
                     worksheet.write(row, 5,
-                                    self.__str_to_float_locale(feat[self.__get_idx_attr_segments('up_qproject')]),
+                                    self.utils.str_to_float_locale(feat[self.utils.get_idx_attr_segments('up_qproject')]),
                                     NUMBER_NORMAL_CENTER_BODY_C_000)
                     worksheet.write(row, 6,
-                                    self.__str_to_float_locale(feat[self.__get_idx_attr_segments('dwn_qproject')]),
+                                    self.utils.str_to_float_locale(feat[self.utils.get_idx_attr_segments('dwn_qproject')]),
                                     NUMBER_NORMAL_CENTER_BODY_C_000)
                     if row == 20:
-                        worksheet.write(row, 7, self.__str_to_float_locale(self.get_element_layer_nodes(
-                            node=feat[self.__get_idx_attr_segments('up_box')], name_attr='depth')),
+                        worksheet.write(row, 7, self.utils.str_to_float_locale(self.utils.get_element_layer_nodes(
+                            node=feat[self.utils.get_idx_attr_segments('up_box')], name_attr='depth')),
                                         NUMBER_NORMAL_CENTER_BODY_C)
                     else:
-                        worksheet.write(row, 7, self.__str_to_float_locale(self.get_element_layer_nodes(
-                            node=feat[self.__get_idx_attr_segments('up_box')], name_attr='q_terrain')) -
-                                        float(feat[self.__get_idx_attr_segments('up_qproject')]),
+                        worksheet.write(row, 7, self.utils.str_to_float_locale(self.utils.get_element_layer_nodes(
+                            node=feat[self.utils.get_idx_attr_segments('up_box')], name_attr='q_terrain')) -
+                                        float(feat[self.utils.get_idx_attr_segments('up_qproject')]),
                                         NUMBER_NORMAL_CENTER_BODY_C)
-                    worksheet.write(row, 8, self.__str_to_float_locale(self.get_element_layer_nodes(
-                        node=feat[self.__get_idx_attr_segments('down_box')], name_attr='depth')),
+                    worksheet.write(row, 8, self.utils.str_to_float_locale(self.utils.get_element_layer_nodes(
+                        node=feat[self.utils.get_idx_attr_segments('down_box')], name_attr='depth')),
                                     NUMBER_NORMAL_CENTER_BODY_C)
-                    worksheet.write(row, 9, self.__str_to_float_locale(self.get_element_layer_nodes(
-                        node=feat[self.__get_idx_attr_segments('up_box')], name_attr='template')),
+                    worksheet.write(row, 9, self.utils.str_to_float_locale(self.utils.get_element_layer_nodes(
+                        node=feat[self.utils.get_idx_attr_segments('up_box')], name_attr='template')),
                                     NUMBER_NORMAL_CENTER_BODY_C)
-                    worksheet.write(row, 10, self.__str_to_float_locale(self.get_element_layer_nodes(
-                        node=feat[self.__get_idx_attr_segments('up_box')], name_attr='q_rule')),
+                    worksheet.write(row, 10, self.utils.str_to_float_locale(self.utils.get_element_layer_nodes(
+                        node=feat[self.utils.get_idx_attr_segments('up_box')], name_attr='q_rule')),
                                     NUMBER_NORMAL_CENTER_BODY_C_000)
-                    worksheet.write(row, 11, self.__str_to_float_locale(self.get_element_layer_nodes(
-                        node=feat[self.__get_idx_attr_segments('down_box')], name_attr='q_rule')),
+                    worksheet.write(row, 11, self.utils.str_to_float_locale(self.utils.get_element_layer_nodes(
+                        node=feat[self.utils.get_idx_attr_segments('down_box')], name_attr='q_rule')),
                                     NUMBER_NORMAL_CENTER_BODY_C_000)
-                    worksheet.write(row, 12, self.__str_to_float_locale(self.get_element_layer_nodes(
-                        node=feat[self.__get_idx_attr_segments('up_box')], name_attr='critical_depth')),
+                    worksheet.write(row, 12, self.utils.str_to_float_locale(self.utils.get_element_layer_nodes(
+                        node=feat[self.utils.get_idx_attr_segments('up_box')], name_attr='critical_depth')),
                                     NUMBER_NORMAL_CENTER_BODY_C)
-                    worksheet.write(row, 13, self.__str_to_float_locale(
-                        feat[self.__get_idx_attr_segments('unevenness_segment')]),
+                    worksheet.write(row, 13, self.utils.str_to_float_locale(
+                        feat[self.utils.get_idx_attr_segments('unevenness_segment')]),
                                     NUMBER_NORMAL_CENTER_BODY_C_0)
-                    worksheet.write(row, 14, self.__str_to_float_locale(feat[self.__get_idx_attr_segments('h_tq')]),
+                    worksheet.write(row, 14, self.utils.str_to_float_locale(feat[self.utils.get_idx_attr_segments('h_tq')]),
                                     NUMBER_NORMAL_CENTER_BODY_C)
-                    worksheet.write(row, 15, str(feat[self.__get_idx_attr_segments('comments')])
+                    worksheet.write(row, 15, str(feat[self.utils.get_idx_attr_segments('comments')])
                                     .replace('NULL', '').replace('0.0', ''),
                                     TEXT_NORMAL_CENTER_BODY_R)
                     row += 1
@@ -301,65 +303,6 @@ class ProducesReportOSXls:
             worksheet.write_merge(q_row, q_row, 10, self.MAX_COLUMN, '               Construtora',
                                   TEXT_NORMAL_CENTER_REC_CONS)
         workbook.save(local_file)
-
-    def get_element_layer_nodes(self, node: str, name_attr: str):
-        nodes_lyr = QgsProject.instance().mapLayer(ProjectDataManager.get_layers_id().NODES_LAYER_ID)
-        all_nodes = nodes_lyr.getFeatures()
-        for n in all_nodes:
-            if n.attributes()[self.__get_idx_attr(nodes_lyr, 'nodes', 'name')] == node:
-                return n.attributes()[self.__get_idx_attr(nodes_lyr, 'nodes', name_attr)]
-        return
-
-    def __get_idx_attr(self, layer: QgsVectorLayer, name_lyr: str, name_attr: str):
-        attrs = layer.fields().names()
-        return attrs.index(self.__get_json_attr(name_lyr, name_attr))
-
-    def __get_idx_attr_segments(self, name_attr: str):
-        attrs = self.segments.fields().names()
-        return attrs.index(self.__get_json_attr('segments', name_attr))
-
-    def __get_json_attr(self, name_lyr: str, attribute: str):
-        if self.data_json is None:
-            self.__set_data_json()
-        lyr = self.data_json[name_lyr][1]
-
-        def get_key(val):
-            for k, v in lyr.items():
-                if v == val:
-                    return k
-            return
-
-        try:
-            return lyr[attribute]
-        except KeyError:
-            att = get_key(attribute)
-            if att is not None:
-                return lyr[att]
-            return
-
-    def __set_data_json(self):
-        plg_dir = os.path.dirname(__file__)
-        plg_dir = plg_dir.replace('core' + os.sep + 'xls', 'resources' + os.sep + 'localizations' + os.sep)
-        # TODO: Tirar 2 linhas abaixo após receber geopackage
-        from ..data.models import Language
-        ProjectDataManager.save_language_project(Language(LANGUAGE='pt_BR'))
-
-        lang = ProjectDataManager.get_language_project().LANGUAGE
-        lang = lang if lang != '' else get_language_file()
-        file_json = open(os.path.join(plg_dir, lang + '.json'), 'r')
-        self.data_json = json.load(file_json)
-        file_json.close()
-
-    def __str_to_float_locale(self, value: str) -> float:
-        # if QgsApplication.instance().locale() == 'pt_BR':
-        if type(value) is str and len(value) > 0:
-            if value[-1].isnumeric():
-                return self.loc.toFloat(value)[0]
-            return 0.00
-        elif type(value) is float:
-            return value
-        else:
-            return 0.00
 
 
 TEXT_BOLD_CENTER_12_BORDER = easyxf('font: name Arial, height 240, bold True; '
