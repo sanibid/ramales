@@ -3,7 +3,8 @@ from PyQt5.QtWidgets import QGroupBox, QGridLayout, QPushButton, QVBoxLayout, QS
     QCheckBox, QHBoxLayout, QFormLayout
 
 from ...custom_widgets.widgets import ThousandsSeparatorSpinBox
-from ..base.ui_dock_tab_base import DockTab
+from ...dock_tabs.base.ui_dock_tab_base import DockTab
+from ...ui_rep_out_costs import RepOutDataCostsUI
 
 
 class DockTabCostsBase(DockTab):
@@ -114,7 +115,7 @@ class DockTabCostsBase(DockTab):
         self.gb_costsPipe = QGroupBox()
         self.gb_costsTerrain = QGroupBox()
         self.gb_DataCosts = QGroupBox()
-
+        self.rep_out_costs = RepOutDataCostsUI()
         self.set_logic()
 
     def tab_start_ui(self):

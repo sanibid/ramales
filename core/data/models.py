@@ -5,11 +5,14 @@ from typing import Optional
 @dataclass
 class LayersData:
     BLOCKS_LAYER_ID: str = ''
+    RESUME_FRAME_LAYER_ID: str = ''
     NODES_LAYER_ID: str = ''
     SEGMENTS_LAYER_ID: str = ''
     LINEAR_OBSTACLES_LAYER_ID: str = ''
     POINT_OBSTACLES_LAYER_ID: str = ''
     ACCESSORIES_LAYER_ID: str = ''
+    BUILDINGS_LAYER_ID: str = ''
+    SERVICE_LANE_LAYER_ID: str = ''
 
 
 @dataclass
