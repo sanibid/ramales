@@ -1,5 +1,6 @@
 from .data_access import LayersInfoDAO, CalculationInfoDAO, LanguageDAO, LayerRasterDAO, CostsDAO, SegmentsDAO
-from .models import LayersData, Language, LayerRaster, Costs
+from .models import LayersData, Language, LayerRaster, Costs, Ramal
+from typing import Dict
 
 
 class ProjectDataManager:
@@ -121,7 +122,7 @@ class ProjectDataManager:
         return CostsDAO.is_done()[0]
 
     @classmethod
-    def get_all_segments(cls):
+    def get_all_segments(cls) -> Dict[str, Ramal]:
         segs = SegmentsDAO(
             segments_layer_id=cls.get_layers_id().SEGMENTS_LAYER_ID,
             nodes_layer_id=cls.get_layers_id().NODES_LAYER_ID,

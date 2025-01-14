@@ -7,6 +7,28 @@ from ..helpers.utils import Utils
 
 
 class RepOutDataCostsUI():
+    items_prices = {
+        "01_01_01": 10.10,
+        "01_01_02": 0.96,
+        "01_01_03": 11.93,
+        "01_01_04": 10.83,
+        "01_02_01": 0.27,
+        "01_03_01": 8.47,
+        "01_03_02": 1.21,
+        "01_03_03": 9.99,
+        "01_04_01": 2.77,
+        "01_04_02": 8.63,
+        "01_04_03": 19.56,
+        "01_05_03": 0.55,
+        "01_05_04": 0.22,
+        "01_07_01": 17.48,
+        "01_07_08": 14.09,
+        "01_07_10": 13.68,
+        "01_09_01": 0.51,
+        "01_09_02": 0.60,
+        "02_01_01": 4.14,
+        "02_01_02": 8.93,
+    }
     screen = QDialog()
     layout = QGridLayout()
     table = QTableWidget()
@@ -97,8 +119,8 @@ class RepOutDataCostsUI():
                                 int(round(self.table.verticalHeader().length() - 890.0, 0)))
         self.screen.exec_()
 
-    def loadReportCosts(self, costs):
-        self.costs = costs
+    def loadReportCosts(self, quantities_calculator):
+        self.quantities_calculator = quantities_calculator
         self.screen.setWindowTitle(self.title + self.translate(' - Custos'))
         self.pb_saveEditCosts.setText(self.translate('Salvar'))
         self.pb_saveEditCosts.setFixedSize(100, 25)
@@ -579,244 +601,244 @@ class RepOutDataCostsUI():
         self.dsb_item40_unity_dollar.valueChanged.connect(self.setItem40)
 
     def setItem01(self):
-        self.costs.prices.price_5_2_55 = self.dsb_item01_unity_dollar.value()
+        self.quantities_calculator.prices.price_5_2_55 = self.dsb_item01_unity_dollar.value()
         self.table.setItem(1, 5, QTableWidgetItem(
-            self.utils.formatNum2Dec(self.costs.get_5_2_55_price())))
+            self.utils.formatNum2Dec(self.quantities_calculator.get_5_2_55_price())))
         # A alteracao do valor de um item no  implica que o mesmo valor seja aplicado no reator
         self.dsb_item01_unity_dollar.setValue(self.dsb_item01_unity_dollar.value())
 
     def setItem02(self):
-        self.costs.prices.price_5_2_67 = self.dsb_item02_unity_dollar.value()
+        self.quantities_calculator.prices.price_5_2_67 = self.dsb_item02_unity_dollar.value()
         self.table.setItem(2, 5, QTableWidgetItem(
-            self.utils.formatNum2Dec(self.costs.get_5_2_67_price())))
+            self.utils.formatNum2Dec(self.quantities_calculator.get_5_2_67_price())))
         self.dsb_item02_unity_dollar.setValue(self.dsb_item02_unity_dollar.value())
 
     def setItem03(self):
-        self.costs.prices.price_6_1_4 = self.dsb_item03_unity_dollar.value()
+        self.quantities_calculator.prices.price_6_1_4 = self.dsb_item03_unity_dollar.value()
         self.table.setItem(3, 5, QTableWidgetItem(
-            self.utils.formatNum2Dec(self.costs.get_6_1_4_price())))
+            self.utils.formatNum2Dec(self.quantities_calculator.get_6_1_4_price())))
         self.dsb_item03_unity_dollar.setValue(self.dsb_item03_unity_dollar.value())
 
     def setItem04(self):
-        self.costs.prices.price_6_2_4 = self.dsb_item04_unity_dollar.value()
+        self.quantities_calculator.prices.price_6_2_4 = self.dsb_item04_unity_dollar.value()
         self.table.setItem(4, 5, QTableWidgetItem(
-            self.utils.formatNum2Dec(self.costs.get_6_2_4_price())))
+            self.utils.formatNum2Dec(self.quantities_calculator.get_6_2_4_price())))
         self.dsb_item04_unity_dollar.setValue(self.dsb_item04_unity_dollar.value())
 
     def setItem05(self):
-        self.costs.prices.price_6_1_1 = self.dsb_item05_unity_dollar.value()
+        self.quantities_calculator.prices.price_6_1_1 = self.dsb_item05_unity_dollar.value()
         self.table.setItem(5, 5, QTableWidgetItem(
-            self.utils.formatNum2Dec(self.costs.get_6_1_1_price())))
+            self.utils.formatNum2Dec(self.quantities_calculator.get_6_1_1_price())))
         self.dsb_item05_unity_dollar.setValue(self.dsb_item05_unity_dollar.value())
 
     def setItem06(self):
-        self.costs.prices.price_6_2_1 = self.dsb_item06_unity_dollar.value()
+        self.quantities_calculator.prices.price_6_2_1 = self.dsb_item06_unity_dollar.value()
         self.table.setItem(6, 5, QTableWidgetItem(
-            self.utils.formatNum2Dec(self.costs.get_6_2_1_price())))
+            self.utils.formatNum2Dec(self.quantities_calculator.get_6_2_1_price())))
         self.dsb_item06_unity_dollar.setValue(self.dsb_item06_unity_dollar.value())
 
     def setItem07(self):
-        self.costs.prices.price_7_9_2 = self.dsb_item07_unity_dollar.value()
+        self.quantities_calculator.prices.price_7_9_2 = self.dsb_item07_unity_dollar.value()
         self.table.setItem(8, 5, QTableWidgetItem(
-            self.utils.formatNum2Dec(self.costs.get_7_9_2_price())))
+            self.utils.formatNum2Dec(self.quantities_calculator.get_7_9_2_price())))
         self.dsb_item07_unity_dollar.setValue(self.dsb_item07_unity_dollar.value())
 
     def setItem08(self):
-        self.costs.prices.price_9_1_1 = self.dsb_item08_unity_dollar.value()
+        self.quantities_calculator.prices.price_9_1_1 = self.dsb_item08_unity_dollar.value()
         self.table.setItem(10, 5, QTableWidgetItem(
-            self.utils.formatNum2Dec(self.costs.get_9_1_1_price())))
+            self.utils.formatNum2Dec(self.quantities_calculator.get_9_1_1_price())))
         self.dsb_item08_unity_dollar.setValue(self.dsb_item08_unity_dollar.value())
 
     def setItem09(self):
-        self.costs.prices.price_9_7_1 = self.dsb_item09_unity_dollar.value()
+        self.quantities_calculator.prices.price_9_7_1 = self.dsb_item09_unity_dollar.value()
         self.table.setItem(11, 5, QTableWidgetItem(
-            self.utils.formatNum2Dec(self.costs.get_9_7_1_price())))
+            self.utils.formatNum2Dec(self.quantities_calculator.get_9_7_1_price())))
         self.dsb_item09_unity_dollar.setValue(self.dsb_item09_unity_dollar.value())
 
     def setItem10(self):
-        self.costs.prices.price_9_6_1 = self.dsb_item10_unity_dollar.value()
+        self.quantities_calculator.prices.price_9_6_1 = self.dsb_item10_unity_dollar.value()
         self.table.setItem(12, 5, QTableWidgetItem(
-            self.utils.formatNum2Dec(self.costs.get_9_6_1_price())))
+            self.utils.formatNum2Dec(self.quantities_calculator.get_9_6_1_price())))
         self.dsb_item10_unity_dollar.setValue(self.dsb_item10_unity_dollar.value())
 
     def setItem11(self):
-        self.costs.prices.price_50_99_22 = self.dsb_item11_unity_dollar.value()
+        self.quantities_calculator.prices.price_50_99_22 = self.dsb_item11_unity_dollar.value()
         self.table.setItem(13, 5, QTableWidgetItem(
-            self.utils.formatNum2Dec(self.costs.get_50_99_22_price())))
+            self.utils.formatNum2Dec(self.quantities_calculator.get_50_99_22_price())))
         self.dsb_item11_unity_dollar.setValue(self.dsb_item11_unity_dollar.value())
 
     def setItem12(self):
-        self.costs.prices.price_50_99_22 = self.dsb_item11_unity_dollar.value()
+        self.quantities_calculator.prices.price_50_99_22 = self.dsb_item11_unity_dollar.value()
         self.table.setItem(13, 5, QTableWidgetItem(
-            self.utils.formatNum2Dec(self.costs.get_50_99_22_price())))
+            self.utils.formatNum2Dec(self.quantities_calculator.get_50_99_22_price())))
         self.dsb_item11_unity_dollar.setValue(self.dsb_item11_unity_dollar.value())
 
     def setItem13(self):
-        self.costs.prices.price_50_99_22 = self.dsb_item11_unity_dollar.value()
+        self.quantities_calculator.prices.price_50_99_22 = self.dsb_item11_unity_dollar.value()
         self.table.setItem(13, 5, QTableWidgetItem(
-            self.utils.formatNum2Dec(self.costs.get_50_99_22_price())))
+            self.utils.formatNum2Dec(self.quantities_calculator.get_50_99_22_price())))
         self.dsb_item11_unity_dollar.setValue(self.dsb_item11_unity_dollar.value())
 
     def setItem14(self):
-        self.costs.prices.price_50_99_22 = self.dsb_item11_unity_dollar.value()
+        self.quantities_calculator.prices.price_50_99_22 = self.dsb_item11_unity_dollar.value()
         self.table.setItem(13, 5, QTableWidgetItem(
-            self.utils.formatNum2Dec(self.costs.get_50_99_22_price())))
+            self.utils.formatNum2Dec(self.quantities_calculator.get_50_99_22_price())))
         self.dsb_item11_unity_dollar.setValue(self.dsb_item11_unity_dollar.value())
 
     def setItem15(self):
-        self.costs.prices.price_50_99_22 = self.dsb_item11_unity_dollar.value()
+        self.quantities_calculator.prices.price_50_99_22 = self.dsb_item11_unity_dollar.value()
         self.table.setItem(13, 5, QTableWidgetItem(
-            self.utils.formatNum2Dec(self.costs.get_50_99_22_price())))
+            self.utils.formatNum2Dec(self.quantities_calculator.get_50_99_22_price())))
         self.dsb_item11_unity_dollar.setValue(self.dsb_item11_unity_dollar.value())
 
     def setItem16(self):
-        self.costs.prices.price_50_99_22 = self.dsb_item11_unity_dollar.value()
+        self.quantities_calculator.prices.price_50_99_22 = self.dsb_item11_unity_dollar.value()
         self.table.setItem(13, 5, QTableWidgetItem(
-            self.utils.formatNum2Dec(self.costs.get_50_99_22_price())))
+            self.utils.formatNum2Dec(self.quantities_calculator.get_50_99_22_price())))
         self.dsb_item11_unity_dollar.setValue(self.dsb_item11_unity_dollar.value())
 
     def setItem17(self):
-        self.costs.prices.price_50_99_22 = self.dsb_item11_unity_dollar.value()
+        self.quantities_calculator.prices.price_50_99_22 = self.dsb_item11_unity_dollar.value()
         self.table.setItem(13, 5, QTableWidgetItem(
-            self.utils.formatNum2Dec(self.costs.get_50_99_22_price())))
+            self.utils.formatNum2Dec(self.quantities_calculator.get_50_99_22_price())))
         self.dsb_item11_unity_dollar.setValue(self.dsb_item11_unity_dollar.value())
 
     def setItem18(self):
-        self.costs.prices.price_50_99_22 = self.dsb_item11_unity_dollar.value()
+        self.quantities_calculator.prices.price_50_99_22 = self.dsb_item11_unity_dollar.value()
         self.table.setItem(13, 5, QTableWidgetItem(
-            self.utils.formatNum2Dec(self.costs.get_50_99_22_price())))
+            self.utils.formatNum2Dec(self.quantities_calculator.get_50_99_22_price())))
         self.dsb_item11_unity_dollar.setValue(self.dsb_item11_unity_dollar.value())
 
     def setItem19(self):
-        self.costs.prices.price_50_99_22 = self.dsb_item11_unity_dollar.value()
+        self.quantities_calculator.prices.price_50_99_22 = self.dsb_item11_unity_dollar.value()
         self.table.setItem(13, 5, QTableWidgetItem(
-            self.utils.formatNum2Dec(self.costs.get_50_99_22_price())))
+            self.utils.formatNum2Dec(self.quantities_calculator.get_50_99_22_price())))
         self.dsb_item11_unity_dollar.setValue(self.dsb_item11_unity_dollar.value())
 
     def setItem20(self):
-        self.costs.prices.price_50_99_22 = self.dsb_item11_unity_dollar.value()
+        self.quantities_calculator.prices.price_50_99_22 = self.dsb_item11_unity_dollar.value()
         self.table.setItem(13, 5, QTableWidgetItem(
-            self.utils.formatNum2Dec(self.costs.get_50_99_22_price())))
+            self.utils.formatNum2Dec(self.quantities_calculator.get_50_99_22_price())))
         self.dsb_item11_unity_dollar.setValue(self.dsb_item11_unity_dollar.value())
 
     def setItem21(self):
-        self.costs.prices.price_50_99_22 = self.dsb_item11_unity_dollar.value()
+        self.quantities_calculator.prices.price_50_99_22 = self.dsb_item11_unity_dollar.value()
         self.table.setItem(13, 5, QTableWidgetItem(
-            self.utils.formatNum2Dec(self.costs.get_50_99_22_price())))
+            self.utils.formatNum2Dec(self.quantities_calculator.get_50_99_22_price())))
         self.dsb_item11_unity_dollar.setValue(self.dsb_item11_unity_dollar.value())
 
     def setItem22(self):
-        self.costs.prices.price_50_99_22 = self.dsb_item11_unity_dollar.value()
+        self.quantities_calculator.prices.price_50_99_22 = self.dsb_item11_unity_dollar.value()
         self.table.setItem(13, 5, QTableWidgetItem(
-            self.utils.formatNum2Dec(self.costs.get_50_99_22_price())))
+            self.utils.formatNum2Dec(self.quantities_calculator.get_50_99_22_price())))
         self.dsb_item11_unity_dollar.setValue(self.dsb_item11_unity_dollar.value())
 
     def setItem23(self):
-        self.costs.prices.price_50_99_22 = self.dsb_item11_unity_dollar.value()
+        self.quantities_calculator.prices.price_50_99_22 = self.dsb_item11_unity_dollar.value()
         self.table.setItem(13, 5, QTableWidgetItem(
-            self.utils.formatNum2Dec(self.costs.get_50_99_22_price())))
+            self.utils.formatNum2Dec(self.quantities_calculator.get_50_99_22_price())))
         self.dsb_item11_unity_dollar.setValue(self.dsb_item11_unity_dollar.value())
 
     def setItem24(self):
-        self.costs.prices.price_50_99_22 = self.dsb_item11_unity_dollar.value()
+        self.quantities_calculator.prices.price_50_99_22 = self.dsb_item11_unity_dollar.value()
         self.table.setItem(13, 5, QTableWidgetItem(
-            self.utils.formatNum2Dec(self.costs.get_50_99_22_price())))
+            self.utils.formatNum2Dec(self.quantities_calculator.get_50_99_22_price())))
         self.dsb_item11_unity_dollar.setValue(self.dsb_item11_unity_dollar.value())
 
     def setItem25(self):
-        self.costs.prices.price_50_99_22 = self.dsb_item11_unity_dollar.value()
+        self.quantities_calculator.prices.price_50_99_22 = self.dsb_item11_unity_dollar.value()
         self.table.setItem(13, 5, QTableWidgetItem(
-            self.utils.formatNum2Dec(self.costs.get_50_99_22_price())))
+            self.utils.formatNum2Dec(self.quantities_calculator.get_50_99_22_price())))
         self.dsb_item11_unity_dollar.setValue(self.dsb_item11_unity_dollar.value())
 
     def setItem26(self):
-        self.costs.prices.price_50_99_22 = self.dsb_item11_unity_dollar.value()
+        self.quantities_calculator.prices.price_50_99_22 = self.dsb_item11_unity_dollar.value()
         self.table.setItem(13, 5, QTableWidgetItem(
-            self.utils.formatNum2Dec(self.costs.get_50_99_22_price())))
+            self.utils.formatNum2Dec(self.quantities_calculator.get_50_99_22_price())))
         self.dsb_item11_unity_dollar.setValue(self.dsb_item11_unity_dollar.value())
 
     def setItem27(self):
-        self.costs.prices.price_50_99_22 = self.dsb_item11_unity_dollar.value()
+        self.quantities_calculator.prices.price_50_99_22 = self.dsb_item11_unity_dollar.value()
         self.table.setItem(13, 5, QTableWidgetItem(
-            self.utils.formatNum2Dec(self.costs.get_50_99_22_price())))
+            self.utils.formatNum2Dec(self.quantities_calculator.get_50_99_22_price())))
         self.dsb_item11_unity_dollar.setValue(self.dsb_item11_unity_dollar.value())
 
     def setItem28(self):
-        self.costs.prices.price_50_99_22 = self.dsb_item11_unity_dollar.value()
+        self.quantities_calculator.prices.price_50_99_22 = self.dsb_item11_unity_dollar.value()
         self.table.setItem(13, 5, QTableWidgetItem(
-            self.utils.formatNum2Dec(self.costs.get_50_99_22_price())))
+            self.utils.formatNum2Dec(self.quantities_calculator.get_50_99_22_price())))
         self.dsb_item11_unity_dollar.setValue(self.dsb_item11_unity_dollar.value())
 
     def setItem29(self):
-        self.costs.prices.price_50_99_22 = self.dsb_item11_unity_dollar.value()
+        self.quantities_calculator.prices.price_50_99_22 = self.dsb_item11_unity_dollar.value()
         self.table.setItem(13, 5, QTableWidgetItem(
-            self.utils.formatNum2Dec(self.costs.get_50_99_22_price())))
+            self.utils.formatNum2Dec(self.quantities_calculator.get_50_99_22_price())))
         self.dsb_item11_unity_dollar.setValue(self.dsb_item11_unity_dollar.value())
 
     def setItem30(self):
-        self.costs.prices.price_50_99_22 = self.dsb_item11_unity_dollar.value()
+        self.quantities_calculator.prices.price_50_99_22 = self.dsb_item11_unity_dollar.value()
         self.table.setItem(13, 5, QTableWidgetItem(
-            self.utils.formatNum2Dec(self.costs.get_50_99_22_price())))
+            self.utils.formatNum2Dec(self.quantities_calculator.get_50_99_22_price())))
         self.dsb_item11_unity_dollar.setValue(self.dsb_item11_unity_dollar.value())
 
     def setItem31(self):
-        self.costs.prices.price_50_99_22 = self.dsb_item11_unity_dollar.value()
+        self.quantities_calculator.prices.price_50_99_22 = self.dsb_item11_unity_dollar.value()
         self.table.setItem(13, 5, QTableWidgetItem(
-            self.utils.formatNum2Dec(self.costs.get_50_99_22_price())))
+            self.utils.formatNum2Dec(self.quantities_calculator.get_50_99_22_price())))
         self.dsb_item11_unity_dollar.setValue(self.dsb_item11_unity_dollar.value())
 
     def setItem32(self):
-        self.costs.prices.price_50_99_22 = self.dsb_item11_unity_dollar.value()
+        self.quantities_calculator.prices.price_50_99_22 = self.dsb_item11_unity_dollar.value()
         self.table.setItem(13, 5, QTableWidgetItem(
-            self.utils.formatNum2Dec(self.costs.get_50_99_22_price())))
+            self.utils.formatNum2Dec(self.quantities_calculator.get_50_99_22_price())))
         self.dsb_item11_unity_dollar.setValue(self.dsb_item11_unity_dollar.value())
 
     def setItem33(self):
-        self.costs.prices.price_50_99_22 = self.dsb_item11_unity_dollar.value()
+        self.quantities_calculator.prices.price_50_99_22 = self.dsb_item11_unity_dollar.value()
         self.table.setItem(13, 5, QTableWidgetItem(
-            self.utils.formatNum2Dec(self.costs.get_50_99_22_price())))
+            self.utils.formatNum2Dec(self.quantities_calculator.get_50_99_22_price())))
         self.dsb_item11_unity_dollar.setValue(self.dsb_item11_unity_dollar.value())
 
     def setItem34(self):
-        self.costs.prices.price_50_99_22 = self.dsb_item11_unity_dollar.value()
+        self.quantities_calculator.prices.price_50_99_22 = self.dsb_item11_unity_dollar.value()
         self.table.setItem(13, 5, QTableWidgetItem(
-            self.utils.formatNum2Dec(self.costs.get_50_99_22_price())))
+            self.utils.formatNum2Dec(self.quantities_calculator.get_50_99_22_price())))
         self.dsb_item11_unity_dollar.setValue(self.dsb_item11_unity_dollar.value())
 
     def setItem35(self):
-        self.costs.prices.price_50_99_22 = self.dsb_item11_unity_dollar.value()
+        self.quantities_calculator.prices.price_50_99_22 = self.dsb_item11_unity_dollar.value()
         self.table.setItem(13, 5, QTableWidgetItem(
-            self.utils.formatNum2Dec(self.costs.get_50_99_22_price())))
+            self.utils.formatNum2Dec(self.quantities_calculator.get_50_99_22_price())))
         self.dsb_item11_unity_dollar.setValue(self.dsb_item11_unity_dollar.value())
 
     def setItem36(self):
-        self.costs.prices.price_50_99_22 = self.dsb_item11_unity_dollar.value()
+        self.quantities_calculator.prices.price_50_99_22 = self.dsb_item11_unity_dollar.value()
         self.table.setItem(13, 5, QTableWidgetItem(
-            self.utils.formatNum2Dec(self.costs.get_50_99_22_price())))
+            self.utils.formatNum2Dec(self.quantities_calculator.get_50_99_22_price())))
         self.dsb_item11_unity_dollar.setValue(self.dsb_item11_unity_dollar.value())
 
     def setItem37(self):
-        self.costs.prices.price_50_99_22 = self.dsb_item11_unity_dollar.value()
+        self.quantities_calculator.prices.price_50_99_22 = self.dsb_item11_unity_dollar.value()
         self.table.setItem(13, 5, QTableWidgetItem(
-            self.utils.formatNum2Dec(self.costs.get_50_99_22_price())))
+            self.utils.formatNum2Dec(self.quantities_calculator.get_50_99_22_price())))
         self.dsb_item11_unity_dollar.setValue(self.dsb_item11_unity_dollar.value())
 
     def setItem38(self):
-        self.costs.prices.price_50_99_22 = self.dsb_item11_unity_dollar.value()
+        self.quantities_calculator.prices.price_50_99_22 = self.dsb_item11_unity_dollar.value()
         self.table.setItem(13, 5, QTableWidgetItem(
-            self.utils.formatNum2Dec(self.costs.get_50_99_22_price())))
+            self.utils.formatNum2Dec(self.quantities_calculator.get_50_99_22_price())))
         self.dsb_item11_unity_dollar.setValue(self.dsb_item11_unity_dollar.value())
 
     def setItem39(self):
-        self.costs.prices.price_50_99_22 = self.dsb_item11_unity_dollar.value()
+        self.quantities_calculator.prices.price_50_99_22 = self.dsb_item11_unity_dollar.value()
         self.table.setItem(13, 5, QTableWidgetItem(
-            self.utils.formatNum2Dec(self.costs.get_50_99_22_price())))
+            self.utils.formatNum2Dec(self.quantities_calculator.get_50_99_22_price())))
         self.dsb_item11_unity_dollar.setValue(self.dsb_item11_unity_dollar.value())
 
     def setItem40(self):
-        self.costs.prices.price_50_99_22 = self.dsb_item11_unity_dollar.value()
+        self.quantities_calculator.prices.price_50_99_22 = self.dsb_item11_unity_dollar.value()
         self.table.setItem(13, 5, QTableWidgetItem(
-            self.utils.formatNum2Dec(self.costs.get_50_99_22_price())))
+            self.utils.formatNum2Dec(self.quantities_calculator.get_50_99_22_price())))
         self.dsb_item11_unity_dollar.setValue(self.dsb_item11_unity_dollar.value())
 
     def checkData(self):
@@ -845,46 +867,46 @@ class RepOutDataCostsUI():
 
     def saveChanges(self):
         if self.checkData():
-            self.costs.prices.price_5_2_55 = self.dsb_item01_unity_dollar.value()
-            self.costs.prices.price_5_2_67 = self.dsb_item02_unity_dollar.value()
-            self.costs.prices.price_6_1_4 = self.dsb_item03_unity_dollar.value()
-            self.costs.prices.price_6_2_4 = self.dsb_item04_unity_dollar.value()
-            self.costs.prices.price_6_1_1 = self.dsb_item05_unity_dollar.value()
-            self.costs.prices.price_6_2_1 = self.dsb_item06_unity_dollar.value()
-            self.costs.prices.price_7_9_2 = self.dsb_item07_unity_dollar.value()
-            self.costs.prices.price_9_1_1 = self.dsb_item08_unity_dollar.value()
-            self.costs.prices.price_9_7_1 = self.dsb_item09_unity_dollar.value()
-            self.costs.prices.price_9_6_1 = self.dsb_item10_unity_dollar.value()
-            self.costs.prices.price_50_99_22 = self.dsb_item11_unity_dollar.value()
-            self.costs.prices.price_50_99_22 = self.dsb_item12_unity_dollar.value()
-            self.costs.prices.price_50_99_22 = self.dsb_item13_unity_dollar.value()
-            self.costs.prices.price_50_99_22 = self.dsb_item14_unity_dollar.value()
-            self.costs.prices.price_50_99_22 = self.dsb_item15_unity_dollar.value()
-            self.costs.prices.price_50_99_22 = self.dsb_item16_unity_dollar.value()
-            self.costs.prices.price_50_99_22 = self.dsb_item17_unity_dollar.value()
-            self.costs.prices.price_50_99_22 = self.dsb_item18_unity_dollar.value()
-            self.costs.prices.price_50_99_22 = self.dsb_item19_unity_dollar.value()
-            self.costs.prices.price_50_99_22 = self.dsb_item20_unity_dollar.value()
-            self.costs.prices.price_50_99_22 = self.dsb_item21_unity_dollar.value()
-            self.costs.prices.price_50_99_22 = self.dsb_item22_unity_dollar.value()
-            self.costs.prices.price_50_99_22 = self.dsb_item23_unity_dollar.value()
-            self.costs.prices.price_50_99_22 = self.dsb_item24_unity_dollar.value()
-            self.costs.prices.price_50_99_22 = self.dsb_item25_unity_dollar.value()
-            self.costs.prices.price_50_99_22 = self.dsb_item26_unity_dollar.value()
-            self.costs.prices.price_50_99_22 = self.dsb_item27_unity_dollar.value()
-            self.costs.prices.price_50_99_22 = self.dsb_item28_unity_dollar.value()
-            self.costs.prices.price_50_99_22 = self.dsb_item29_unity_dollar.value()
-            self.costs.prices.price_50_99_22 = self.dsb_item30_unity_dollar.value()
-            self.costs.prices.price_50_99_22 = self.dsb_item31_unity_dollar.value()
-            self.costs.prices.price_50_99_22 = self.dsb_item32_unity_dollar.value()
-            self.costs.prices.price_50_99_22 = self.dsb_item33_unity_dollar.value()
-            self.costs.prices.price_50_99_22 = self.dsb_item34_unity_dollar.value()
-            self.costs.prices.price_50_99_22 = self.dsb_item35_unity_dollar.value()
-            self.costs.prices.price_50_99_22 = self.dsb_item36_unity_dollar.value()
-            self.costs.prices.price_50_99_22 = self.dsb_item37_unity_dollar.value()
-            self.costs.prices.price_50_99_22 = self.dsb_item38_unity_dollar.value()
-            self.costs.prices.price_50_99_22 = self.dsb_item39_unity_dollar.value()
-            self.costs.prices.price_50_99_22 = self.dsb_item40_unity_dollar.value()
+            self.quantities_calculator.prices.price_5_2_55 = self.dsb_item01_unity_dollar.value()
+            self.quantities_calculator.prices.price_5_2_67 = self.dsb_item02_unity_dollar.value()
+            self.quantities_calculator.prices.price_6_1_4 = self.dsb_item03_unity_dollar.value()
+            self.quantities_calculator.prices.price_6_2_4 = self.dsb_item04_unity_dollar.value()
+            self.quantities_calculator.prices.price_6_1_1 = self.dsb_item05_unity_dollar.value()
+            self.quantities_calculator.prices.price_6_2_1 = self.dsb_item06_unity_dollar.value()
+            self.quantities_calculator.prices.price_7_9_2 = self.dsb_item07_unity_dollar.value()
+            self.quantities_calculator.prices.price_9_1_1 = self.dsb_item08_unity_dollar.value()
+            self.quantities_calculator.prices.price_9_7_1 = self.dsb_item09_unity_dollar.value()
+            self.quantities_calculator.prices.price_9_6_1 = self.dsb_item10_unity_dollar.value()
+            self.quantities_calculator.prices.price_50_99_22 = self.dsb_item11_unity_dollar.value()
+            self.quantities_calculator.prices.price_50_99_22 = self.dsb_item12_unity_dollar.value()
+            self.quantities_calculator.prices.price_50_99_22 = self.dsb_item13_unity_dollar.value()
+            self.quantities_calculator.prices.price_50_99_22 = self.dsb_item14_unity_dollar.value()
+            self.quantities_calculator.prices.price_50_99_22 = self.dsb_item15_unity_dollar.value()
+            self.quantities_calculator.prices.price_50_99_22 = self.dsb_item16_unity_dollar.value()
+            self.quantities_calculator.prices.price_50_99_22 = self.dsb_item17_unity_dollar.value()
+            self.quantities_calculator.prices.price_50_99_22 = self.dsb_item18_unity_dollar.value()
+            self.quantities_calculator.prices.price_50_99_22 = self.dsb_item19_unity_dollar.value()
+            self.quantities_calculator.prices.price_50_99_22 = self.dsb_item20_unity_dollar.value()
+            self.quantities_calculator.prices.price_50_99_22 = self.dsb_item21_unity_dollar.value()
+            self.quantities_calculator.prices.price_50_99_22 = self.dsb_item22_unity_dollar.value()
+            self.quantities_calculator.prices.price_50_99_22 = self.dsb_item23_unity_dollar.value()
+            self.quantities_calculator.prices.price_50_99_22 = self.dsb_item24_unity_dollar.value()
+            self.quantities_calculator.prices.price_50_99_22 = self.dsb_item25_unity_dollar.value()
+            self.quantities_calculator.prices.price_50_99_22 = self.dsb_item26_unity_dollar.value()
+            self.quantities_calculator.prices.price_50_99_22 = self.dsb_item27_unity_dollar.value()
+            self.quantities_calculator.prices.price_50_99_22 = self.dsb_item28_unity_dollar.value()
+            self.quantities_calculator.prices.price_50_99_22 = self.dsb_item29_unity_dollar.value()
+            self.quantities_calculator.prices.price_50_99_22 = self.dsb_item30_unity_dollar.value()
+            self.quantities_calculator.prices.price_50_99_22 = self.dsb_item31_unity_dollar.value()
+            self.quantities_calculator.prices.price_50_99_22 = self.dsb_item32_unity_dollar.value()
+            self.quantities_calculator.prices.price_50_99_22 = self.dsb_item33_unity_dollar.value()
+            self.quantities_calculator.prices.price_50_99_22 = self.dsb_item34_unity_dollar.value()
+            self.quantities_calculator.prices.price_50_99_22 = self.dsb_item35_unity_dollar.value()
+            self.quantities_calculator.prices.price_50_99_22 = self.dsb_item36_unity_dollar.value()
+            self.quantities_calculator.prices.price_50_99_22 = self.dsb_item37_unity_dollar.value()
+            self.quantities_calculator.prices.price_50_99_22 = self.dsb_item38_unity_dollar.value()
+            self.quantities_calculator.prices.price_50_99_22 = self.dsb_item39_unity_dollar.value()
+            self.quantities_calculator.prices.price_50_99_22 = self.dsb_item40_unity_dollar.value()
 
             icon = QMessageBox.Information
             self.utils.showDialog(self.title, self.translate('Dados alterados com sucesso!'), icon)

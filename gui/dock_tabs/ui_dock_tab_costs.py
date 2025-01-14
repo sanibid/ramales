@@ -1,7 +1,9 @@
 from typing import Optional
 
+from PyQt5.QtWidgets import QMessageBox
+
 from ..generate_costs_ui import GenerateCostsUI
-from ...core.calculate.CostsCalculation import CostCalculation
+from ...core.calculate.CostsCalculation import QuantitiesCalculations
 from .base.ui_dock_tab_costs_base import DockTabCostsBase
 from ...core.data.data_manager import ProjectDataManager
 from ...core.data.models import Costs
@@ -10,10 +12,9 @@ from ...core.data.models import Costs
 class DockTabCosts(DockTabCostsBase):
     def __init__(self, dock):
         super().__init__(dock)
-        self.costs_calculator: Optional[CostCalculation] = None
+        self.quantities_calculator: Optional[QuantitiesCalculations] = None
         self.loaded_from_db = False
         self.costs: Optional[Costs] = None
-        self.costs_calculation = ''
         self.generate_costs = GenerateCostsUI()
 
     def set_logic(self):
@@ -75,13 +76,28 @@ class DockTabCosts(DockTabCostsBase):
         pass
 
     def load_costs_calculations(self):
-        pass
+        self.quantities_calculator = QuantitiesCalculations(
+            costs=self.costs,
+            ramals=ProjectDataManager.get_all_segments(),
+        )
 
     def reload(self):
         self.loaded_from_db = False
         self.load_data()
 
     def on_cb_costs_toggle(self, checked: bool):
+        self.load_costs_calculations()
+        print(self.quantities_calculator.get_02_02_01())
+
+        methods = [method for method in dir(self.quantities_calculator) if
+                   callable(getattr(self.quantities_calculator, method)) and not method.startswith("_")]
+
+        for method in methods:
+            try:
+                value = getattr(self.quantities_calculator, method)()  # Call the method
+                print(f"{method}: {value}")
+            except Exception as e:
+                print(f"{method}: Error while executing method - {e}")
         if self.cb_show_data_costs.isChecked():
             self.gb_DataCosts.show()
         else:
@@ -155,16 +171,14 @@ class DockTabCosts(DockTabCostsBase):
     def __generete_xls_costs(self):
         self.generate_costs.show_generate_costs()
 
-
     def showReportCosts(self):
-        pass
-        # if self.check_data_costs():
-        #     self.setCosts()
-        #     # TODO verificar se project config é não nula
-        #     self.repOutCosts.loadReportCosts(self.costs_calculator, self.project_config.has_sedimentation_tank,
-        #                                      self.title)
-        #     self.repOutCosts.showReportCosts()
-        # elif self.loaded_from_db:
-        #     icon = QMessageBox.Critical
-        #     self.utils.showDialog(self.title,
-        #                           self.tr('Diâmetro e profundidade da tubulação devem ser informados!'), icon)
+        #pass
+        if self.check_data_costs():
+            self.setCosts()
+            # TODO verificar se project config é não nula
+            self.repOutCosts.loadReportCosts(self.quantities_calculator)
+            self.repOutCosts.showReportCosts()
+        elif self.loaded_from_db:
+            icon = QMessageBox.Critical
+            self.utils.showDialog(self.title,
+                                  self.tr('Diâmetro e profundidade da tubulação devem ser informados!'), icon)
