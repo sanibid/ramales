@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 
 from PyQt5.QtCore import QLocale
 from qgis.core import QgsProject, QgsVectorLayer, QgsMapLayer
-from typing import Tuple, Dict
+from typing import Tuple, Dict, List
 from ..data.models import Ramal, Segment, Node
 import os
 import json
@@ -167,6 +167,30 @@ class CostsDAO(DAO):
     KEY_DISPOSAL_DISTANCE = 'DISPOSAL_DISTANCE'
     KEY_SOIL_BULKING = 'SOIL_BULKING'
     KEY_ROCK_SWELLING = 'ROCK_SWELLING'
+    KEY_SERVICES = 'SERVICES'
+
+
+    @classmethod
+    def get_services(cls) -> Tuple[List[float], bool]:
+        # O QgsProject só salva strings, então temos que fazer essa conversão para
+        # float em cada elemento.
+        services, success = cls.proj.readListEntry(cls.SCOPE, cls.KEY_SERVICES, [])
+        try:
+            services_double = [float(x) for x in services]
+
+            return services_double, success
+        except ValueError:
+            return [], False
+
+    @classmethod
+    def set_services(cls, value: List[float]) -> bool:
+        # O QgsProject só salva strings, então temos que garantir que só estamos inserindo números
+        # em nossa lista
+        if any(not isinstance(x, (float, int)) for x in value):
+            return False
+
+        services_str = [str(x) for x in value]
+        return cls.proj.writeEntry(cls.SCOPE, cls.KEY_SERVICES, services_str)
 
     @classmethod
     def get_trench_width(cls) -> Tuple[float, bool]:

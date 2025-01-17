@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from typing import Optional
+from typing import Optional, List
 
 
 @dataclass
@@ -39,6 +39,14 @@ class Costs:
     DISPOSAL_DISTANCE: float = 0.0
     SOIL_BULKING: float = 0.0
     ROCK_SWELLING: float = 0.0
+
+    SERVICES: List = field(
+        default_factory=lambda: [10.10, 0.96, 11.93, 10.83, 0.27, 8.47, 1.21, 9.99, 2.77, 8.63, 19.56,
+                                 0.28,
+                                 0.16, 0.55, 0.22,
+                                 35.19, 68.72, 113.04, 103.88, 33.72, 17.48, 11.03, 10.11, 3.03, 38.19,
+                                 11.55, 9.53, 14.09, 24.59,
+                                 13.68, 77.82, 0.51, 0.60, 4.14, 8.93, 5.97, 6.74, 24.59, 7.67, 17.02])
 
 
 @dataclass
@@ -107,7 +115,3 @@ class Segment:
 class Ramal:
     segments: list[Segment] = field(default_factory=list)
     is_aerial: bool = False
-
-
-
-

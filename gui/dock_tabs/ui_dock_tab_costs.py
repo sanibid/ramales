@@ -34,7 +34,7 @@ class DockTabCosts(DockTabCostsBase):
         self.cb_show_data_costs.toggled.connect(self.on_cb_costs_toggle)
         self.pb_report_costs.clicked.connect(self.__show_report_costs)
         self.pb_generate_xls_costs.clicked.connect(self.__generete_xls_costs)
-        # self.repOutCosts.pb_saveEditCosts.clicked.connect(self.on_services_cost_update)
+        self.rep_out_costs.pb_saveEditCosts.clicked.connect(self.on_services_cost_update)
 
     def load_data(self):
         if ProjectDataManager.is_costs_loaded():
@@ -121,30 +121,17 @@ class DockTabCosts(DockTabCostsBase):
         # if self.check_data_costs():
         #     self.rb_show_data_costs.setChecked(False)
 
-    # def on_services_cost_update(self):
-    #     self.repOutCosts.saveChanges()
-    #     services = [self.repOutCosts.costs.getVlItem01(),
-    #                 self.repOutCosts.costs.getVlItem02(),
-    #                 self.repOutCosts.costs.getVlItem03(),
-    #                 self.repOutCosts.costs.getVlItem04(),
-    #                 self.repOutCosts.costs.getVlItem05(),
-    #                 self.repOutCosts.costs.getVlItem06(),
-    #                 self.repOutCosts.costs.getVlItem07(),
-    #                 self.repOutCosts.costs.getVlItem08(),
-    #                 self.repOutCosts.costs.getVlItem09(),
-    #                 self.repOutCosts.costs.getVlItem10(),
-    #                 self.repOutCosts.costs.getVlItem11(),
-    #                 self.repOutCosts.costs.getVlItem12(),
-    #                 self.repOutCosts.costs.getVlItem13(),
-    #                 self.repOutCosts.costs.getVlItem14(),
-    #                 self.repOutCosts.costs.getVlItem15(),
-    #                 self.repOutCosts.costs.getVlItem16(),
-    #                 self.repOutCosts.costs.getVlItem17()]
-    #     if self.costs is not None:
-    #         self.costs.services = services
-    #     ProjectDataManager.save_project_costs(self.costs)
-    #     self.dock_reload()
-    #     self.load_costs_values()
+    def on_services_cost_update(self):
+        print("on_services_cost_update called")
+        self.rep_out_costs.saveChanges()
+        services = [dsb.value() for dsb in self.rep_out_costs.dsb_list_entrance]
+
+        if self.costs is not None:
+            self.costs.SERVICES = services
+        print("self.costs.SERVICES", self.costs.SERVICES)
+        ProjectDataManager.save_costs(self.costs)
+        self.dock_reload()
+        self.load_costs_values()
 
     def setCosts(self):
         pass
@@ -161,14 +148,3 @@ class DockTabCosts(DockTabCostsBase):
     def __generete_xls_costs(self):
         self.generate_costs.show_generate_costs()
 
-    def showReportCosts(self):
-        #pass
-        if self.check_data_costs():
-            self.setCosts()
-            # TODO verificar se project config é não nula
-            self.repOutCosts.loadReportCosts(self.quantities_calculator)
-            self.repOutCosts.showReportCosts()
-        elif self.loaded_from_db:
-            icon = QMessageBox.Critical
-            self.utils.showDialog(self.title,
-                                  self.tr('Diâmetro e profundidade da tubulação devem ser informados!'), icon)
