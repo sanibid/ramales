@@ -19,15 +19,35 @@ class RepOutDataCostsUI():
         "01_04_01": 2.77,
         "01_04_02": 8.63,
         "01_04_03": 19.56,
+        "01_05_01": 0.28,
+        "01_05_02": 0.16,
         "01_05_03": 0.55,
         "01_05_04": 0.22,
+        "01_06_01": 35.19,
+        "01_06_02": 68.72,
+        "01_06_03": 113.04,
+        "01_06_04": 103.88,
+        "01_06_05": 33.72,
         "01_07_01": 17.48,
+        "01_07_02": 11.03,
+        "01_07_03": 10.11,
+        "01_07_04": 3.03,
+        "01_07_05": 38.19,
+        "01_07_06": 11.55,
+        "01_07_07": 9.53,
         "01_07_08": 14.09,
+        "01_07_09": 24.59,
         "01_07_10": 13.68,
+        "01_08_01": 77.82,
         "01_09_01": 0.51,
         "01_09_02": 0.60,
         "02_01_01": 4.14,
         "02_01_02": 8.93,
+        "02_02_01": 5.97,
+        "02_02_02": 6.74,
+        "02_02_03": 24.59,
+        "02_02_04": 7.67,
+        "02_02_05": 17.02,
     }
     screen = QDialog()
     layout = QGridLayout()
@@ -150,46 +170,46 @@ class RepOutDataCostsUI():
         self.table.setItemDelegateForColumn(3, delegate)
         self.table.setItemDelegateForColumn(5, delegate)
 
-        self.dsb_item01_unity_dollar.setValue(1) #self.costs.prices.price_5_2_55)
-        self.dsb_item02_unity_dollar.setValue(1) #self.costs.prices.price_5_2_67)
-        self.dsb_item03_unity_dollar.setValue(1) #self.costs.prices.price_6_1_4)
-        self.dsb_item04_unity_dollar.setValue(1) #self.costs.prices.price_6_2_4)
-        self.dsb_item05_unity_dollar.setValue(1) #self.costs.prices.price_6_1_1)
-        self.dsb_item06_unity_dollar.setValue(1) #self.costs.prices.price_6_2_1)
-        self.dsb_item07_unity_dollar.setValue(1) #self.costs.prices.price_7_9_2)
-        self.dsb_item08_unity_dollar.setValue(1) #self.costs.prices.price_9_1_1)
-        self.dsb_item09_unity_dollar.setValue(1) #self.costs.prices.price_9_7_1)
-        self.dsb_item10_unity_dollar.setValue(1) #self.costs.prices.price_9_6_1)
-        self.dsb_item11_unity_dollar.setValue(1) #self.costs.prices.price_50_99_22)
-        self.dsb_item12_unity_dollar.setValue(1) #self.costs.prices.price_50_99_22)
-        self.dsb_item13_unity_dollar.setValue(1) #self.costs.prices.price_50_99_22)
-        self.dsb_item14_unity_dollar.setValue(1) #self.costs.prices.price_50_99_22)
-        self.dsb_item15_unity_dollar.setValue(1) #self.costs.prices.price_50_99_22)
-        self.dsb_item16_unity_dollar.setValue(1) #self.costs.prices.price_50_99_22)
-        self.dsb_item17_unity_dollar.setValue(1) #self.costs.prices.price_50_99_22)
-        self.dsb_item18_unity_dollar.setValue(1) #self.costs.prices.price_50_99_22)
-        self.dsb_item19_unity_dollar.setValue(1) #self.costs.prices.price_50_99_22)
-        self.dsb_item20_unity_dollar.setValue(1) #self.costs.prices.price_50_99_22)
-        self.dsb_item21_unity_dollar.setValue(1) #self.costs.prices.price_50_99_22)
-        self.dsb_item22_unity_dollar.setValue(1) #self.costs.prices.price_50_99_22)
-        self.dsb_item23_unity_dollar.setValue(1) #self.costs.prices.price_50_99_22)
-        self.dsb_item24_unity_dollar.setValue(1) #self.costs.prices.price_50_99_22)
-        self.dsb_item25_unity_dollar.setValue(1) #self.costs.prices.price_50_99_22)
-        self.dsb_item26_unity_dollar.setValue(1) #self.costs.prices.price_50_99_22)
-        self.dsb_item27_unity_dollar.setValue(1) #self.costs.prices.price_50_99_22)
-        self.dsb_item28_unity_dollar.setValue(1) #self.costs.prices.price_50_99_22)
-        self.dsb_item29_unity_dollar.setValue(1) #self.costs.prices.price_50_99_22)
-        self.dsb_item30_unity_dollar.setValue(1) #self.costs.prices.price_50_99_22)
-        self.dsb_item31_unity_dollar.setValue(1) #self.costs.prices.price_50_99_22)
-        self.dsb_item32_unity_dollar.setValue(1) #self.costs.prices.price_50_99_22)
-        self.dsb_item33_unity_dollar.setValue(1) #self.costs.prices.price_50_99_22)
-        self.dsb_item34_unity_dollar.setValue(1) #self.costs.prices.price_50_99_22)
-        self.dsb_item35_unity_dollar.setValue(1) #self.costs.prices.price_50_99_22)
-        self.dsb_item36_unity_dollar.setValue(1) #self.costs.prices.price_50_99_22)
-        self.dsb_item37_unity_dollar.setValue(1) #self.costs.prices.price_50_99_22)
-        self.dsb_item38_unity_dollar.setValue(1) #self.costs.prices.price_50_99_22)
-        self.dsb_item39_unity_dollar.setValue(1) #self.costs.prices.price_50_99_22)
-        self.dsb_item40_unity_dollar.setValue(1) #self.costs.prices.price_50_99_22)
+        self.dsb_item01_unity_dollar.setValue(self.items_prices['01_01_01'])
+        self.dsb_item02_unity_dollar.setValue(self.items_prices['01_01_02'])
+        self.dsb_item03_unity_dollar.setValue(self.items_prices['01_01_03'])
+        self.dsb_item04_unity_dollar.setValue(self.items_prices['01_01_04'])
+        self.dsb_item05_unity_dollar.setValue(self.items_prices['01_02_01'])
+        self.dsb_item06_unity_dollar.setValue(self.items_prices['01_03_01'])
+        self.dsb_item07_unity_dollar.setValue(self.items_prices['01_03_02'])
+        self.dsb_item08_unity_dollar.setValue(self.items_prices['01_03_03'])
+        self.dsb_item09_unity_dollar.setValue(self.items_prices['01_04_01'])
+        self.dsb_item10_unity_dollar.setValue(self.items_prices['01_04_02'])
+        self.dsb_item11_unity_dollar.setValue(self.items_prices['01_04_03']) 
+        self.dsb_item12_unity_dollar.setValue(self.items_prices['01_05_01']) 
+        self.dsb_item13_unity_dollar.setValue(self.items_prices['01_05_02']) 
+        self.dsb_item14_unity_dollar.setValue(self.items_prices['01_05_03']) 
+        self.dsb_item15_unity_dollar.setValue(self.items_prices['01_05_04']) 
+        self.dsb_item16_unity_dollar.setValue(self.items_prices['01_06_01']) 
+        self.dsb_item17_unity_dollar.setValue(self.items_prices['01_06_02']) 
+        self.dsb_item18_unity_dollar.setValue(self.items_prices['01_06_03']) 
+        self.dsb_item19_unity_dollar.setValue(self.items_prices['01_06_04']) 
+        self.dsb_item20_unity_dollar.setValue(self.items_prices['01_06_05']) 
+        self.dsb_item21_unity_dollar.setValue(self.items_prices['01_07_01']) 
+        self.dsb_item22_unity_dollar.setValue(self.items_prices['01_07_02']) 
+        self.dsb_item23_unity_dollar.setValue(self.items_prices['01_07_03']) 
+        self.dsb_item24_unity_dollar.setValue(self.items_prices['01_07_04']) 
+        self.dsb_item25_unity_dollar.setValue(self.items_prices['01_07_05']) 
+        self.dsb_item26_unity_dollar.setValue(self.items_prices['01_07_06']) 
+        self.dsb_item27_unity_dollar.setValue(self.items_prices['01_07_07']) 
+        self.dsb_item28_unity_dollar.setValue(self.items_prices['01_07_08']) 
+        self.dsb_item29_unity_dollar.setValue(self.items_prices['01_07_09']) 
+        self.dsb_item30_unity_dollar.setValue(self.items_prices['01_07_10']) 
+        self.dsb_item31_unity_dollar.setValue(self.items_prices['01_08_01']) 
+        self.dsb_item32_unity_dollar.setValue(self.items_prices['01_09_01']) 
+        self.dsb_item33_unity_dollar.setValue(self.items_prices['01_09_02']) 
+        self.dsb_item34_unity_dollar.setValue(self.items_prices['02_01_01'])
+        self.dsb_item35_unity_dollar.setValue(self.items_prices['02_01_02'])
+        self.dsb_item36_unity_dollar.setValue(self.items_prices['02_02_01'])
+        self.dsb_item37_unity_dollar.setValue(self.items_prices['02_02_02'])
+        self.dsb_item38_unity_dollar.setValue(self.items_prices['02_02_03'])
+        self.dsb_item39_unity_dollar.setValue(self.items_prices['02_02_04'])
+        self.dsb_item40_unity_dollar.setValue(self.items_prices['02_02_05'])
         i = 0
         self.table.setItem(i, 0, QTableWidgetItem(self.translate('SERVIÇOS')))
         self.table.setSpan(i, 0, 1, 6)
@@ -199,40 +219,40 @@ class RepOutDataCostsUI():
         self.table.setSpan(i, 0, 1, 6)
         self.table.item(i, 0).setFont(self.utils.formatBoldText())
         i += 1
-        self.table.setItem(i, 0, QTableWidgetItem(str(i -1)))
+        self.table.setItem(i, 0, QTableWidgetItem(str(i - 1)))
         self.table.setItem(i, 1, QTableWidgetItem(self.translate(
             'PLACA DE SINALIZAÇAO E ADVERTENCIA,INCL.FORNEC.,TRANSP.,INSTAL.E REMOÇAO P/OUTRO LOCAL DA OBRA')))
         self.table.setItem(i, 2, QTableWidgetItem(self.translate('m²')))
-        self.table.setItem(i, 3, QTableWidgetItem(self.utils.formatNum2Dec(1))) #self.costs.get_5_2_55_qtd())))
+        self.table.setItem(i, 3, QTableWidgetItem(self.utils.formatNum2Dec(self.quantities_calculator.get_01_01_01()))) #self.costs.get_5_2_55_qtd())))
         self.table.setCellWidget(i, 4, self.dsb_item01_unity_dollar)
         self.table.setItem(i, 5, QTableWidgetItem(
-            self.utils.formatNum2Dec(1))) #self.costs.get_5_2_55_price())))
+            self.utils.formatNum2Dec(self.quantities_calculator.get_01_01_01() * self.dsb_item01_unity_dollar.value())))
         i += 1
-        self.table.setItem(i, 0, QTableWidgetItem(str(i -1)))
+        self.table.setItem(i, 0, QTableWidgetItem(str(i - 1)))
         self.table.setItem(i, 1, QTableWidgetItem(self.translate(
             'CERCA DE PROTECAO S/ SINALIZACAO LUMINOSA C/ MONTANTES E TELA PVC')))
         self.table.setItem(i, 2, QTableWidgetItem(self.translate('m²')))
-        self.table.setItem(i, 3, QTableWidgetItem(self.utils.formatNum2Dec(1))) #self.costs.get_5_2_67_qtd())))
+        self.table.setItem(i, 3, QTableWidgetItem(self.utils.formatNum2Dec(self.quantities_calculator.get_01_01_02()))) #self.costs.get_5_2_67_qtd())))
         self.table.setCellWidget(i, 4, self.dsb_item02_unity_dollar)
         self.table.setItem(i, 5, QTableWidgetItem(
-            self.utils.formatNum2Dec(1))) #self.costs.get_5_2_67_price())))
+            self.utils.formatNum2Dec(self.quantities_calculator.get_01_01_02() * self.dsb_item02_unity_dollar.value())))
         i += 1
         self.table.setItem(i, 0, QTableWidgetItem(str(i - 1)))
         self.table.setItem(i, 1, QTableWidgetItem(self.translate('PASSADICO EM MADEIRA ,P/PEDESTRES')))
         self.table.setItem(i, 2, QTableWidgetItem(self.translate('m²')))
-        self.table.setItem(i, 3, QTableWidgetItem(self.utils.formatNum2Dec(1))) #self.costs.get_6_1_4_qtd())))
+        self.table.setItem(i, 3, QTableWidgetItem(self.utils.formatNum2Dec(self.quantities_calculator.get_01_01_03()))) #self.costs.get_6_1_4_qtd())))
         self.table.setCellWidget(i, 4, self.dsb_item03_unity_dollar)
         self.table.setItem(i, 5, QTableWidgetItem(
-            self.utils.formatNum2Dec(1))) #self.costs.get_6_1_4_price())))
+            self.utils.formatNum2Dec(self.quantities_calculator.get_01_01_03() * self.dsb_item03_unity_dollar.value())))
         i += 1
         self.table.setItem(i, 0, QTableWidgetItem(str(i - 1)))
         self.table.setItem(i, 1, QTableWidgetItem(
             self.translate('PASSADICO METALICO P/ VEICULOS ')))
         self.table.setItem(i, 2, QTableWidgetItem(self.translate('m²')))
-        self.table.setItem(i, 3, QTableWidgetItem(self.utils.formatNum2Dec(1))) #self.costs.get_6_2_4_qtd())))
+        self.table.setItem(i, 3, QTableWidgetItem(self.utils.formatNum2Dec(self.quantities_calculator.get_01_01_04()))) #self.costs.get_6_2_4_qtd())))
         self.table.setCellWidget(i, 4, self.dsb_item04_unity_dollar)
         self.table.setItem(i, 5, QTableWidgetItem(
-            self.utils.formatNum2Dec(1))) #self.costs.get_6_2_4_price())))
+            self.utils.formatNum2Dec(self.quantities_calculator.get_01_01_04() * self.dsb_item04_unity_dollar.value())))
         i += 1
         self.table.setItem(i, 0, QTableWidgetItem(self.translate('SERVICOS TOPOGRAFICOS')))
         self.table.setSpan(i, 0, 1, 6)
@@ -242,10 +262,10 @@ class RepOutDataCostsUI():
         self.table.setItem(i, 1, QTableWidgetItem(self.translate(
             'SERVICOS TOPOGRAFICOS, GEOTECNICOS, INSPECAO DE MATERIAIS, DETALHAMENTO DE PROJETOS E CADASTRO ')))
         self.table.setItem(i, 2, QTableWidgetItem(self.translate('m')))
-        self.table.setItem(i, 3, QTableWidgetItem(self.utils.formatNum2Dec(1))) #self.costs.get_6_2_1_qtd())))
+        self.table.setItem(i, 3, QTableWidgetItem(self.utils.formatNum2Dec(self.quantities_calculator.get_01_02_01()))) #self.costs.get_6_2_1_qtd())))
         self.table.setCellWidget(i, 4, self.dsb_item05_unity_dollar)
         self.table.setItem(i, 5, QTableWidgetItem(
-            self.utils.formatNum2Dec(1))) #self.costs.get_6_2_1_price())))
+            self.utils.formatNum2Dec(self.quantities_calculator.get_01_02_01() * self.dsb_item05_unity_dollar.value())))
         i += 1
         self.table.setItem(i, 0, QTableWidgetItem(self.translate('ESCAVACOES')))
         self.table.setSpan(i, 0, 1, 6)
@@ -254,26 +274,26 @@ class RepOutDataCostsUI():
         self.table.setItem(i, 0, QTableWidgetItem(str(i - 3)))
         self.table.setItem(i, 1, QTableWidgetItem(self.translate('ESCAV. MANUAL DE VALAS')))
         self.table.setItem(i, 2, QTableWidgetItem(self.translate('m³')))
-        self.table.setItem(i, 3, QTableWidgetItem(self.utils.formatNum2Dec(1))) #self.costs.get_7_9_2_qtd())))
+        self.table.setItem(i, 3, QTableWidgetItem(self.utils.formatNum2Dec(self.quantities_calculator.get_01_03_01()))) #self.costs.get_7_9_2_qtd())))
         self.table.setCellWidget(i, 4, self.dsb_item06_unity_dollar)
         self.table.setItem(i, 5, QTableWidgetItem(
-            self.utils.formatNum2Dec(1))) #self.costs.get_7_9_2_price())))
+            self.utils.formatNum2Dec(self.quantities_calculator.get_01_03_01() * self.dsb_item06_unity_dollar.value())))
         i += 1
         self.table.setItem(i, 0, QTableWidgetItem(str(i - 3)))
         self.table.setItem(i, 1, QTableWidgetItem(self.translate('ESCAV. MECANIZ. DE VALAS   EM SOLO')))
         self.table.setItem(i, 2, QTableWidgetItem(self.translate('m³')))
-        self.table.setItem(i, 3, QTableWidgetItem(self.utils.formatNum2Dec(1))) #self.costs.get_7_9_2_qtd())))
+        self.table.setItem(i, 3, QTableWidgetItem(self.utils.formatNum2Dec(self.quantities_calculator.get_01_03_02()))) #self.costs.get_7_9_2_qtd())))
         self.table.setCellWidget(i, 4, self.dsb_item07_unity_dollar)
         self.table.setItem(i, 5, QTableWidgetItem(
-            self.utils.formatNum2Dec(1))) #self.costs.get_7_9_2_price())))
+            self.utils.formatNum2Dec(self.quantities_calculator.get_01_03_02() * self.dsb_item07_unity_dollar.value())))
         i += 1
         self.table.setItem(i, 0, QTableWidgetItem(str(i - 3)))
         self.table.setItem(i, 1, QTableWidgetItem(self.translate('ESCAV. DE VALAS - EM ROCHA')))
         self.table.setItem(i, 2, QTableWidgetItem(self.translate('m³')))
-        self.table.setItem(i, 3, QTableWidgetItem(self.utils.formatNum2Dec(1))) #self.costs.get_7_9_2_qtd())))
+        self.table.setItem(i, 3, QTableWidgetItem(self.utils.formatNum2Dec(self.quantities_calculator.get_01_03_03()))) #self.costs.get_7_9_2_qtd())))
         self.table.setCellWidget(i, 4, self.dsb_item08_unity_dollar)
         self.table.setItem(i, 5, QTableWidgetItem(
-            self.utils.formatNum2Dec(1))) #self.costs.get_7_9_2_price())))
+            self.utils.formatNum2Dec(self.quantities_calculator.get_01_03_03() * self.dsb_item08_unity_dollar.value())))
         i += 1
         self.table.setItem(i, 0, QTableWidgetItem(self.translate('ATERROS E ENVOLTORIAS')))
         self.table.setSpan(i, 0, 1, 6)
@@ -283,28 +303,28 @@ class RepOutDataCostsUI():
         self.table.setItem(i, 1, QTableWidgetItem(self.translate(
             'EXEC. DE ATERRO EM VALAS/POÇOS/CAVAS DE FUNDAÇAO C/ SOLO PROVENIENTE DAS ESCAVAÇOES')))
         self.table.setItem(i, 2, QTableWidgetItem(self.translate('m³')))
-        self.table.setItem(i, 3, QTableWidgetItem(self.utils.formatNum2Dec(1))) #self.costs.get_9_1_1_qtd())))
+        self.table.setItem(i, 3, QTableWidgetItem(self.utils.formatNum2Dec(self.quantities_calculator.get_01_04_01())))
         self.table.setCellWidget(i, 4, self.dsb_item09_unity_dollar)
         self.table.setItem(i, 5, QTableWidgetItem(
-            self.utils.formatNum2Dec(1))) #self.costs.get_9_1_1_price())))
+            self.utils.formatNum2Dec(self.quantities_calculator.get_01_04_01() * self.dsb_item09_unity_dollar.value())))
         i += 1
         self.table.setItem(i, 0, QTableWidgetItem(str(i - 4)))
         self.table.setItem(i, 1, QTableWidgetItem(
             self.translate('EXEC. DE ATERRO EM VALAS/POÇOS/CAVAS DE FUNDAÇAO, C/ FORNEC. DE SOLO')))
         self.table.setItem(i, 2, QTableWidgetItem(self.translate('m³')))
-        self.table.setItem(i, 3, QTableWidgetItem(self.utils.formatNum2Dec(1))) #self.costs.get_9_7_1_qtd())))
+        self.table.setItem(i, 3, QTableWidgetItem(self.utils.formatNum2Dec(self.quantities_calculator.get_01_04_02())))
         self.table.setCellWidget(i, 4, self.dsb_item10_unity_dollar)
         self.table.setItem(i, 5, QTableWidgetItem(
-            self.utils.formatNum2Dec(1))) #self.costs.get_9_7_1_price())))
+            self.utils.formatNum2Dec(self.quantities_calculator.get_01_04_02() * self.dsb_item10_unity_dollar.value())))
         i += 1
         self.table.setItem(i, 0, QTableWidgetItem(str(i - 4)))
         self.table.setItem(i, 1, QTableWidgetItem(
             self.translate('EXEC. DE ENVOLTORIA OU BERCO DE AREIA EM VALAS')))
         self.table.setItem(i, 2, QTableWidgetItem(self.translate('m³')))
-        self.table.setItem(i, 3, QTableWidgetItem(self.utils.formatNum2Dec(1))) #self.costs.get_9_6_1_qtd())))
+        self.table.setItem(i, 3, QTableWidgetItem(self.utils.formatNum2Dec(self.quantities_calculator.get_01_04_03())))
         self.table.setCellWidget(i, 4, self.dsb_item11_unity_dollar)
         self.table.setItem(i, 5, QTableWidgetItem(
-            self.utils.formatNum2Dec(1))) #self.costs.get_9_6_1_price())))
+            self.utils.formatNum2Dec(self.quantities_calculator.get_01_04_03() * self.dsb_item11_unity_dollar.value())))
         i += 1
         self.table.setItem(i, 0, QTableWidgetItem(self.translate('TRANSPORTE DE MATERIAIS')))
         self.table.setSpan(i, 0, 1, 6)
@@ -313,31 +333,35 @@ class RepOutDataCostsUI():
         self.table.setItem(i, 0, QTableWidgetItem(str(i - 5)))
         self.table.setItem(i, 1, QTableWidgetItem(self.translate('CARGA E DESCARGA DE SOLO')))
         self.table.setItem(i, 2, QTableWidgetItem(self.translate('m³')))
-        self.table.setItem(i, 3, QTableWidgetItem(self.utils.formatNum2Dec(1))) #self.costs.get_50_99_22_qtd())))
+        self.table.setItem(i, 3, QTableWidgetItem(self.utils.formatNum2Dec(self.quantities_calculator.get_01_05_01())))
         self.table.setCellWidget(i, 4, self.dsb_item12_unity_dollar)
-        self.table.setItem(i, 5, QTableWidgetItem(self.utils.formatNum2Dec(1))) #self.costs.get_50_99_22_price())))
+        self.table.setItem(i, 5, QTableWidgetItem(
+            self.utils.formatNum2Dec(self.quantities_calculator.get_01_05_01() * self.dsb_item12_unity_dollar.value())))
         i += 1
         self.table.setItem(i, 0, QTableWidgetItem(str(i - 5)))
         self.table.setItem(i, 1, QTableWidgetItem(self.translate(
             'MOMENTO DE TRANSPORTE DE SOLO, EM CAMINHAO BASCULANTE')))
         self.table.setItem(i, 2, QTableWidgetItem(self.translate('m³xkm')))
-        self.table.setItem(i, 3, QTableWidgetItem(self.utils.formatNum2Dec(1))) #self.costs.get_50_99_22_qtd())))
+        self.table.setItem(i, 3, QTableWidgetItem(self.utils.formatNum2Dec(self.quantities_calculator.get_01_05_02())))
         self.table.setCellWidget(i, 4, self.dsb_item13_unity_dollar)
-        self.table.setItem(i, 5, QTableWidgetItem(self.utils.formatNum2Dec(1))) #self.costs.get_50_99_22_price())))
+        self.table.setItem(i, 5, QTableWidgetItem(
+            self.utils.formatNum2Dec(self.quantities_calculator.get_01_05_02() * self.dsb_item13_unity_dollar.value())))
         i += 1
         self.table.setItem(i, 0, QTableWidgetItem(str(i - 5)))
         self.table.setItem(i, 1, QTableWidgetItem(self.translate('CARGA E DESCARGA DE ROCHA')))
         self.table.setItem(i, 2, QTableWidgetItem(self.translate('m³')))
-        self.table.setItem(i, 3, QTableWidgetItem(self.utils.formatNum2Dec(1))) #self.costs.get_50_99_22_qtd())))
+        self.table.setItem(i, 3, QTableWidgetItem(self.utils.formatNum2Dec(self.quantities_calculator.get_01_05_03())))
         self.table.setCellWidget(i, 4, self.dsb_item14_unity_dollar)
-        self.table.setItem(i, 5, QTableWidgetItem(self.utils.formatNum2Dec(1))) #self.costs.get_50_99_22_price())))
+        self.table.setItem(i, 5, QTableWidgetItem(
+            self.utils.formatNum2Dec(self.quantities_calculator.get_01_05_03() * self.dsb_item14_unity_dollar.value())))
         i += 1
         self.table.setItem(i, 0, QTableWidgetItem(str(i - 5)))
         self.table.setItem(i, 1, QTableWidgetItem(self.translate('MOMENTO DE TRANSPORTE DE ROCHA, EM CAMINHAO BASCULANTE')))
         self.table.setItem(i, 2, QTableWidgetItem(self.translate('m³xkm')))
-        self.table.setItem(i, 3, QTableWidgetItem(self.utils.formatNum2Dec(1))) #self.costs.get_50_99_22_qtd())))
+        self.table.setItem(i, 3, QTableWidgetItem(self.utils.formatNum2Dec(self.quantities_calculator.get_01_05_04())))
         self.table.setCellWidget(i, 4, self.dsb_item15_unity_dollar)
-        self.table.setItem(i, 5, QTableWidgetItem(self.utils.formatNum2Dec(1))) #self.costs.get_50_99_22_price())))
+        self.table.setItem(i, 5, QTableWidgetItem(
+            self.utils.formatNum2Dec(self.quantities_calculator.get_01_05_04() * self.dsb_item15_unity_dollar.value())))
         i += 1
         self.table.setItem(i, 0, QTableWidgetItem(self.translate('CAIXAS E POCOS DE VISITA')))
         self.table.setSpan(i, 0, 1, 6)
@@ -347,41 +371,46 @@ class RepOutDataCostsUI():
         self.table.setItem(i, 1, QTableWidgetItem(self.translate(
             'CAIXA P/LIGACAO PREDIAL DE ESGOTO SANITARIO, EM ANEL DE CONCRETO PRE MOLDADODN=0,40m, e=7cm INCL. TAMPA DE CONCR. ARMADO C/ e=0,07m')))
         self.table.setItem(i, 2, QTableWidgetItem(self.translate('un')))
-        self.table.setItem(i, 3, QTableWidgetItem(self.utils.formatNum2Dec(1))) #self.costs.get_50_99_22_qtd())))
+        self.table.setItem(i, 3, QTableWidgetItem(self.utils.formatNum2Dec(self.quantities_calculator.get_01_06_01())))
         self.table.setCellWidget(i, 4, self.dsb_item16_unity_dollar)
-        self.table.setItem(i, 5, QTableWidgetItem(self.utils.formatNum2Dec(1))) #self.costs.get_50_99_22_price())))
+        self.table.setItem(i, 5, QTableWidgetItem(
+            self.utils.formatNum2Dec(self.quantities_calculator.get_01_06_01() * self.dsb_item16_unity_dollar.value())))
         i += 1
         self.table.setItem(i, 0, QTableWidgetItem(str(i - 6)))
         self.table.setItem(i, 1, QTableWidgetItem(self.translate(
             'CAIXA P/ LIGAÇAO PREDIAL DE ESGOTO SANITARIO, EM ANEL DE CONCRETO DN=0,60m, e=7cm,INCL. TAMPA DE CONCR. ARMADO  C/ e=0,07m')))
         self.table.setItem(i, 2, QTableWidgetItem(self.translate('un')))
-        self.table.setItem(i, 3, QTableWidgetItem(self.utils.formatNum2Dec(1))) #self.costs.get_50_99_22_qtd())))
+        self.table.setItem(i, 3, QTableWidgetItem(self.utils.formatNum2Dec(self.quantities_calculator.get_01_06_02())))
         self.table.setCellWidget(i, 4, self.dsb_item17_unity_dollar)
-        self.table.setItem(i, 5, QTableWidgetItem(self.utils.formatNum2Dec(1))) #self.costs.get_50_99_22_price())))
+        self.table.setItem(i, 5, QTableWidgetItem(
+            self.utils.formatNum2Dec(self.quantities_calculator.get_01_06_02() * self.dsb_item17_unity_dollar.value())))
         i += 1
         self.table.setItem(i, 0, QTableWidgetItem(str(i - 6)))
         self.table.setItem(i, 1, QTableWidgetItem(self.translate(
             'CAIXA P/LIGACAO PREDIAL DE ESGOTO SANITARIO,EM ALVENARIA DE TIJOLO MACICO, C/ FORNEC. E ASSENT. DE TAMPA DE CONCRETO')))
         self.table.setItem(i, 2, QTableWidgetItem(self.translate('un')))
-        self.table.setItem(i, 3, QTableWidgetItem(self.utils.formatNum2Dec(1))) #self.costs.get_50_99_22_qtd())))
+        self.table.setItem(i, 3, QTableWidgetItem(self.utils.formatNum2Dec(self.quantities_calculator.get_01_06_03())))
         self.table.setCellWidget(i, 4, self.dsb_item18_unity_dollar)
-        self.table.setItem(i, 5, QTableWidgetItem(self.utils.formatNum2Dec(1))) #self.costs.get_50_99_22_price())))
+        self.table.setItem(i, 5, QTableWidgetItem(
+            self.utils.formatNum2Dec(self.quantities_calculator.get_01_06_03() * self.dsb_item18_unity_dollar.value())))
         i += 1
         self.table.setItem(i, 0, QTableWidgetItem(str(i - 6)))
         self.table.setItem(i, 1, QTableWidgetItem(self.translate(
             'CAIXA P/LIGACAO PREDIAL DE ESGOTO SANITARIO,DE CONCRETO ARMADO, e=0,07 m,C/ FORNEC.E ASSENT.DE TAMPA')))
         self.table.setItem(i, 2, QTableWidgetItem(self.translate('un')))
-        self.table.setItem(i, 3, QTableWidgetItem(self.utils.formatNum2Dec(1))) #self.costs.get_50_99_22_qtd())))
+        self.table.setItem(i, 3, QTableWidgetItem(self.utils.formatNum2Dec(self.quantities_calculator.get_01_06_04())))
         self.table.setCellWidget(i, 4, self.dsb_item19_unity_dollar)
-        self.table.setItem(i, 5, QTableWidgetItem(self.utils.formatNum2Dec(1))) #self.costs.get_50_99_22_price())))
+        self.table.setItem(i, 5, QTableWidgetItem(
+            self.utils.formatNum2Dec(self.quantities_calculator.get_01_06_04() * self.dsb_item19_unity_dollar.value())))
         i += 1
         self.table.setItem(i, 0, QTableWidgetItem(str(i - 6)))
         self.table.setItem(i, 1, QTableWidgetItem(self.translate(
             'DISPOSITIVO DE PASSAGEM P/ ESGOT. SANITARIO, SIMILAR TIL DE PASSAGEM , C/ FORNEC. DO MAT. E ANEL')))
         self.table.setItem(i, 2, QTableWidgetItem(self.translate('un')))
-        self.table.setItem(i, 3, QTableWidgetItem(self.utils.formatNum2Dec(1))) #self.costs.get_50_99_22_qtd())))
+        self.table.setItem(i, 3, QTableWidgetItem(self.utils.formatNum2Dec(self.quantities_calculator.get_01_06_05())))
         self.table.setCellWidget(i, 4, self.dsb_item20_unity_dollar)
-        self.table.setItem(i, 5, QTableWidgetItem(self.utils.formatNum2Dec(1))) #self.costs.get_50_99_22_price())))
+        self.table.setItem(i, 5, QTableWidgetItem(
+            self.utils.formatNum2Dec(self.quantities_calculator.get_01_06_05() * self.dsb_item20_unity_dollar.value())))
         i += 1
         self.table.setItem(i, 0, QTableWidgetItem(self.translate('DEMOLICOES')))
         self.table.setSpan(i, 0, 1, 6)
@@ -391,80 +420,90 @@ class RepOutDataCostsUI():
         self.table.setItem(i, 1, QTableWidgetItem(self.translate(
             'DEMOLICAO E RECOMPOSIÇÃO DE PASSEIO EM PISO CERÂMICO,ARDOSIA E MARMORE')))
         self.table.setItem(i, 2, QTableWidgetItem(self.translate('m²')))
-        self.table.setItem(i, 3, QTableWidgetItem(self.utils.formatNum2Dec(1))) #self.costs.get_50_99_22_qtd())))
+        self.table.setItem(i, 3, QTableWidgetItem(self.utils.formatNum2Dec(self.quantities_calculator.get_01_07_01())))
         self.table.setCellWidget(i, 4, self.dsb_item21_unity_dollar)
-        self.table.setItem(i, 5, QTableWidgetItem(self.utils.formatNum2Dec(1))) #self.costs.get_50_99_22_price())))
+        self.table.setItem(i, 5, QTableWidgetItem(
+            self.utils.formatNum2Dec(self.quantities_calculator.get_01_07_01() * self.dsb_item21_unity_dollar.value())))
         i += 1
         self.table.setItem(i, 0, QTableWidgetItem(str(i - 7)))
         self.table.setItem(i, 1, QTableWidgetItem(self.translate(
             'DEMOLIÇÃO E RECOMPOSIÇÃO  DE PLACAS PRE-MOLDADAS DE CONCRETO EM PASSEIO')))
         self.table.setItem(i, 2, QTableWidgetItem(self.translate('m²')))
-        self.table.setItem(i, 3, QTableWidgetItem(self.utils.formatNum2Dec(1))) #self.costs.get_50_99_22_qtd())))
+        self.table.setItem(i, 3, QTableWidgetItem(self.utils.formatNum2Dec(self.quantities_calculator.get_01_07_02())))
         self.table.setCellWidget(i, 4, self.dsb_item22_unity_dollar)
-        self.table.setItem(i, 5, QTableWidgetItem(self.utils.formatNum2Dec(1))) #self.costs.get_50_99_22_price())))
+        self.table.setItem(i, 5, QTableWidgetItem(
+            self.utils.formatNum2Dec(self.quantities_calculator.get_01_07_02() * self.dsb_item22_unity_dollar.value())))
         i += 1
         self.table.setItem(i, 0, QTableWidgetItem(str(i - 7)))
         self.table.setItem(i, 1, QTableWidgetItem(self.translate(
             'DEMOLIÇÃO E RECOMPOSIÇÃO DE PARALELEPIPEDO OU PEDRA IRREGULAR')))
         self.table.setItem(i, 2, QTableWidgetItem(self.translate('m²')))
-        self.table.setItem(i, 3, QTableWidgetItem(self.utils.formatNum2Dec(1))) #self.costs.get_50_99_22_qtd())))
+        self.table.setItem(i, 3, QTableWidgetItem(self.utils.formatNum2Dec(self.quantities_calculator.get_01_07_03())))
         self.table.setCellWidget(i, 4, self.dsb_item23_unity_dollar)
-        self.table.setItem(i, 5, QTableWidgetItem(self.utils.formatNum2Dec(1))) #self.costs.get_50_99_22_price())))
+        self.table.setItem(i, 5, QTableWidgetItem(
+            self.utils.formatNum2Dec(self.quantities_calculator.get_01_07_03() * self.dsb_item23_unity_dollar.value())))
         i += 1
         self.table.setItem(i, 0, QTableWidgetItem(str(i - 7)))
         self.table.setItem(i, 1, QTableWidgetItem(self.translate('RETIRADA E PLANTIO DE GRAMA')))
         self.table.setItem(i, 2, QTableWidgetItem(self.translate('m²')))
-        self.table.setItem(i, 3, QTableWidgetItem(self.utils.formatNum2Dec(1))) #self.costs.get_50_99_22_qtd())))
+        self.table.setItem(i, 3, QTableWidgetItem(self.utils.formatNum2Dec(self.quantities_calculator.get_01_07_04())))
         self.table.setCellWidget(i, 4, self.dsb_item24_unity_dollar)
-        self.table.setItem(i, 5, QTableWidgetItem(self.utils.formatNum2Dec(1))) #self.costs.get_50_99_22_price())))
+        self.table.setItem(i, 5, QTableWidgetItem(
+            self.utils.formatNum2Dec(self.quantities_calculator.get_01_07_04() * self.dsb_item24_unity_dollar.value())))
         i += 1
         self.table.setItem(i, 0, QTableWidgetItem(str(i - 7)))
         self.table.setItem(i, 1, QTableWidgetItem(self.translate(
             'DEMOLIÇÃO E RECOMPOSIÇÃO DE PAVIMENTO EM ASFALTO')))
         self.table.setItem(i, 2, QTableWidgetItem(self.translate('m²')))
-        self.table.setItem(i, 3, QTableWidgetItem(self.utils.formatNum2Dec(1))) #self.costs.get_50_99_22_qtd())))
+        self.table.setItem(i, 3, QTableWidgetItem(self.utils.formatNum2Dec(self.quantities_calculator.get_01_07_05())))
         self.table.setCellWidget(i, 4, self.dsb_item25_unity_dollar)
-        self.table.setItem(i, 5, QTableWidgetItem(self.utils.formatNum2Dec(1))) #self.costs.get_50_99_22_price())))
+        self.table.setItem(i, 5, QTableWidgetItem(
+            self.utils.formatNum2Dec(self.quantities_calculator.get_01_07_05() * self.dsb_item25_unity_dollar.value())))
         i += 1
         self.table.setItem(i, 0, QTableWidgetItem(str(i - 7)))
         self.table.setItem(i, 1, QTableWidgetItem(self.translate(
             'DEMOLIÇÃO E RECOMPOSIÇÃO  DE BLOCO ARTICULADO DE CONCRETO (INTERTRAVADO)')))
         self.table.setItem(i, 2, QTableWidgetItem(self.translate('m²')))
-        self.table.setItem(i, 3, QTableWidgetItem(self.utils.formatNum2Dec(1))) #self.costs.get_50_99_22_qtd())))
+        self.table.setItem(i, 3, QTableWidgetItem(self.utils.formatNum2Dec(self.quantities_calculator.get_01_07_06())))
         self.table.setCellWidget(i, 4, self.dsb_item26_unity_dollar)
-        self.table.setItem(i, 5, QTableWidgetItem(self.utils.formatNum2Dec(1))) #self.costs.get_50_99_22_price())))
+        self.table.setItem(i, 5, QTableWidgetItem(
+            self.utils.formatNum2Dec(self.quantities_calculator.get_01_07_06() * self.dsb_item26_unity_dollar.value())))
         i += 1
         self.table.setItem(i, 0, QTableWidgetItem(str(i - 7)))
         self.table.setItem(i, 1, QTableWidgetItem(self.translate(
             'DEMOLIÇAO E RECOMPOSIÇÃO  DE PISO CIMENTADO SOBRE LASTRO DE CONCRETO SIMPLES')))
         self.table.setItem(i, 2, QTableWidgetItem(self.translate('m²')))
-        self.table.setItem(i, 3, QTableWidgetItem(self.utils.formatNum2Dec(1))) #self.costs.get_50_99_22_qtd())))
+        self.table.setItem(i, 3, QTableWidgetItem(self.utils.formatNum2Dec(self.quantities_calculator.get_01_07_07())))
         self.table.setCellWidget(i, 4, self.dsb_item27_unity_dollar)
-        self.table.setItem(i, 5, QTableWidgetItem(self.utils.formatNum2Dec(1))) #self.costs.get_50_99_22_price())))
+        self.table.setItem(i, 5, QTableWidgetItem(
+            self.utils.formatNum2Dec(self.quantities_calculator.get_01_07_07() * self.dsb_item27_unity_dollar.value())))
         i += 1
         self.table.setItem(i, 0, QTableWidgetItem(str(i - 7)))
         self.table.setItem(i, 1, QTableWidgetItem(self.translate(
             'DEMOLICAO E RECOMPOSIÇÃO DE PAVIMENTO EM CONCRETO SIMPLES')))
         self.table.setItem(i, 2, QTableWidgetItem(self.translate('m²')))
-        self.table.setItem(i, 3, QTableWidgetItem(self.utils.formatNum2Dec(1))) #self.costs.get_50_99_22_qtd())))
+        self.table.setItem(i, 3, QTableWidgetItem(self.utils.formatNum2Dec(self.quantities_calculator.get_01_07_08())))
         self.table.setCellWidget(i, 4, self.dsb_item28_unity_dollar)
-        self.table.setItem(i, 5, QTableWidgetItem(self.utils.formatNum2Dec(1))) #self.costs.get_50_99_22_price())))
+        self.table.setItem(i, 5, QTableWidgetItem(
+            self.utils.formatNum2Dec(self.quantities_calculator.get_01_07_08() * self.dsb_item28_unity_dollar.value())))
         i += 1
         self.table.setItem(i, 0, QTableWidgetItem(str(i - 7)))
         self.table.setItem(i, 1, QTableWidgetItem(self.translate(
             'DEMOLICAO E RECOMPOSIÇÃO DE PAVIMENTO EM CONCRETO REFORÇADO')))
         self.table.setItem(i, 2, QTableWidgetItem(self.translate('m²')))
-        self.table.setItem(i, 3, QTableWidgetItem(self.utils.formatNum2Dec(1))) #self.costs.get_50_99_22_qtd())))
+        self.table.setItem(i, 3, QTableWidgetItem(self.utils.formatNum2Dec(self.quantities_calculator.get_01_07_09())))
         self.table.setCellWidget(i, 4, self.dsb_item29_unity_dollar)
-        self.table.setItem(i, 5, QTableWidgetItem(self.utils.formatNum2Dec(1))) #self.costs.get_50_99_22_price())))
+        self.table.setItem(i, 5, QTableWidgetItem(
+            self.utils.formatNum2Dec(self.quantities_calculator.get_01_07_09() * self.dsb_item29_unity_dollar.value())))
         i += 1
         self.table.setItem(i, 0, QTableWidgetItem(str(i - 7)))
         self.table.setItem(i, 1, QTableWidgetItem(self.translate(
             'LEVANTAMENTOE RECOMPOSIÇÃO  DE PEDRA PORTUGUESA')))
         self.table.setItem(i, 2, QTableWidgetItem(self.translate('m²')))
-        self.table.setItem(i, 3, QTableWidgetItem(self.utils.formatNum2Dec(1))) #self.costs.get_50_99_22_qtd())))
+        self.table.setItem(i, 3, QTableWidgetItem(self.utils.formatNum2Dec(self.quantities_calculator.get_01_07_10())))
         self.table.setCellWidget(i, 4, self.dsb_item30_unity_dollar)
-        self.table.setItem(i, 5, QTableWidgetItem(self.utils.formatNum2Dec(1))) #self.costs.get_50_99_22_price())))
+        self.table.setItem(i, 5, QTableWidgetItem(
+            self.utils.formatNum2Dec(self.quantities_calculator.get_01_07_10() * self.dsb_item30_unity_dollar.value())))
         i += 1
         self.table.setItem(i, 0, QTableWidgetItem(self.translate('SERVICOS DIVERSOS')))
         self.table.setSpan(i, 0, 1, 6)
@@ -474,9 +513,10 @@ class RepOutDataCostsUI():
         self.table.setItem(i, 1, QTableWidgetItem(self.translate(
             'EXEC. DE  ENVELOPAMENTO C/ CONCRETO SIMPLES, INCL. FORNEC. DE MAT., PRODUCAO, TRANSP.MANUAL., LANC. VERT., ADENS., CURA E FORMA')))
         self.table.setItem(i, 2, QTableWidgetItem(self.translate('m³')))
-        self.table.setItem(i, 3, QTableWidgetItem(self.utils.formatNum2Dec(1))) #self.costs.get_50_99_22_qtd())))
+        self.table.setItem(i, 3, QTableWidgetItem(self.utils.formatNum2Dec(self.quantities_calculator.get_01_08_01())))
         self.table.setCellWidget(i, 4, self.dsb_item31_unity_dollar)
-        self.table.setItem(i, 5, QTableWidgetItem(self.utils.formatNum2Dec(1))) #self.costs.get_50_99_22_price())))
+        self.table.setItem(i, 5, QTableWidgetItem(
+            self.utils.formatNum2Dec(self.quantities_calculator.get_01_08_01() * self.dsb_item31_unity_dollar.value())))
         i += 1
         self.table.setItem(i, 0, QTableWidgetItem(self.translate('ASSENTAMENTO DE TUBULACOES')))
         self.table.setSpan(i, 0, 1, 6)
@@ -486,17 +526,19 @@ class RepOutDataCostsUI():
         self.table.setItem(i, 1, QTableWidgetItem(self.translate(
             'ASSENT. DE TUBOS EM PVC RIG OU PEAD. PB JE- ESGOTO - DN   100 mm')))
         self.table.setItem(i, 2, QTableWidgetItem(self.translate('m')))
-        self.table.setItem(i, 3, QTableWidgetItem(self.utils.formatNum2Dec(1))) #self.costs.get_50_99_22_qtd())))
+        self.table.setItem(i, 3, QTableWidgetItem(self.utils.formatNum2Dec(self.quantities_calculator.get_01_09_01())))
         self.table.setCellWidget(i, 4, self.dsb_item32_unity_dollar)
-        self.table.setItem(i, 5, QTableWidgetItem(self.utils.formatNum2Dec(1))) #self.costs.get_50_99_22_price())))
+        self.table.setItem(i, 5, QTableWidgetItem(
+            self.utils.formatNum2Dec(self.quantities_calculator.get_01_09_01() * self.dsb_item32_unity_dollar.value())))
         i += 1
         self.table.setItem(i, 0, QTableWidgetItem(str(i - 9)))
         self.table.setItem(i, 1, QTableWidgetItem(self.translate(
             'ASSENT. DE TUBOS EM PVC RIG OU PEAD. PB JE- ESGOTO - DN   150 mm')))
         self.table.setItem(i, 2, QTableWidgetItem(self.translate('m')))
-        self.table.setItem(i, 3, QTableWidgetItem(self.utils.formatNum2Dec(1))) #self.costs.get_50_99_22_qtd())))
+        self.table.setItem(i, 3, QTableWidgetItem(self.utils.formatNum2Dec(self.quantities_calculator.get_01_09_02())))
         self.table.setCellWidget(i, 4, self.dsb_item33_unity_dollar)
-        self.table.setItem(i, 5, QTableWidgetItem(self.utils.formatNum2Dec(1))) #self.costs.get_50_99_22_price())))
+        self.table.setItem(i, 5, QTableWidgetItem(
+            self.utils.formatNum2Dec(self.quantities_calculator.get_01_09_02() * self.dsb_item33_unity_dollar.value())))
         i += 1
         self.table.setItem(i, 0, QTableWidgetItem(self.translate('MATERIAIS')))
         self.table.setSpan(i, 0, 1, 6)
@@ -509,16 +551,18 @@ class RepOutDataCostsUI():
         self.table.setItem(i, 0, QTableWidgetItem(str(i - 11)))
         self.table.setItem(i, 1, QTableWidgetItem(self.translate('TUBO ES PVC OU PEAD PB JE P/ ESG. DN 100')))
         self.table.setItem(i, 2, QTableWidgetItem(self.translate('m')))
-        self.table.setItem(i, 3, QTableWidgetItem(self.utils.formatNum2Dec(1))) #self.costs.get_50_99_22_qtd())))
+        self.table.setItem(i, 3, QTableWidgetItem(self.utils.formatNum2Dec(self.quantities_calculator.get_02_01_01())))
         self.table.setCellWidget(i, 4, self.dsb_item34_unity_dollar)
-        self.table.setItem(i, 5, QTableWidgetItem(self.utils.formatNum2Dec(1))) #self.costs.get_50_99_22_price())))
+        self.table.setItem(i, 5, QTableWidgetItem(
+            self.utils.formatNum2Dec(self.quantities_calculator.get_02_01_01() * self.dsb_item34_unity_dollar.value())))
         i += 1
         self.table.setItem(i, 0, QTableWidgetItem(str(i - 11)))
         self.table.setItem(i, 1, QTableWidgetItem(self.translate('TUBO ES PVC OU PEAD PB JE P/ ESG. DN 150')))
         self.table.setItem(i, 2, QTableWidgetItem(self.translate('m')))
-        self.table.setItem(i, 3, QTableWidgetItem(self.utils.formatNum2Dec(1))) #self.costs.get_50_99_22_qtd())))
+        self.table.setItem(i, 3, QTableWidgetItem(self.utils.formatNum2Dec(self.quantities_calculator.get_02_01_02())))
         self.table.setCellWidget(i, 4, self.dsb_item35_unity_dollar)
-        self.table.setItem(i, 5, QTableWidgetItem(self.utils.formatNum2Dec(1))) #self.costs.get_50_99_22_price())))
+        self.table.setItem(i, 5, QTableWidgetItem(
+            self.utils.formatNum2Dec(self.quantities_calculator.get_02_01_02() * self.dsb_item35_unity_dollar.value())))
         i += 1
         self.table.setItem(i, 0, QTableWidgetItem(self.translate('PECAS E CONEXOES')))
         self.table.setSpan(i, 0, 1, 6)
@@ -527,37 +571,42 @@ class RepOutDataCostsUI():
         self.table.setItem(i, 0, QTableWidgetItem(str(i - 12)))
         self.table.setItem(i, 1, QTableWidgetItem(self.translate('SELIM ES PVC JE')))
         self.table.setItem(i, 2, QTableWidgetItem(self.translate('pc')))
-        self.table.setItem(i, 3, QTableWidgetItem(self.utils.formatNum2Dec(1))) #self.costs.get_50_99_22_qtd())))
+        self.table.setItem(i, 3, QTableWidgetItem(self.utils.formatNum2Dec(self.quantities_calculator.get_02_02_01())))
         self.table.setCellWidget(i, 4, self.dsb_item36_unity_dollar)
-        self.table.setItem(i, 5, QTableWidgetItem(self.utils.formatNum2Dec(1))) #self.costs.get_50_99_22_price())))
+        self.table.setItem(i, 5, QTableWidgetItem(
+            self.utils.formatNum2Dec(self.quantities_calculator.get_02_02_01() * self.dsb_item36_unity_dollar.value())))
         i += 1
         self.table.setItem(i, 0, QTableWidgetItem(str(i - 12)))
         self.table.setItem(i, 1, QTableWidgetItem(self.translate('C90 ES PVC PB JE DN 100')))
         self.table.setItem(i, 2, QTableWidgetItem(self.translate('pc')))
-        self.table.setItem(i, 3, QTableWidgetItem(self.utils.formatNum2Dec(1))) #self.costs.get_50_99_22_qtd())))
+        self.table.setItem(i, 3, QTableWidgetItem(self.utils.formatNum2Dec(self.quantities_calculator.get_02_02_02())))
         self.table.setCellWidget(i, 4, self.dsb_item37_unity_dollar)
-        self.table.setItem(i, 5, QTableWidgetItem(self.utils.formatNum2Dec(1))) #self.costs.get_50_99_22_price())))
+        self.table.setItem(i, 5, QTableWidgetItem(
+            self.utils.formatNum2Dec(self.quantities_calculator.get_02_02_02() * self.dsb_item37_unity_dollar.value())))
         i += 1
         self.table.setItem(i, 0, QTableWidgetItem(str(i - 12)))
         self.table.setItem(i, 1, QTableWidgetItem(self.translate('C90 ES PVC PB JE DN 150')))
         self.table.setItem(i, 2, QTableWidgetItem(self.translate('pc')))
-        self.table.setItem(i, 3, QTableWidgetItem(self.utils.formatNum2Dec(1))) #self.costs.get_50_99_22_qtd())))
+        self.table.setItem(i, 3, QTableWidgetItem(self.utils.formatNum2Dec(self.quantities_calculator.get_02_02_03())))
         self.table.setCellWidget(i, 4, self.dsb_item38_unity_dollar)
-        self.table.setItem(i, 5, QTableWidgetItem(self.utils.formatNum2Dec(1))) #self.costs.get_50_99_22_price())))
+        self.table.setItem(i, 5, QTableWidgetItem(
+            self.utils.formatNum2Dec(self.quantities_calculator.get_02_02_03() * self.dsb_item38_unity_dollar.value())))
         i += 1
         self.table.setItem(i, 0, QTableWidgetItem(str(i - 12)))
         self.table.setItem(i, 1, QTableWidgetItem(self.translate('TE ES PVC BBB JE DN 100')))
         self.table.setItem(i, 2, QTableWidgetItem(self.translate('pc')))
-        self.table.setItem(i, 3, QTableWidgetItem(self.utils.formatNum2Dec(1))) #self.costs.get_50_99_22_qtd())))
+        self.table.setItem(i, 3, QTableWidgetItem(self.utils.formatNum2Dec(self.quantities_calculator.get_02_02_04())))
         self.table.setCellWidget(i, 4, self.dsb_item39_unity_dollar)
-        self.table.setItem(i, 5, QTableWidgetItem(self.utils.formatNum2Dec(1))) #self.costs.get_50_99_22_price())))
+        self.table.setItem(i, 5, QTableWidgetItem(
+            self.utils.formatNum2Dec(self.quantities_calculator.get_02_02_04() * self.dsb_item39_unity_dollar.value())))
         i += 1
         self.table.setItem(i, 0, QTableWidgetItem(str(i - 12)))
         self.table.setItem(i, 1, QTableWidgetItem(self.translate('TE ES PVC BBB JE DN 150')))
         self.table.setItem(i, 2, QTableWidgetItem(self.translate('pc')))
-        self.table.setItem(i, 3, QTableWidgetItem(self.utils.formatNum2Dec(1))) #self.costs.get_50_99_22_qtd())))
+        self.table.setItem(i, 3, QTableWidgetItem(self.utils.formatNum2Dec(self.quantities_calculator.get_02_02_05())))
         self.table.setCellWidget(i, 4, self.dsb_item40_unity_dollar)
-        self.table.setItem(i, 5, QTableWidgetItem(self.utils.formatNum2Dec(1))) #self.costs.get_50_99_22_price())))
+        self.table.setItem(i, 5, QTableWidgetItem(
+            self.utils.formatNum2Dec(self.quantities_calculator.get_02_02_05() * self.dsb_item40_unity_dollar.value())))
         i += 1
         self.dsb_item01_unity_dollar.valueChanged.connect(self.setItem01)
         self.dsb_item02_unity_dollar.valueChanged.connect(self.setItem02)

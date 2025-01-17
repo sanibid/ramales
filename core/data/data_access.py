@@ -318,7 +318,8 @@ class LayerDAO(ABC):
         plg_dir = os.path.dirname(__file__)
         plg_dir = plg_dir.replace('core' + os.sep + 'data', 'resources' + os.sep + 'localizations' + os.sep)
 
-        file_json = open(os.path.join(plg_dir, self.lang + '.json'), 'r')
+        # file_json = open(os.path.join(plg_dir, self.lang + '.json'), 'r')
+        file_json = open(os.path.join(plg_dir, 'pt_BR' + '.json'), 'r') #TODO: remover esta linha, descomentar a superior, avaliar usar o recurso a partir de Utils
         self.data_json = json.load(file_json)
         file_json.close()
 
