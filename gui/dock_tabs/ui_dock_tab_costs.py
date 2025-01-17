@@ -76,6 +76,7 @@ class DockTabCosts(DockTabCostsBase):
         pass
 
     def load_costs_calculations(self):
+        self.costs = ProjectDataManager.get_costs()
         self.quantities_calculator = QuantitiesCalculations(
             costs=self.costs,
             ramals=ProjectDataManager.get_all_segments(),
@@ -87,17 +88,6 @@ class DockTabCosts(DockTabCostsBase):
 
     def on_cb_costs_toggle(self, checked: bool):
         self.load_costs_calculations()
-        print(self.quantities_calculator.get_02_02_01())
-
-        methods = [method for method in dir(self.quantities_calculator) if
-                   callable(getattr(self.quantities_calculator, method)) and not method.startswith("_")]
-
-        for method in methods:
-            try:
-                value = getattr(self.quantities_calculator, method)()  # Call the method
-                print(f"{method}: {value}")
-            except Exception as e:
-                print(f"{method}: Error while executing method - {e}")
         if self.cb_show_data_costs.isChecked():
             self.gb_DataCosts.show()
         else:
