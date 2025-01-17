@@ -75,6 +75,8 @@ class RepOutDataCostsUI():
                          dsb_item37_unity_dollar, dsb_item38_unity_dollar, dsb_item39_unity_dollar,
                          dsb_item40_unity_dollar]
 
+
+
     for i in dsb_list_entrance:
         i.setMaximum(max)
         i.setAlignment(Qt.AlignHCenter)
@@ -536,10 +538,13 @@ class RepOutDataCostsUI():
             )
 
     def set_item(self, item_index):
+        price_methods = [method for method in dir(self.quantities_calculator) if method.startswith('get_')]
+        price_methods.sort()
         value = self.dsb_list_entrance[item_index].value()
 
         # Atualizando a lista de custos
         self.quantities_calculator.costs.SERVICES[item_index] = value
+        value *= getattr(self.quantities_calculator, price_methods[item_index])()
 
         # Atualizando a tabela
         self.table.setItem(

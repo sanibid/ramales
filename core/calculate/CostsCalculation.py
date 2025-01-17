@@ -295,8 +295,9 @@ class CostCalculation:
 
 class QuantitiesCalculations:
     def __init__(self, costs: Costs, ramals: Dict[str, Ramal]):
-        self.costs_calculation = CostCalculation(costs, ramals)
         self.costs = costs
+        self.costs_calculation = CostCalculation(self.costs, ramals)
+
 
     # SINALIZAÇÃO E SEGURANÇA
     def get_01_01_01(self):

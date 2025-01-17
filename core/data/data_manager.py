@@ -130,7 +130,7 @@ class ProjectDataManager:
 
     @classmethod
     def get_all_segments(cls) -> Dict[str, Ramal]:
-        if not cls.is_data_layers_id_loaded():
+        if not cls.get_layers_id().SEGMENTS_LAYER_ID:
             return {}
         segs = SegmentsDAO(
             segments_layer_id=cls.get_layers_id().SEGMENTS_LAYER_ID,
