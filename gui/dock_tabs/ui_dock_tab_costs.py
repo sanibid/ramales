@@ -40,8 +40,8 @@ class DockTabCosts(DockTabCostsBase):
         if ProjectDataManager.is_costs_loaded():
             self.costs = ProjectDataManager.get_costs()
         self.load_costs_calculations()
-        self.load_user_input()
         self.load_costs_values()
+        self.load_user_input()
         self.loaded_from_db = True
 
     def load_user_input(self):

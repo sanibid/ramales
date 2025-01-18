@@ -27,6 +27,7 @@ from PyQt5.QtCore import Qt
 from qgis.PyQt.QtCore import QSettings, QTranslator, QCoreApplication
 from qgis.PyQt.QtGui import QIcon
 from qgis.PyQt.QtWidgets import QAction
+from qgis.core import QgsProject
 
 from .ramales_dockwidget import SaniHubRamalesDockWidget
 from .gui.ui_dock import DockUI
@@ -140,6 +141,9 @@ class SanihubRamales:
             self.dock = DockUI(self.iface, self.title)
         self.dockwidget.setWidget(self.dock.scroll)
         self.dock.loadDock()
+        QgsProject.instance().readProject.connect(self.on_project_clear)
+        QgsProject.instance().writeProject.connect(self.on_project_clear)
+        QgsProject.instance().cleared.connect(self.on_project_clear)
 
     def onClosePlugin(self):
         """Cleanup necessary items here when plugin dockwidget is closed"""
@@ -178,3 +182,6 @@ class SanihubRamales:
         # TODO: fix to allow choice of dock location
         self.iface.addDockWidget(Qt.RightDockWidgetArea, self.dockwidget)
         self.dockwidget.show()
+
+    def on_project_clear(self):
+        self.dock.reload()
