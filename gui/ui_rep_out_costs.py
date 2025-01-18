@@ -532,27 +532,62 @@ class RepOutDataCostsUI():
             self.utils.formatNum2Dec(self.quantities_calculator.get_02_02_05() * self.dsb_item40_unity_dollar.value())))
         i += 1
         # Conectando os sinais usando uma única função com lambdas
-        for index in range(40):  # Para os itens de 1 a 40
+        # as adições sao para contar as linhas de cabeçalho
+        for index in range(0, 4):  # SINALIZAÇÃO E SEGURANÇA
             self.dsb_list_entrance[index].valueChanged.connect(
-                lambda _, item_index=index: self.set_item(item_index)
-            )
+                lambda _, item_index=index: self.set_item(item_index, item_index + 2))
+        for index in range(4, 5):  # SERVIÇOS TOPOGRÁFICOS
+            self.dsb_list_entrance[index].valueChanged.connect(
+                lambda _, item_index=index: self.set_item(item_index, item_index + 3))
+        for index in range(5, 8):  # ESCAVAÇÕES
+            self.dsb_list_entrance[index].valueChanged.connect(
+                lambda _, item_index=index: self.set_item(item_index, item_index + 4))
+        for index in range(8, 11):  # ATERROS E ENVOLTÓRIAS
+            self.dsb_list_entrance[index].valueChanged.connect(
+                lambda _, item_index=index: self.set_item(item_index, item_index + 5))
+        for index in range(11, 15):  # TRANSPORTE DE MATERIAIS
+            self.dsb_list_entrance[index].valueChanged.connect(
+                lambda _, item_index=index: self.set_item(item_index, item_index + 6))
+        for index in range(15, 20):  # CAIXAS E POÇOS DE VISITA
+            self.dsb_list_entrance[index].valueChanged.connect(
+                lambda _, item_index=index: self.set_item(item_index, item_index + 7))
+        for index in range(20, 30):  # DEMOLIÇÕES
+            self.dsb_list_entrance[index].valueChanged.connect(
+                lambda _, item_index=index: self.set_item(item_index, item_index + 8))
+        for index in range(30, 31):  # SERVIÇOS DIVERSOS
+            self.dsb_list_entrance[index].valueChanged.connect(
+                lambda _, item_index=index: self.set_item(item_index, item_index + 9))
+        for index in range(31, 33):  # ASSENTAMENTO DE TUBULAÇÕES
+            self.dsb_list_entrance[index].valueChanged.connect(
+                lambda _, item_index=index: self.set_item(item_index, item_index + 10))
+        for index in range(33, 35):  # TUBULAÇÕES
+            self.dsb_list_entrance[index].valueChanged.connect(
+                lambda _, item_index=index: self.set_item(item_index, item_index + 12))
+        for index in range(35, 40):  # PEÇAS E CONEXÕES
+            self.dsb_list_entrance[index].valueChanged.connect(
+                lambda _, item_index=index: self.set_item(item_index, item_index + 13))
 
-    def set_item(self, item_index):
+
+
+
+
+    def set_item(self, dsb_index, table_index):
         price_methods = [method for method in dir(self.quantities_calculator) if method.startswith('get_')]
         price_methods.sort()
-        value = self.dsb_list_entrance[item_index].value()
+        value = self.dsb_list_entrance[dsb_index].value()
 
         # Atualizando a lista de custos
-        self.quantities_calculator.costs.SERVICES[item_index] = value
-        value *= getattr(self.quantities_calculator, price_methods[item_index])()
+        self.quantities_calculator.costs.SERVICES[dsb_index] = value
+        value *= getattr(self.quantities_calculator, price_methods[dsb_index])()
 
         # Atualizando a tabela
         self.table.setItem(
-            item_index + 1, 5, QTableWidgetItem(self.utils.formatNum2Dec(value))
+            table_index, 5, QTableWidgetItem(self.utils.formatNum2Dec(value))
         )
 
+
         # Atualizando o spin box com o novo valor
-        self.dsb_list_entrance[item_index].setValue(value)
+        #self.dsb_list_entrance[item_index].setValue(value)
 
     def checkData(self):
         # Verifica se todos os itens têm valores diferentes de 0
