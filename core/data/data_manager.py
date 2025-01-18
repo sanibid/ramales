@@ -130,7 +130,9 @@ class ProjectDataManager:
 
     @classmethod
     def get_all_segments(cls) -> Dict[str, Ramal]:
-        if not cls.get_layers_id().SEGMENTS_LAYER_ID:
+        if not cls.get_layers_id().SEGMENTS_LAYER_ID \
+                or not cls.get_layers_id().NODES_LAYER_ID \
+                or not cls.get_language_project().LANGUAGE:
             return {}
         segs = SegmentsDAO(
             segments_layer_id=cls.get_layers_id().SEGMENTS_LAYER_ID,
