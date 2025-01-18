@@ -92,10 +92,10 @@ class RepOutDataCostsUI():
         allScreen = app.primaryScreen()
         geometry = allScreen.availableGeometry()
         self.screen.setGeometry(
-            (geometry.width() - self.table.horizontalHeader().length() * 1.1) / 2.0,
-            (geometry.height() - self.table.verticalHeader().length() * 0.48) / 2.0,
-            self.table.horizontalHeader().length() * 1.055,
-            self.table.verticalHeader().length() * 0.5
+            int((geometry.width() - self.table.horizontalHeader().length() * 1.1) / 2.0),
+            int((geometry.height() - self.table.verticalHeader().length() * 0.48) / 2.0),
+            int(self.table.horizontalHeader().length() * 1.055),
+            int(self.table.verticalHeader().length() * 0.5)
         )
         self.screen.exec_()
 
