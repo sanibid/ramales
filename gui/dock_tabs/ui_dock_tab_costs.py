@@ -73,7 +73,34 @@ class DockTabCosts(DockTabCostsBase):
             self.dsb_soil_bulking.setValue(1)
 
     def load_costs_values(self):
-        pass
+        if self.costs is not None:
+            # Serviços de custos sao de 1 a 33
+            costs_services = self.costs.SERVICES[:33]
+            costs_materials = self.costs.SERVICES[33:]
+
+            methods_quantities = [method for method in dir(self.quantities_calculator)
+                                  if callable(getattr(self.quantities_calculator, method)) and method.startswith("get_")]
+            methods_quantities.sort()
+            values_quantities = [getattr(self.quantities_calculator, method)() for method in methods_quantities]
+
+            total_costs_services = 0
+            total_costs_materials = 0
+            for i in range(33):
+                total_costs_services += costs_services[i] * values_quantities[i]
+
+            for i in range(33, 40):
+                total_costs_materials += costs_materials[i-33] * values_quantities[i]
+
+            total_costs = total_costs_services + total_costs_materials
+
+            self.lb_materials_costs.setText(f"{self.translate('Custo dos materiais (USD):')} $ {self.utils.formatNum2Dec(total_costs_materials)}")
+            self.lb_services_costs.setText(f"{self.translate('Custo dos serviços (USD):')} $ {self.utils.formatNum2Dec(total_costs_services)}")
+            self.lb_total_costs.setText(f"{self.translate('Custo total (USD):')} $ {self.utils.formatNum2Dec(total_costs)}")
+        else:
+            self.lb_materials_costs.setText(f"{self.translate('Custo dos materiais (USD):')} $ {self.utils.formatNum2Dec(0)}")
+            self.lb_services_costs.setText(f"{self.translate('Custo dos serviços (USD):')} $ {self.utils.formatNum2Dec(0)}")
+            self.lb_total_costs.setText(f"{self.translate('Custo total (USD):')} $ {self.utils.formatNum2Dec(0)}")
+
 
     def load_costs_calculations(self):
         self.costs = ProjectDataManager.get_costs()
@@ -108,7 +135,8 @@ class DockTabCosts(DockTabCostsBase):
             TRENCH_WIDTH=self.dsb_trench_width.value(),
             DISPOSAL_DISTANCE=self.dsb_disposal_distance.value(),
             SOIL_BULKING=self.dsb_soil_bulking.value(),
-            ROCK_SWELLING=self.dsb_rock_swelling.value()
+            ROCK_SWELLING=self.dsb_rock_swelling.value(),
+            SERVICES=self.costs.SERVICES
         )
         # if self.costs is None:
         #     tmp_costs.services = Costs().services

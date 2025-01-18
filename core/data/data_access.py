@@ -3,9 +3,11 @@ from abc import ABC, abstractmethod
 from PyQt5.QtCore import QLocale
 from qgis.core import QgsProject, QgsVectorLayer, QgsMapLayer
 from typing import Tuple, Dict, List
+
 from ..data.models import Ramal, Segment, Node
 import os
 import json
+import importlib
 from ...helpers.globals import get_language_file
 
 
@@ -300,63 +302,13 @@ class LayerDAO(ABC):
     def get_segments_layer(self) -> QgsVectorLayer:
         return QgsProject.instance().mapLayer(self.segments_layer_id)
 
-    def get_idx_attr(self, layer: QgsVectorLayer, name_lyr: str, name_attr: str):
-        attrs = layer.fields().names()
-        return attrs.index(self.get_json_attr(name_lyr, name_attr))
-
-    def get_idx_attr_segments(self, name_attr: str):
-        attrs = self.get_segments_layer().fields().names()
-        return attrs.index(self.get_json_attr('segments', name_attr))
-
-    def get_json_attr(self, name_lyr: str, attribute: str):
-        if self.data_json is None:
-            self.set_data_json()
-        lyr = self.data_json[name_lyr][1]
-
-        def get_key(val):
-            for k, v in lyr.items():
-                if v == val:
-                    return k
-            return
-
-        try:
-            return lyr[attribute]
-        except KeyError:
-            att = get_key(attribute)
-            if att is not None:
-                return lyr[att]
-            return
-
-    def str_to_float_locale(self, value: str) -> float:
-        # if QgsApplication.instance().locale() == 'pt_BR':
-        if type(value) is str and len(value) > 0:
-            if value[-1].isnumeric():
-                return self.loc.toFloat(value)[0]
-            return 0.00
-        elif type(value) is float:
-            return value
-        else:
-            return 0.00
-
-    def set_data_json(self):
-        plg_dir = os.path.dirname(__file__)
-        plg_dir = plg_dir.replace('core' + os.sep + 'data', 'resources' + os.sep + 'localizations' + os.sep)
-
-        # file_json = open(os.path.join(plg_dir, self.lang + '.json'), 'r')
-        file_json = open(os.path.join(plg_dir, 'pt_BR' + '.json'), 'r') #TODO: remover esta linha, descomentar a superior, avaliar usar o recurso a partir de Utils
-        self.data_json = json.load(file_json)
-        file_json.close()
-
-    def get_element_layer_nodes(self, node: str, name_attr: str):
-        nodes_lyr = QgsProject.instance().mapLayer(self.nodes_layer_id)
-        all_nodes = nodes_lyr.getFeatures()
-        for n in all_nodes:
-            if n.attributes()[self.get_idx_attr(nodes_lyr, 'nodes', 'name')] == node:
-                return n.attributes()[self.get_idx_attr(nodes_lyr, 'nodes', name_attr)]
-        return
-
 
 class SegmentsDAO(LayerDAO):
+    def __init__(self, segments_layer_id, nodes_layer_id, lang):
+        super().__init__(segments_layer_id, nodes_layer_id, lang)
+        from ...helpers.utils import Utils  # devido a um erro de importação circular, foi necessário importar aqui
+        self.utils = Utils()
+
     def get_segments(self) -> Dict[str, Ramal]:
         """
         Get all the segments from the segments layer
@@ -368,12 +320,12 @@ class SegmentsDAO(LayerDAO):
         for s in all_segs:
             segments.append(s)
         segments = sorted(segments, key=lambda item:
-        (item[self.get_idx_attr(self.get_segments_layer(), 'segments', 'branch_id')],
-         item[self.get_idx_attr(self.get_segments_layer(), 'segments', 'segment_id')]))
+        (item[self.utils.get_idx_attr(self.get_segments_layer(), 'segments', 'branch_id')],
+         item[self.utils.get_idx_attr(self.get_segments_layer(), 'segments', 'segment_id')]))
 
         branchs = []
         for feat in segments:
-            branchs.append(feat[self.get_idx_attr_segments('branch_id')])
+            branchs.append(feat[self.utils.get_idx_attr_segments('branch_id')])
 
         branchs = set(branchs)
 
@@ -381,125 +333,125 @@ class SegmentsDAO(LayerDAO):
         for branch in branchs:
             result[branch] = Ramal()
             for feat in segments:
-                if feat[self.get_idx_attr_segments('branch_id')] == branch:
-                    branch_position = int(feat[self.get_idx_attr_segments("branch_position")])
+                if feat[self.utils.get_idx_attr_segments('branch_id')] == branch:
+                    branch_position = int(feat[self.utils.get_idx_attr_segments("branch_position")])
                     if branch_position == 2:
                         result[branch].is_aerial = True
                         is_aerial = True
-                        h_branch = self.get_element_layer_nodes(
-                            node=feat[self.get_idx_attr_segments('up_box')], name_attr='h_branch')
+                        h_branch = self.utils.get_element_layer_nodes(
+                            node=feat[self.utils.get_idx_attr_segments('up_box')], name_attr='h_branch')
                     break
         for i, feat in enumerate(segments):
-            branch_id = feat[self.get_idx_attr_segments('branch_id')]
+            branch_id = feat[self.utils.get_idx_attr_segments('branch_id')]
             upBox = Node(
-                id=self.get_element_layer_nodes(node=feat[self.get_idx_attr_segments('up_box')], name_attr='id'),
-                name=self.get_element_layer_nodes(node=feat[self.get_idx_attr_segments('up_box')],
+                id=self.utils.get_element_layer_nodes(node=feat[self.utils.get_idx_attr_segments('up_box')], name_attr='id'),
+                name=self.utils.get_element_layer_nodes(node=feat[self.utils.get_idx_attr_segments('up_box')],
                                                     name_attr='name'),
-                name_id=self.get_element_layer_nodes(node=feat[self.get_idx_attr_segments('up_box')],
+                name_id=self.utils.get_element_layer_nodes(node=feat[self.utils.get_idx_attr_segments('up_box')],
                                                        name_attr='name_id'),
-                node_type=self.get_element_layer_nodes(node=feat[self.get_idx_attr_segments('up_box')],
+                node_type=self.utils.get_element_layer_nodes(node=feat[self.utils.get_idx_attr_segments('up_box')],
                                                          name_attr='node_type'),
-                node_position=self.get_element_layer_nodes(node=feat[self.get_idx_attr_segments('up_box')],
+                node_position=self.utils.get_element_layer_nodes(node=feat[self.utils.get_idx_attr_segments('up_box')],
                                                              name_attr='node_position'),
-                down_box=self.get_element_layer_nodes(node=feat[self.get_idx_attr_segments('up_box')],
+                down_box=self.utils.get_element_layer_nodes(node=feat[self.utils.get_idx_attr_segments('up_box')],
                                                         name_attr='down_box'),
-                branch_id=self.get_element_layer_nodes(node=feat[self.get_idx_attr_segments('up_box')],
+                branch_id=self.utils.get_element_layer_nodes(node=feat[self.utils.get_idx_attr_segments('up_box')],
                                                          name_attr='branch_id'),
-                photo=self.get_element_layer_nodes(node=feat[self.get_idx_attr_segments('up_box')],
+                photo=self.utils.get_element_layer_nodes(node=feat[self.utils.get_idx_attr_segments('up_box')],
                                                      name_attr='photo'),
-                q_terrain=self.get_element_layer_nodes(node=feat[self.get_idx_attr_segments('up_box')],
+                q_terrain=self.utils.get_element_layer_nodes(node=feat[self.utils.get_idx_attr_segments('up_box')],
                                                          name_attr='q_terrain'),
-                q_project=self.get_element_layer_nodes(node=feat[self.get_idx_attr_segments('up_box')],
+                q_project=self.utils.get_element_layer_nodes(node=feat[self.utils.get_idx_attr_segments('up_box')],
                                                          name_attr='q_project'),
-                depth=self.get_element_layer_nodes(node=feat[self.get_idx_attr_segments('up_box')],
+                depth=self.utils.get_element_layer_nodes(node=feat[self.utils.get_idx_attr_segments('up_box')],
                                                      name_attr='depth'),
-                q_rule=self.get_element_layer_nodes(node=feat[self.get_idx_attr_segments('up_box')],
+                q_rule=self.utils.get_element_layer_nodes(node=feat[self.utils.get_idx_attr_segments('up_box')],
                                                       name_attr='q_rule'),
-                coord_x=self.get_element_layer_nodes(node=feat[self.get_idx_attr_segments('up_box')],
+                coord_x=self.utils.get_element_layer_nodes(node=feat[self.utils.get_idx_attr_segments('up_box')],
                                                        name_attr='coord_x'),
-                coord_y=self.get_element_layer_nodes(node=feat[self.get_idx_attr_segments('up_box')],
+                coord_y=self.utils.get_element_layer_nodes(node=feat[self.utils.get_idx_attr_segments('up_box')],
                                                        name_attr='coord_y'),
-                critical_depth=self.get_element_layer_nodes(node=feat[self.get_idx_attr_segments('up_box')],
+                critical_depth=self.utils.get_element_layer_nodes(node=feat[self.utils.get_idx_attr_segments('up_box')],
                                                               name_attr='critical_depth'),
-                template=self.get_element_layer_nodes(node=feat[self.get_idx_attr_segments('up_box')],
+                template=self.utils.get_element_layer_nodes(node=feat[self.utils.get_idx_attr_segments('up_box')],
                                                         name_attr='template'),
-                branch_position=self.get_element_layer_nodes(node=feat[self.get_idx_attr_segments('up_box')],
+                branch_position=self.utils.get_element_layer_nodes(node=feat[self.utils.get_idx_attr_segments('up_box')],
                                                                name_attr='branch_position'),
-                h_branch=self.get_element_layer_nodes(node=feat[self.get_idx_attr_segments('up_box')],
+                h_branch=self.utils.get_element_layer_nodes(node=feat[self.utils.get_idx_attr_segments('up_box')],
                                                         name_attr='h_branch')
             )
             downBox = Node(
-                id=self.get_element_layer_nodes(node=feat[self.get_idx_attr_segments('down_box')], name_attr='id'),
-                name=self.get_element_layer_nodes(node=feat[self.get_idx_attr_segments('down_box')],
+                id=self.utils.get_element_layer_nodes(node=feat[self.utils.get_idx_attr_segments('down_box')], name_attr='id'),
+                name=self.utils.get_element_layer_nodes(node=feat[self.utils.get_idx_attr_segments('down_box')],
                                                     name_attr='name'),
-                name_id=self.get_element_layer_nodes(node=feat[self.get_idx_attr_segments('down_box')],
+                name_id=self.utils.get_element_layer_nodes(node=feat[self.utils.get_idx_attr_segments('down_box')],
                                                        name_attr='name_id'),
-                node_type=self.get_element_layer_nodes(node=feat[self.get_idx_attr_segments('down_box')],
+                node_type=self.utils.get_element_layer_nodes(node=feat[self.utils.get_idx_attr_segments('down_box')],
                                                          name_attr='node_type'),
-                node_position=self.get_element_layer_nodes(node=feat[self.get_idx_attr_segments('down_box')],
+                node_position=self.utils.get_element_layer_nodes(node=feat[self.utils.get_idx_attr_segments('down_box')],
                                                              name_attr='node_position'),
-                down_box=self.get_element_layer_nodes(node=feat[self.get_idx_attr_segments('down_box')],
+                down_box=self.utils.get_element_layer_nodes(node=feat[self.utils.get_idx_attr_segments('down_box')],
                                                         name_attr='down_box'),
-                branch_id=self.get_element_layer_nodes(node=feat[self.get_idx_attr_segments('down_box')],
+                branch_id=self.utils.get_element_layer_nodes(node=feat[self.utils.get_idx_attr_segments('down_box')],
                                                          name_attr='branch_id'),
-                photo=self.get_element_layer_nodes(node=feat[self.get_idx_attr_segments('down_box')],
+                photo=self.utils.get_element_layer_nodes(node=feat[self.utils.get_idx_attr_segments('down_box')],
                                                      name_attr='photo'),
-                q_terrain=self.get_element_layer_nodes(node=feat[self.get_idx_attr_segments('down_box')],
+                q_terrain=self.utils.get_element_layer_nodes(node=feat[self.utils.get_idx_attr_segments('down_box')],
                                                          name_attr='q_terrain'),
-                q_project=self.get_element_layer_nodes(node=feat[self.get_idx_attr_segments('down_box')],
+                q_project=self.utils.get_element_layer_nodes(node=feat[self.utils.get_idx_attr_segments('down_box')],
                                                          name_attr='q_project'),
-                depth=self.get_element_layer_nodes(node=feat[self.get_idx_attr_segments('down_box')],
+                depth=self.utils.get_element_layer_nodes(node=feat[self.utils.get_idx_attr_segments('down_box')],
                                                      name_attr='depth'),
-                q_rule=self.get_element_layer_nodes(node=feat[self.get_idx_attr_segments('down_box')],
+                q_rule=self.utils.get_element_layer_nodes(node=feat[self.utils.get_idx_attr_segments('down_box')],
                                                       name_attr='q_rule'),
-                coord_x=self.get_element_layer_nodes(node=feat[self.get_idx_attr_segments('down_box')],
+                coord_x=self.utils.get_element_layer_nodes(node=feat[self.utils.get_idx_attr_segments('down_box')],
                                                        name_attr='coord_x'),
-                coord_y=self.get_element_layer_nodes(node=feat[self.get_idx_attr_segments('down_box')],
+                coord_y=self.utils.get_element_layer_nodes(node=feat[self.utils.get_idx_attr_segments('down_box')],
                                                        name_attr='coord_y'),
-                critical_depth=self.get_element_layer_nodes(node=feat[self.get_idx_attr_segments('down_box')],
+                critical_depth=self.utils.get_element_layer_nodes(node=feat[self.utils.get_idx_attr_segments('down_box')],
                                                               name_attr='critical_depth'),
-                template=self.get_element_layer_nodes(node=feat[self.get_idx_attr_segments('down_box')],
+                template=self.utils.get_element_layer_nodes(node=feat[self.utils.get_idx_attr_segments('down_box')],
                                                         name_attr='template'),
-                branch_position=self.get_element_layer_nodes(node=feat[self.get_idx_attr_segments('down_box')],
+                branch_position=self.utils.get_element_layer_nodes(node=feat[self.utils.get_idx_attr_segments('down_box')],
                                                                name_attr='branch_position'),
-                h_branch=self.get_element_layer_nodes(node=feat[self.get_idx_attr_segments('down_box')],
+                h_branch=self.utils.get_element_layer_nodes(node=feat[self.utils.get_idx_attr_segments('down_box')],
                                                         name_attr='h_branch')
             )
             segment = Segment(
-                id=feat[self.get_idx_attr_segments('id')],
-                length=self.str_to_float_locale(feat[self.get_idx_attr_segments('length')]),
-                segment=feat[self.get_idx_attr_segments('segment')],
-                up_box=feat[self.get_idx_attr_segments('up_box')],
-                segment_id=feat[self.get_idx_attr_segments('segment_id')],
+                id=feat[self.utils.get_idx_attr_segments('id')],
+                length=self.utils.str_to_float_locale(feat[self.utils.get_idx_attr_segments('length')]),
+                segment=feat[self.utils.get_idx_attr_segments('segment')],
+                up_box=feat[self.utils.get_idx_attr_segments('up_box')],
+                segment_id=feat[self.utils.get_idx_attr_segments('segment_id')],
                 branch_id=branch_id,
-                down_box=feat[self.get_idx_attr_segments('down_box')],
-                type=feat[self.get_idx_attr_segments('type')],
-                street=feat[self.get_idx_attr_segments('street')],
-                paviment_1=feat[self.get_idx_attr_segments('paviment_1')],
-                percent_pav_1=self.str_to_float_locale(feat[self.get_idx_attr_segments('percent_pav_1')]),
-                paviment_2=feat[self.get_idx_attr_segments('paviment_2')],
-                percent_pav_2=self.str_to_float_locale(feat[self.get_idx_attr_segments('percent_pav_2')]),
-                protection=feat[self.get_idx_attr_segments('protection')],
-                lgt_protection=self.str_to_float_locale(feat[self.get_idx_attr_segments('lgt_protection')]),
-                photo1=feat[self.get_idx_attr_segments('photo1')],
-                photo2=feat[self.get_idx_attr_segments('photo2')],
-                comments=feat[self.get_idx_attr_segments('comments')],
-                pvc_diameter=self.str_to_float_locale(feat[self.get_idx_attr_segments('pvc_diameter')]),
-                up_qproject=self.str_to_float_locale(feat[self.get_idx_attr_segments('up_qproject')]),
-                dwn_qproject=self.str_to_float_locale(feat[self.get_idx_attr_segments('dwn_qproject')]),
-                unevenness_segment=self.str_to_float_locale(feat[self.get_idx_attr_segments('unevenness_segment')]),
-                coord_Xi=self.str_to_float_locale(feat[self.get_idx_attr_segments('coord_Xi')]),
-                coord_Yi=self.str_to_float_locale(feat[self.get_idx_attr_segments('coord_Yi')]),
-                coord_Xf=self.str_to_float_locale(feat[self.get_idx_attr_segments('coord_Xf')]),
-                coord_Yf=self.str_to_float_locale(feat[self.get_idx_attr_segments('coord_Yf')]),
-                tq=str(feat[self.get_idx_attr_segments('tq')]) == 'True',
-                h_tq=self.str_to_float_locale(feat[self.get_idx_attr_segments('h_tq')]),
-                to_envelop=feat[self.get_idx_attr_segments('to_envelop')],
-                tq_link1=feat[self.get_idx_attr_segments('tq_link1')],
-                tq_link2=feat[self.get_idx_attr_segments('tq_link2')],
-                branch_position=feat[self.get_idx_attr_segments('branch_position')],
-                h_branch=self.get_element_layer_nodes(
-                    node=feat[self.get_idx_attr_segments('up_box')], name_attr='h_branch'),
+                down_box=feat[self.utils.get_idx_attr_segments('down_box')],
+                type=feat[self.utils.get_idx_attr_segments('type')],
+                street=feat[self.utils.get_idx_attr_segments('street')],
+                paviment_1=feat[self.utils.get_idx_attr_segments('paviment_1')],
+                percent_pav_1=self.utils.str_to_float_locale(feat[self.utils.get_idx_attr_segments('percent_pav_1')]),
+                paviment_2=feat[self.utils.get_idx_attr_segments('paviment_2')],
+                percent_pav_2=self.utils.str_to_float_locale(feat[self.utils.get_idx_attr_segments('percent_pav_2')]),
+                protection=feat[self.utils.get_idx_attr_segments('protection')],
+                lgt_protection=self.utils.str_to_float_locale(feat[self.utils.get_idx_attr_segments('lgt_protection')]),
+                photo1=feat[self.utils.get_idx_attr_segments('photo1')],
+                photo2=feat[self.utils.get_idx_attr_segments('photo2')],
+                comments=feat[self.utils.get_idx_attr_segments('comments')],
+                pvc_diameter=int(feat[self.utils.get_idx_attr_segments('pvc_diameter')]),
+                up_qproject=self.utils.str_to_float_locale(feat[self.utils.get_idx_attr_segments('up_qproject')]),
+                dwn_qproject=self.utils.str_to_float_locale(feat[self.utils.get_idx_attr_segments('dwn_qproject')]),
+                unevenness_segment=self.utils.str_to_float_locale(feat[self.utils.get_idx_attr_segments('unevenness_segment')]),
+                coord_Xi=self.utils.str_to_float_locale(feat[self.utils.get_idx_attr_segments('coord_Xi')]),
+                coord_Yi=self.utils.str_to_float_locale(feat[self.utils.get_idx_attr_segments('coord_Yi')]),
+                coord_Xf=self.utils.str_to_float_locale(feat[self.utils.get_idx_attr_segments('coord_Xf')]),
+                coord_Yf=self.utils.str_to_float_locale(feat[self.utils.get_idx_attr_segments('coord_Yf')]),
+                tq=str(feat[self.utils.get_idx_attr_segments('tq')]) == 'True',
+                h_tq=self.utils.str_to_float_locale(feat[self.utils.get_idx_attr_segments('h_tq')]),
+                to_envelop=feat[self.utils.get_idx_attr_segments('to_envelop')],
+                tq_link1=feat[self.utils.get_idx_attr_segments('tq_link1')],
+                tq_link2=feat[self.utils.get_idx_attr_segments('tq_link2')],
+                branch_position=feat[self.utils.get_idx_attr_segments('branch_position')],
+                h_branch=self.utils.get_element_layer_nodes(
+                    node=feat[self.utils.get_idx_attr_segments('up_box')], name_attr='h_branch'),
                 UpBox=upBox,
                 DownBox=downBox
             )

@@ -108,6 +108,12 @@ class DockTabCostsBase(DockTab):
         self.pb_report_costs = QPushButton()
         self.pb_generate_xls_costs = QPushButton()
 
+        # Costs report
+        self.lb_services_costs = QLabel()
+        self.lb_materials_costs = QLabel()
+        self.lb_total_costs = QLabel()
+
+
         self.vb_layoutCosts = QVBoxLayout()
         self.gl_layoutCostsPipe = QGridLayout()
         self.gl_layoutCostsTerrain = QGridLayout()
@@ -198,11 +204,11 @@ class DockTabCostsBase(DockTab):
         self.hb_layoutShowCosts.addWidget(self.pb_report_costs)
         self.vb_layoutCosts.addLayout(self.hb_layoutShowCosts)
         self.gl_layoutDataCosts.addWidget(QLabel(self.translate('Total serviços')), 0, 0)
-        self.gl_layoutDataCosts.addWidget(QLabel(''), 0, 1)
+        self.gl_layoutDataCosts.addWidget(self.lb_services_costs, 0, 1)
         self.gl_layoutDataCosts.addWidget(QLabel(self.translate('Total materiais')), 1, 0)
-        self.gl_layoutDataCosts.addWidget(QLabel(''), 1, 1)
+        self.gl_layoutDataCosts.addWidget(self.lb_materials_costs, 1, 1)
         self.gl_layoutDataCosts.addWidget(QLabel(self.translate('Total geral')), 2, 0)
-        self.gl_layoutDataCosts.addWidget(QLabel(''), 2, 1)
+        self.gl_layoutDataCosts.addWidget(self.lb_total_costs, 2, 1)
         self.gl_layoutDataCosts.addWidget(self.pb_generate_xls_costs, 3, 1)
         self.gb_DataCosts.setLayout(self.gl_layoutDataCosts)
         self.vb_layoutCosts.addWidget(self.gb_DataCosts)
