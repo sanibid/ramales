@@ -105,20 +105,6 @@ class CostCalculationRamal:
                 result[segment.paviment_2] = result.get(segment.paviment_2, 0) +  segment.percent_pav_2 * segment.length * self.costs.TRENCH_WIDTH
         return result
 
-    def get_node_counts(self):
-        result = {}
-        for i, segment in enumerate(self.ramal.segments):
-            c1 = segment.UpBox.node_type
-            c2 = segment.DownBox.node_type
-            if c1 not in result:
-                result[c1] = 0
-            if c2 not in result and i == len(self.ramal.segments) - 1:
-                result[c2] = 0
-            result[c1] += 1
-            if i == len(self.ramal.segments) - 1:
-                result[c2] += 1
-        return result
-
     def get_protection_ramal(self):
         total_protection = 0
         for segment in self.ramal.segments:
@@ -139,33 +125,6 @@ class CostCalculationRamal:
 
     def get_total_extension_150_material(self):
         return self.get_total_extension_150() * 1.05
-
-    def get_connections_count(self) -> Dict[str, int]:
-        result = {}
-        for i, segment in enumerate(self.ramal.segments):
-            c1 = segment.UpBox.node_type
-            c2 = segment.DownBox.node_type
-            if c1 == '10':
-                result['selim'] = result.get('selim', 0) + 1
-            if c2 == '10' and i == len(self.ramal.segments) - 1:
-                result['selim'] = result.get('selim', 0) + 1
-            if segment.tq:
-                for link in [segment.tq_link1, segment.tq_link2]:
-                    if link == '1' and segment.pvc_diameter in (100, 110):
-                        result['c90_100'] = result.get('c90_100', 0) + 1
-                    elif link == '1' and segment.pvc_diameter in (150, 160):
-                        result['c90_150'] = result.get('c90_150', 0) + 1
-                    elif link == '2' and segment.pvc_diameter in (100, 110):
-                        result['tee_100'] = result.get('tee_100', 0) + 1
-                    elif link == '2' and segment.pvc_diameter in (150, 160):
-                        result['tee_150'] = result.get('tee_150', 0) + 1
-
-                if str(segment.tq_link1).isnumeric():
-                    result[segment.tq_link1] = result.get(segment.tq_link1, 0) + 1
-                if str(segment.tq_link2).isnumeric():
-                    result[segment.tq_link2] = result.get(segment.tq_link2, 0) + 1
-
-        return result
 
 
 class CostCalculation:
@@ -247,14 +206,24 @@ class CostCalculation:
         return total_pavement_areas
 
     def get_node_counts(self):
-        total_node_counts = {}
-        for calc in self.calculations.values():
-            node_counts = calc.get_node_counts()
-            for node_type, count in node_counts.items():
-                if node_type not in total_node_counts:
-                    total_node_counts[node_type] = 0
-                total_node_counts[node_type] += count
-        return total_node_counts
+        result = {}
+        used_nodes = set()
+        for ramal_id, ramal in self.ramals.items():
+            for i, segment in enumerate(ramal.segments):
+                c1, c1_name = segment.UpBox.node_type, segment.UpBox.name
+                c2, c2_name = segment.DownBox.node_type, segment.DownBox.name
+                if c1 not in result:
+                    result[c1] = 0
+                if c2 not in result and i == len(ramal.segments) - 1:
+                    result[c2] = 0
+                if c1_name not in used_nodes:
+                    result[c1] += 1
+                    used_nodes.add(c1_name)
+
+                if i == len(ramal.segments) - 1 and c2_name not in used_nodes:
+                    result[c2] += 1
+                    used_nodes.add(c2_name)
+        return result
 
     def get_protection_ramals(self):
         return sum([calc.get_protection_ramal() for calc in self.calculations.values()])
@@ -285,12 +254,33 @@ class CostCalculation:
 
     def get_connections_count(self) -> Dict[str, int]:
         result = {}
-        for calc in self.calculations.values():
-            connections = calc.get_connections_count()
-            for connection, count in connections.items():
-                if connection not in result:
-                    result[connection] = 0
-                result[connection] += count
+        used_nodes = set()
+        for ramal_id, ramal in self.ramals.items():
+            for i, segment in enumerate(ramal.segments):
+                c1, c1_name = segment.UpBox.node_type, segment.UpBox.name
+                c2, c2_name = segment.DownBox.node_type, segment.DownBox.name
+                if c1 == '10' and c1_name not in used_nodes:
+                    result['selim'] = result.get('selim', 0) + 1
+                    used_nodes.add(c1_name)
+                if c2 == '10' and i == len(ramal.segments) - 1 and c2_name not in used_nodes:
+                    result['selim'] = result.get('selim', 0) + 1
+                    used_nodes.add(c2_name)
+                if segment.tq:
+                    for link in [segment.tq_link1, segment.tq_link2]:
+                        if link == '1' and segment.pvc_diameter in (100, 110):
+                            result['c90_100'] = result.get('c90_100', 0) + 1
+                        elif link == '1' and segment.pvc_diameter in (150, 160):
+                            result['c90_150'] = result.get('c90_150', 0) + 1
+                        elif link == '2' and segment.pvc_diameter in (100, 110):
+                            result['tee_100'] = result.get('tee_100', 0) + 1
+                        elif link == '2' and segment.pvc_diameter in (150, 160):
+                            result['tee_150'] = result.get('tee_150', 0) + 1
+
+                    if str(segment.tq_link1).isnumeric():
+                        result[segment.tq_link1] = result.get(segment.tq_link1, 0) + 1
+                    if str(segment.tq_link2).isnumeric():
+                        result[segment.tq_link2] = result.get(segment.tq_link2, 0) + 1
+
         return result
 
 
