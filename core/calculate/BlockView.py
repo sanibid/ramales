@@ -4,6 +4,7 @@ from PyQt5.QtCore import QLocale, QVariant
 from PyQt5.QtWidgets import QDialog, QTableWidgetItem, QDoubleSpinBox
 from qgis.PyQt.QtCore import QCoreApplication
 from qgis._core import QgsProject, QgsApplication, QgsVectorLayer, QgsDefaultValue, QgsFeature
+from qgis.core import edit
 
 from ...core.data.data_manager import ProjectDataManager
 from ...gui.BlockDialogUi import Ui_BlockDialog
@@ -404,8 +405,8 @@ class BlockViewDialog(QDialog, Ui_BlockDialog):
     def save_resume_frame(self):
         self.tableWidget.blockSignals(True)
         resume_frame = self.proj.getResumeFrameLayer()
-        if not resume_frame.isEditable():
-            resume_frame.startEditing()
+
+        with edit(resume_frame):
             feature = QgsFeature(resume_frame.fields())
             feat_exist = None
             for feat in resume_frame.getFeatures():
@@ -453,7 +454,6 @@ class BlockViewDialog(QDialog, Ui_BlockDialog):
                 else:
                     feature.setAttribute(field, value)
                     resume_frame.addFeature(feature)
-            resume_frame.commitChanges()
 
     def __get_len_DN(self, dn):
         total = 0.00
