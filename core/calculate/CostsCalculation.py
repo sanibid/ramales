@@ -91,7 +91,7 @@ class CostCalculationRamal:
             return 0
 
         return self.get_total_backfill_soil() * self.costs.CONTRIBUTION_PERCENT / 100 + \
-            self.get_total_backfill_rock() - self.get_total_backfill_soil()
+            self.get_total_backfill_rock() - self.get_total_backfill_enclosure_cradle()
 
     def get_total_area(self):
         return self.get_total_extension() * self.costs.TRENCH_WIDTH
