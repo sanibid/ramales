@@ -78,7 +78,7 @@ class CostCalculationRamal:
         return self.get_rock_volume() - self.get_total_volume_tube_100() - self.get_total_volume_tube_150()
 
     def get_total_backfill_enclosure_cradle(self):
-        return ((self.get_total_extension() * self.costs.CRADLE_HEIGHT) *
+        return ((self.get_total_extension() * self.costs.TRENCH_WIDTH) *
                 (self.costs.WRAP_HEIGHT + self.costs.CRADLE_HEIGHT))
 
     def get_total_backfill_own(self):
@@ -89,8 +89,9 @@ class CostCalculationRamal:
     def get_total_backfill_contribution(self):
         if self.ramal.is_aerial or self.get_total_backfill_soil() == 0:
             return 0
+
         return self.get_total_backfill_soil() * self.costs.CONTRIBUTION_PERCENT / 100 + \
-            self.get_total_backfill_rock() - self.get_total_backfill_enclosure_cradle()
+            self.get_total_backfill_rock() - self.get_total_backfill_soil()
 
     def get_total_area(self):
         return self.get_total_extension() * self.costs.TRENCH_WIDTH
