@@ -1,6 +1,7 @@
 from PyQt5.QtCore import Qt, QCoreApplication
+from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import QGroupBox, QGridLayout, QPushButton, QVBoxLayout, QSpinBox, QDoubleSpinBox, QLabel, \
-    QCheckBox, QHBoxLayout, QFormLayout
+    QCheckBox, QHBoxLayout, QFormLayout, QWidget
 
 from ...custom_widgets.widgets import ThousandsSeparatorSpinBox
 from ...dock_tabs.base.ui_dock_tab_base import DockTab
@@ -107,6 +108,12 @@ class DockTabCostsBase(DockTab):
         self.pb_report_costs = QPushButton()
         self.pb_generate_xls_costs = QPushButton()
 
+        # Costs report
+        self.lb_services_costs = QLabel()
+        self.lb_materials_costs = QLabel()
+        self.lb_total_costs = QLabel()
+
+
         self.vb_layoutCosts = QVBoxLayout()
         self.gl_layoutCostsPipe = QGridLayout()
         self.gl_layoutCostsTerrain = QGridLayout()
@@ -116,6 +123,11 @@ class DockTabCostsBase(DockTab):
         self.gb_costsTerrain = QGroupBox()
         self.gb_DataCosts = QGroupBox()
         self.rep_out_costs = RepOutDataCostsUI()
+
+        self.dialog_contribution_warning = QLabel()
+        icon = QWidget().style().standardIcon(QWidget().style().SP_MessageBoxWarning)
+        self.dialog_contribution_warning.setPixmap(icon.pixmap(16, 16))
+        self.dialog_contribution_warning.hide()
         self.set_logic()
 
     def tab_start_ui(self):
@@ -169,8 +181,10 @@ class DockTabCostsBase(DockTab):
         self.gl_layoutCostsPipe.addWidget(self.lb_own, 11, 0)
         self.gl_layoutCostsPipe.addWidget(self.sb_own, 11, 1)
         self.lb_contribution.setText(self.translate('Aporte'))
+        self.dialog_contribution_warning.setToolTip(self.translate('O aporte deve ser no mínimo equivalente ao percentual de rocha presente.'))
         self.gl_layoutCostsPipe.addWidget(self.lb_contribution, 12, 0)
         self.gl_layoutCostsPipe.addWidget(self.sb_contribution, 12, 1)
+        self.gl_layoutCostsPipe.addWidget(self.dialog_contribution_warning, 12, 2)
 
         self.lb_txt_disposal_distance.setText(self.translate('Distância de descarte:'))
         self.lb_txt_disposal_distance.setFont(self.utils.formatBoldText())
@@ -190,11 +204,11 @@ class DockTabCostsBase(DockTab):
         self.hb_layoutShowCosts.addWidget(self.pb_report_costs)
         self.vb_layoutCosts.addLayout(self.hb_layoutShowCosts)
         self.gl_layoutDataCosts.addWidget(QLabel(self.translate('Total serviços')), 0, 0)
-        self.gl_layoutDataCosts.addWidget(QLabel(''), 0, 1)
+        self.gl_layoutDataCosts.addWidget(self.lb_services_costs, 0, 1)
         self.gl_layoutDataCosts.addWidget(QLabel(self.translate('Total materiais')), 1, 0)
-        self.gl_layoutDataCosts.addWidget(QLabel(''), 1, 1)
+        self.gl_layoutDataCosts.addWidget(self.lb_materials_costs, 1, 1)
         self.gl_layoutDataCosts.addWidget(QLabel(self.translate('Total geral')), 2, 0)
-        self.gl_layoutDataCosts.addWidget(QLabel(''), 2, 1)
+        self.gl_layoutDataCosts.addWidget(self.lb_total_costs, 2, 1)
         self.gl_layoutDataCosts.addWidget(self.pb_generate_xls_costs, 3, 1)
         self.gb_DataCosts.setLayout(self.gl_layoutDataCosts)
         self.vb_layoutCosts.addWidget(self.gb_DataCosts)
@@ -218,6 +232,11 @@ class DockTabCostsBase(DockTab):
 
         self.vb_layoutCosts.addStretch()
         self.setLayout(self.vb_layoutCosts)
+        self.sb_rock.valueChanged.connect(
+            lambda: self.dialog_contribution_warning.setVisible(self.sb_rock.value() > self.sb_contribution.value()))
+        self.sb_contribution.valueChanged.connect(
+            lambda: self.dialog_contribution_warning.setVisible(self.sb_rock.value() > self.sb_contribution.value()))
+
 
 
 

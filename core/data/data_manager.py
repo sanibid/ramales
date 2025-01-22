@@ -1,5 +1,6 @@
 from .data_access import LayersInfoDAO, CalculationInfoDAO, LanguageDAO, LayerRasterDAO, CostsDAO, SegmentsDAO
-from .models import LayersData, Language, LayerRaster, Costs
+from .models import LayersData, Language, LayerRaster, Costs, Ramal
+from typing import Dict
 
 
 class ProjectDataManager:
@@ -82,6 +83,11 @@ class ProjectDataManager:
 
     @staticmethod
     def get_costs():
+        services = CostsDAO.get_services()[0]
+
+        # Se não tem serviços cadastrados, carrega os serviços padrão
+        if not services:
+            services = Costs().SERVICES
         return Costs(
             TRENCH_WIDTH=CostsDAO.get_trench_width()[0],
             CRADLE_HEIGHT=CostsDAO.get_cradle_height()[0],
@@ -94,7 +100,8 @@ class ProjectDataManager:
             CONTRIBUTION_PERCENT=CostsDAO.get_contribution_percent()[0],
             DISPOSAL_DISTANCE=CostsDAO.get_disposal_distance()[0],
             SOIL_BULKING=CostsDAO.get_soil_bulking()[0],
-            ROCK_SWELLING=CostsDAO.get_rock_swelling()[0]
+            ROCK_SWELLING=CostsDAO.get_rock_swelling()[0],
+            SERVICES=services
         )
 
     @staticmethod
@@ -110,7 +117,8 @@ class ProjectDataManager:
                    CostsDAO.set_contribution_percent(costs.CONTRIBUTION_PERCENT) and
                    CostsDAO.set_disposal_distance(costs.DISPOSAL_DISTANCE) and
                    CostsDAO.set_soil_bulking(costs.SOIL_BULKING) and
-                   CostsDAO.set_rock_swelling(costs.ROCK_SWELLING))
+                   CostsDAO.set_rock_swelling(costs.ROCK_SWELLING) and
+                   CostsDAO.set_services(costs.SERVICES))
         if success:
             CostsDAO.set_done(True)
             return True
@@ -121,7 +129,11 @@ class ProjectDataManager:
         return CostsDAO.is_done()[0]
 
     @classmethod
-    def get_all_segments(cls):
+    def get_all_segments(cls) -> Dict[str, Ramal]:
+        if not cls.get_layers_id().SEGMENTS_LAYER_ID \
+                or not cls.get_layers_id().NODES_LAYER_ID \
+                or not cls.get_language_project().LANGUAGE:
+            return {}
         segs = SegmentsDAO(
             segments_layer_id=cls.get_layers_id().SEGMENTS_LAYER_ID,
             nodes_layer_id=cls.get_layers_id().NODES_LAYER_ID,

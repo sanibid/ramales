@@ -1,7 +1,9 @@
 from typing import Optional
 
+from PyQt5.QtWidgets import QMessageBox
+
 from ..generate_costs_ui import GenerateCostsUI
-from ...core.calculate.CostsCalculation import CostCalculation
+from ...core.calculate.CostsCalculation import QuantitiesCalculations
 from .base.ui_dock_tab_costs_base import DockTabCostsBase
 from ...core.data.data_manager import ProjectDataManager
 from ...core.data.models import Costs
@@ -10,10 +12,9 @@ from ...core.data.models import Costs
 class DockTabCosts(DockTabCostsBase):
     def __init__(self, dock):
         super().__init__(dock)
-        self.costs_calculator: Optional[CostCalculation] = None
+        self.quantities_calculator: Optional[QuantitiesCalculations] = None
         self.loaded_from_db = False
         self.costs: Optional[Costs] = None
-        self.costs_calculation = ''
         self.generate_costs = GenerateCostsUI()
 
     def set_logic(self):
@@ -33,14 +34,14 @@ class DockTabCosts(DockTabCostsBase):
         self.cb_show_data_costs.toggled.connect(self.on_cb_costs_toggle)
         self.pb_report_costs.clicked.connect(self.__show_report_costs)
         self.pb_generate_xls_costs.clicked.connect(self.__generete_xls_costs)
-        # self.repOutCosts.pb_saveEditCosts.clicked.connect(self.on_services_cost_update)
+        self.rep_out_costs.pb_saveEditCosts.clicked.connect(self.on_services_cost_update)
 
     def load_data(self):
         if ProjectDataManager.is_costs_loaded():
             self.costs = ProjectDataManager.get_costs()
         self.load_costs_calculations()
-        self.load_user_input()
         self.load_costs_values()
+        self.load_user_input()
         self.loaded_from_db = True
 
     def load_user_input(self):
@@ -72,16 +73,48 @@ class DockTabCosts(DockTabCostsBase):
             self.dsb_soil_bulking.setValue(1)
 
     def load_costs_values(self):
-        pass
+        if self.costs is not None:
+            # Serviços de custos sao de 1 a 33
+            costs_services = self.costs.SERVICES[:33]
+            costs_materials = self.costs.SERVICES[33:]
+
+            methods_quantities = [method for method in dir(self.quantities_calculator)
+                                  if callable(getattr(self.quantities_calculator, method)) and method.startswith("get_")]
+            methods_quantities.sort()
+            values_quantities = [getattr(self.quantities_calculator, method)() for method in methods_quantities]
+
+            total_costs_services = 0
+            total_costs_materials = 0
+            for i in range(33):
+                total_costs_services += costs_services[i] * values_quantities[i]
+
+            for i in range(33, 40):
+                total_costs_materials += costs_materials[i-33] * values_quantities[i]
+
+            total_costs = total_costs_services + total_costs_materials
+
+            self.lb_materials_costs.setText(f"{self.translate('Custo dos materiais (USD):')} $ {self.utils.formatNum2Dec(total_costs_materials)}")
+            self.lb_services_costs.setText(f"{self.translate('Custo dos serviços (USD):')} $ {self.utils.formatNum2Dec(total_costs_services)}")
+            self.lb_total_costs.setText(f"{self.translate('Custo total (USD):')} $ {self.utils.formatNum2Dec(total_costs)}")
+        else:
+            self.lb_materials_costs.setText(f"{self.translate('Custo dos materiais (USD):')} $ {self.utils.formatNum2Dec(0)}")
+            self.lb_services_costs.setText(f"{self.translate('Custo dos serviços (USD):')} $ {self.utils.formatNum2Dec(0)}")
+            self.lb_total_costs.setText(f"{self.translate('Custo total (USD):')} $ {self.utils.formatNum2Dec(0)}")
+
 
     def load_costs_calculations(self):
-        pass
+        self.costs = ProjectDataManager.get_costs()
+        self.quantities_calculator = QuantitiesCalculations(
+            costs=self.costs,
+            ramals=ProjectDataManager.get_all_segments(),
+        )
 
     def reload(self):
         self.loaded_from_db = False
         self.load_data()
 
     def on_cb_costs_toggle(self, checked: bool):
+        self.load_costs_calculations()
         if self.cb_show_data_costs.isChecked():
             self.gb_DataCosts.show()
         else:
@@ -102,7 +135,8 @@ class DockTabCosts(DockTabCostsBase):
             TRENCH_WIDTH=self.dsb_trench_width.value(),
             DISPOSAL_DISTANCE=self.dsb_disposal_distance.value(),
             SOIL_BULKING=self.dsb_soil_bulking.value(),
-            ROCK_SWELLING=self.dsb_rock_swelling.value()
+            ROCK_SWELLING=self.dsb_rock_swelling.value(),
+            SERVICES=self.costs.SERVICES
         )
         # if self.costs is None:
         #     tmp_costs.services = Costs().services
@@ -115,30 +149,17 @@ class DockTabCosts(DockTabCostsBase):
         # if self.check_data_costs():
         #     self.rb_show_data_costs.setChecked(False)
 
-    # def on_services_cost_update(self):
-    #     self.repOutCosts.saveChanges()
-    #     services = [self.repOutCosts.costs.getVlItem01(),
-    #                 self.repOutCosts.costs.getVlItem02(),
-    #                 self.repOutCosts.costs.getVlItem03(),
-    #                 self.repOutCosts.costs.getVlItem04(),
-    #                 self.repOutCosts.costs.getVlItem05(),
-    #                 self.repOutCosts.costs.getVlItem06(),
-    #                 self.repOutCosts.costs.getVlItem07(),
-    #                 self.repOutCosts.costs.getVlItem08(),
-    #                 self.repOutCosts.costs.getVlItem09(),
-    #                 self.repOutCosts.costs.getVlItem10(),
-    #                 self.repOutCosts.costs.getVlItem11(),
-    #                 self.repOutCosts.costs.getVlItem12(),
-    #                 self.repOutCosts.costs.getVlItem13(),
-    #                 self.repOutCosts.costs.getVlItem14(),
-    #                 self.repOutCosts.costs.getVlItem15(),
-    #                 self.repOutCosts.costs.getVlItem16(),
-    #                 self.repOutCosts.costs.getVlItem17()]
-    #     if self.costs is not None:
-    #         self.costs.services = services
-    #     ProjectDataManager.save_project_costs(self.costs)
-    #     self.dock_reload()
-    #     self.load_costs_values()
+    def on_services_cost_update(self):
+        print("on_services_cost_update called")
+        self.rep_out_costs.saveChanges()
+        services = [dsb.value() for dsb in self.rep_out_costs.dsb_list_entrance]
+
+        if self.costs is not None:
+            self.costs.SERVICES = services
+        print("self.costs.SERVICES", self.costs.SERVICES)
+        ProjectDataManager.save_costs(self.costs)
+        self.dock_reload()
+        self.load_costs_values()
 
     def setCosts(self):
         pass
@@ -149,22 +170,9 @@ class DockTabCosts(DockTabCostsBase):
         #     self.load_costs_calculator()
 
     def __show_report_costs(self):
-        self.rep_out_costs.loadReportCosts(self.costs_calculation)
+        self.rep_out_costs.loadReportCosts(self.quantities_calculator)
         self.rep_out_costs.showReportCosts()
 
     def __generete_xls_costs(self):
-        self.generate_costs.show_generate_costs()
+        self.generate_costs.show_generate_costs(self.quantities_calculator)
 
-
-    def showReportCosts(self):
-        pass
-        # if self.check_data_costs():
-        #     self.setCosts()
-        #     # TODO verificar se project config é não nula
-        #     self.repOutCosts.loadReportCosts(self.costs_calculator, self.project_config.has_sedimentation_tank,
-        #                                      self.title)
-        #     self.repOutCosts.showReportCosts()
-        # elif self.loaded_from_db:
-        #     icon = QMessageBox.Critical
-        #     self.utils.showDialog(self.title,
-        #                           self.tr('Diâmetro e profundidade da tubulação devem ser informados!'), icon)

@@ -1,6 +1,9 @@
+from typing import Optional
+
 from PyQt5.QtCore import QCoreApplication
 from PyQt5.QtWidgets import QDialog, QLabel, QPushButton, QLineEdit, QMessageBox, QHBoxLayout, QFormLayout, QFileDialog
 
+from ..core.calculate.CostsCalculation import QuantitiesCalculations
 from ..core.xls.produces_costs_xls import ProducesReportCostsXls
 from ..helpers.utils import Utils
 
@@ -23,6 +26,7 @@ class GenerateCostsUI:
         self.le_select_folder = QLineEdit()
         self.pb_select_folder = QPushButton('...')
         self.pb_gerenate = QPushButton(self.tr('Gerar planilha'))
+        self.quantities_calculator: Optional[QuantitiesCalculations] = None
         self.__load_components()
         self.pb_select_folder.clicked.connect(self.__select_folder_save_os)
         self.pb_gerenate.clicked.connect(self.__generate_costs)
@@ -42,11 +46,13 @@ class GenerateCostsUI:
             name_file += '.xls'
         self.le_select_folder.setText(name_file)
 
-    def show_generate_costs(self):
+    def show_generate_costs(self, quantities_calculator):
+        self.quantities_calculator = quantities_calculator
         self.windows.exec_()
 
     def __generate_costs(self):
-        self.produces_costs.generate_report_costs(local_file=self.le_select_folder.text())
+        self.produces_costs.generate_report_costs(local_file=self.le_select_folder.text(),
+                                                  quantities_calculator=self.quantities_calculator)
         self.utils.show_dialog(title='SaniHub Ramales', message=self.tr('Arquivo gerado com sucesso'),
                                information=QMessageBox.Information)
         self.le_select_folder.clear()
