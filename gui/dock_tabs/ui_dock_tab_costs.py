@@ -174,5 +174,5 @@ class DockTabCosts(DockTabCostsBase):
         self.rep_out_costs.showReportCosts()
 
     def __generete_xls_costs(self):
-        self.generate_costs.show_generate_costs()
+        self.generate_costs.show_generate_costs(self.quantities_calculator)
 
