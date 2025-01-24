@@ -12,10 +12,10 @@ class CostCalculationRamal:
         return sum([segment.length + segment.h_tq for segment in self.ramal.segments])
 
     def get_total_extension_100(self):
-        return sum([segment.length + segment.h_tq for segment in self.ramal.segments if segment.pvc_diameter in (100, 110)])
+        return sum([segment.length for segment in self.ramal.segments if segment.pvc_diameter in (100, 110)])
 
     def get_total_extension_150(self):
-        return sum([segment.length + segment.h_tq for segment in self.ramal.segments if segment.pvc_diameter in (150, 160)])
+        return sum([segment.length for segment in self.ramal.segments if segment.pvc_diameter in (150, 160)])
 
     def get_total_volume(self):
         if self.ramal.is_aerial:
@@ -121,10 +121,12 @@ class CostCalculationRamal:
         return self.get_protection_ramal() + self.get_protection_tq()
 
     def get_total_extension_100_material(self):
-        return self.get_total_extension_100() * 1.05
+        return sum([segment.length + segment.h_tq
+                    for segment in self.ramal.segments if segment.pvc_diameter in (100, 110)]) * 1.05
 
     def get_total_extension_150_material(self):
-        return self.get_total_extension_150() * 1.05
+        return sum([segment.length + segment.h_tq
+                    for segment in self.ramal.segments if segment.pvc_diameter in (150, 160)]) * 1.05
 
 
 class CostCalculation:
