@@ -23,9 +23,13 @@ class Utils:
     loc = QLocale()
     file = __file__
 
+    @property
+    def segments(self):
+        return QgsProject.instance().mapLayer(ProjectDataManager.get_layers_id().SEGMENTS_LAYER_ID)
+
     def __init__(self):
         self.data_json = None
-        self.segments = QgsProject.instance().mapLayer(ProjectDataManager.get_layers_id().SEGMENTS_LAYER_ID)
+        # self.segments = QgsProject.instance().mapLayer(ProjectDataManager.get_layers_id().SEGMENTS_LAYER_ID)
 
     def tr(self, message):
         # noinspection PyTypeChecker,PyArgumentList,PyCallByClass
