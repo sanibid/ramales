@@ -35,6 +35,8 @@ class DockTabCosts(DockTabCostsBase):
         self.pb_report_costs.clicked.connect(self.__show_report_costs)
         self.pb_generate_xls_costs.clicked.connect(self.__generete_xls_costs)
         self.rep_out_costs.pb_saveEditCosts.clicked.connect(self.on_services_cost_update)
+        self.cb_show_data_costs.toggled.connect(
+            lambda: ProjectDataManager.set_show_costs(self.cb_show_data_costs.isChecked()))
 
     def load_data(self):
         if ProjectDataManager.is_costs_loaded():
@@ -71,6 +73,7 @@ class DockTabCosts(DockTabCostsBase):
             self.dsb_disposal_distance.setValue(0)
             self.dsb_rock_swelling.setValue(1)
             self.dsb_soil_bulking.setValue(1)
+        self.cb_show_data_costs.setChecked(ProjectDataManager.should_show_costs())
 
     def load_costs_values(self):
         if self.costs is not None:

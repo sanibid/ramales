@@ -169,5 +169,7 @@ class Utils:
             return 0.00
         elif type(value) is float:
             return value
+        elif type(value) is int:
+            return float(value)
         else:
             return 0.00

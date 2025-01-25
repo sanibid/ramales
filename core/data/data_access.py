@@ -170,7 +170,15 @@ class CostsDAO(DAO):
     KEY_SOIL_BULKING = 'SOIL_BULKING'
     KEY_ROCK_SWELLING = 'ROCK_SWELLING'
     KEY_SERVICES = 'SERVICES'
+    KEY_SHOW_COSTS = 'SHOW_COSTS'
 
+    @classmethod
+    def get_show_costs(cls) -> Tuple[bool, bool]:
+        return cls.proj.readBoolEntry(cls.SCOPE, cls.KEY_SHOW_COSTS, False)
+
+    @classmethod
+    def set_show_costs(cls, value: bool) -> bool:
+        return cls.proj.writeEntryBool(cls.SCOPE, cls.KEY_SHOW_COSTS, value)
 
     @classmethod
     def get_services(cls) -> Tuple[List[float], bool]:

@@ -230,12 +230,17 @@ class DockTabCostsBase(DockTab):
             box1.valueChanged.connect(lambda _, b1=box1, b2=box2: update_pair(b1, b2))
             box2.valueChanged.connect(lambda _, b1=box2, b2=box1: update_pair(b1, b2))
 
+        def dialog_contrib_warning():
+            self.dialog_contribution_warning.setVisible(self.sb_rock.value() > self.sb_contribution.value())
+
         self.vb_layoutCosts.addStretch()
         self.setLayout(self.vb_layoutCosts)
-        self.sb_rock.valueChanged.connect(
-            lambda: self.dialog_contribution_warning.setVisible(self.sb_rock.value() > self.sb_contribution.value()))
-        self.sb_contribution.valueChanged.connect(
-            lambda: self.dialog_contribution_warning.setVisible(self.sb_rock.value() > self.sb_contribution.value()))
+        self.sb_soil.valueChanged.connect(dialog_contrib_warning)
+        self.sb_rock.valueChanged.connect(dialog_contrib_warning)
+        self.sb_own.valueChanged.connect(dialog_contrib_warning)
+        self.sb_contribution.valueChanged.connect(dialog_contrib_warning)
+
+
 
 
 
