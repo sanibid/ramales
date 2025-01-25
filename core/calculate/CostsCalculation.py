@@ -99,11 +99,11 @@ class CostCalculationRamal:
         result = {}
         for segment in self.ramal.segments:
             if str(segment.paviment_1).isnumeric():
-                result[segment.paviment_1] = result.get(segment.paviment_1,
-                                                        0) + segment.percent_pav_1 * segment.length * self.costs.TRENCH_WIDTH
+                result[segment.paviment_1] = result.get(segment.paviment_1, 0) + \
+                                             segment.percent_pav_1 / 100 * segment.length * self.costs.TRENCH_WIDTH
             if str(segment.paviment_2).isnumeric():
-                result[segment.paviment_2] = result.get(segment.paviment_2,
-                                                        0) + segment.percent_pav_2 * segment.length * self.costs.TRENCH_WIDTH
+                result[segment.paviment_2] = result.get(segment.paviment_2, 0) + \
+                                             segment.percent_pav_2 / 100 * segment.length * self.costs.TRENCH_WIDTH
         return result
 
     def get_protection_ramal(self):

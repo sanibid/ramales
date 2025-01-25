@@ -166,8 +166,12 @@ class Utils:
         if type(value) is str and len(value) > 0:
             if value[-1].isnumeric():
                 return self.loc.toFloat(value)[0]
+            else:
+                print(f"for value: {value} is not a number")
             return 0.00
         elif type(value) is float:
             return value
+        elif type(value) is int:
+            return float(value)
         else:
             return 0.00
