@@ -52,46 +52,45 @@ class CostCalculationRamal:
             return 0
         return math.pi * (0.15 / 2) ** 2 * self.get_total_extension_150()
 
-    def get_total_disposal_soil(self):
-        return (self.get_total_backfill_soil() - self.get_total_backfill_enclosure_cradle()
-                - self.get_total_backfill_contribution())
-
-    def get_total_disposal_soil_with_bulking(self):
-        return self.get_total_disposal_soil() * self.costs.SOIL_BULKING
-
-    def get_total_disposal_rock(self):
-        return self.get_rock_volume()
-
-    def get_total_disposal_rock_with_swelling(self):
-        return self.get_total_disposal_rock() * self.costs.ROCK_SWELLING
+    def get_total_backfill(self):
+        if self.ramal.is_aerial:
+            return 0
+        return self.get_total_volume() - self.get_total_volume_tube_100() - self.get_total_volume_tube_150()
 
     def get_total_backfill_soil(self):
         if self.ramal.is_aerial or self.costs.SOIL_PERCENT == 0:
             return 0
 
-        return self.get_soil_volume() - self.get_total_volume_tube_100() - self.get_total_volume_tube_150()
+        return self.get_total_backfill() - self.get_total_backfill_rock() - self.get_total_backfill_enclosure() - \
+               self.get_total_backfill_cradle()
 
     def get_total_backfill_rock(self):
         if self.ramal.is_aerial or self.costs.ROCK_PERCENT == 0:
             return 0
 
-        return self.get_rock_volume() - self.get_total_volume_tube_100() - self.get_total_volume_tube_150()
+        return self.get_rock_volume()
 
-    def get_total_backfill_enclosure_cradle(self):
-        return ((self.get_total_extension() * self.costs.TRENCH_WIDTH) *
-                (self.costs.WRAP_HEIGHT + self.costs.CRADLE_HEIGHT))
+    def get_total_backfill_enclosure(self):
+        if self.ramal.is_aerial:
+            return 0
+        return self.get_total_extension() * self.costs.WRAP_HEIGHT
+
+    def get_total_backfill_cradle(self):
+        if self.ramal.is_aerial:
+            return 0
+        return self.get_total_extension() * self.costs.CRADLE_HEIGHT
 
     def get_total_backfill_own(self):
-        if self.ramal.is_aerial or self.get_total_backfill_soil() == 0:
+        if self.ramal.is_aerial:
             return 0
-        return self.get_total_backfill_soil() * self.costs.OWN_PERCENT / 100 - self.get_total_backfill_enclosure_cradle()
+        return self.get_total_backfill_soil() * self.costs.OWN_PERCENT / 100
 
     def get_total_backfill_contribution(self):
-        if self.ramal.is_aerial or self.get_total_backfill_soil() == 0:
+        if self.ramal.is_aerial:
             return 0
 
         return self.get_total_backfill_soil() * self.costs.CONTRIBUTION_PERCENT / 100 + \
-            self.get_total_backfill_rock() - self.get_total_backfill_enclosure_cradle()
+            self.get_total_backfill_rock() + self.get_total_backfill_enclosure() + self.get_total_backfill_cradle()
 
     def get_total_area(self):
         return self.get_total_extension() * self.costs.TRENCH_WIDTH
@@ -112,10 +111,11 @@ class CostCalculationRamal:
         return total_protection
 
     def get_protection_tq(self):
+        result = 0
         for segment in self.ramal.segments:
             if segment.tq > 0:
-                return segment.h_tq * 2 * (segment.pvc_diameter / 1000 + 0.1)
-        return self.get_total_extension() * 1.2
+                result += segment.h_tq * 2 * (segment.pvc_diameter / 1000 + 0.1)
+        return result
 
     def get_protection_total(self):
         return self.get_protection_ramal() + self.get_protection_tq()
@@ -168,16 +168,22 @@ class CostCalculation:
         return sum([calc.get_total_volume_tube_150() for calc in self.calculations.values()])
 
     def get_total_disposal_soil(self):
-        return sum([calc.get_total_disposal_soil() for calc in self.calculations.values()])
+        if self.get_total_backfill_soil() == 0:
+            return 0
+
+        return self.get_total_backfill() - self.get_total_backfill_rock() - self.get_total_backfill_own()
 
     def get_total_disposal_soil_with_bulking(self):
-        return sum([calc.get_total_disposal_soil_with_bulking() for calc in self.calculations.values()])
+        return self.get_total_disposal_soil() * self.costs.SOIL_BULKING
 
     def get_total_disposal_rock(self):
-        return sum([calc.get_total_disposal_rock() for calc in self.calculations.values()])
+        return self.get_rock_volume()
 
     def get_total_disposal_rock_with_swelling(self):
-        return sum([calc.get_total_disposal_rock_with_swelling() for calc in self.calculations.values()])
+        return self.get_total_disposal_rock() * self.costs.ROCK_SWELLING
+
+    def get_total_backfill(self):
+        return sum([calc.get_total_backfill() for calc in self.calculations.values()])
 
     def get_total_backfill_soil(self):
         return sum([calc.get_total_backfill_soil() for calc in self.calculations.values()])
@@ -185,8 +191,11 @@ class CostCalculation:
     def get_total_backfill_rock(self):
         return sum([calc.get_total_backfill_rock() for calc in self.calculations.values()])
 
-    def get_total_backfill_enclosure_cradle(self):
-        return sum([calc.get_total_backfill_enclosure_cradle() for calc in self.calculations.values()])
+    def get_total_backfill_enclosure(self):
+        return sum([calc.get_total_backfill_enclosure() for calc in self.calculations.values()])
+
+    def get_total_backfill_cradle(self):
+        return sum([calc.get_total_backfill_cradle() for calc in self.calculations.values()])
 
     def get_total_backfill_own(self):
         return sum([calc.get_total_backfill_own() for calc in self.calculations.values()])
@@ -324,10 +333,13 @@ class QuantitiesCalculations:
         return self.costs_calculation.get_total_backfill_own()
 
     def get_01_04_02(self):
-        return self.costs_calculation.get_total_backfill_contribution()
+        return (self.costs_calculation.get_total_backfill_contribution()
+                - self.costs_calculation.get_total_backfill_enclosure()
+                - self.costs_calculation.get_total_backfill_cradle())
 
     def get_01_04_03(self):
-        return self.costs_calculation.get_total_backfill_enclosure_cradle()
+        return (self.costs_calculation.get_total_backfill_enclosure()
+                + self.costs_calculation.get_total_backfill_cradle())
 
     # TRANSPORTE DE MATERIAIS
     def get_01_05_01(self):
