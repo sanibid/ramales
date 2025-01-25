@@ -53,16 +53,16 @@ class CostCalculationRamal:
         return math.pi * (0.15 / 2) ** 2 * self.get_total_extension_150()
 
     def get_total_backfill(self):
-        if self.ramal.is_aerial:
+        if self.ramal.is_aerial or self.get_total_volume() == 0:
             return 0
         return self.get_total_volume() - self.get_total_volume_tube_100() - self.get_total_volume_tube_150()
 
     def get_total_backfill_soil(self):
-        if self.ramal.is_aerial or self.costs.SOIL_PERCENT == 0:
+        if self.ramal.is_aerial or self.get_soil_volume() == 0:
             return 0
 
         return self.get_total_backfill() - self.get_total_backfill_rock() - self.get_total_backfill_enclosure() - \
-               self.get_total_backfill_cradle()
+            self.get_total_backfill_cradle()
 
     def get_total_backfill_rock(self):
         if self.ramal.is_aerial or self.costs.ROCK_PERCENT == 0:
@@ -73,12 +73,12 @@ class CostCalculationRamal:
     def get_total_backfill_enclosure(self):
         if self.ramal.is_aerial:
             return 0
-        return self.get_total_extension() * self.costs.WRAP_HEIGHT
+        return self.get_total_extension() * self.costs.TRENCH_WIDTH * self.costs.WRAP_HEIGHT
 
     def get_total_backfill_cradle(self):
         if self.ramal.is_aerial:
             return 0
-        return self.get_total_extension() * self.costs.CRADLE_HEIGHT
+        return self.get_total_extension() * self.costs.TRENCH_WIDTH * self.costs.CRADLE_HEIGHT
 
     def get_total_backfill_own(self):
         if self.ramal.is_aerial:
@@ -99,9 +99,11 @@ class CostCalculationRamal:
         result = {}
         for segment in self.ramal.segments:
             if str(segment.paviment_1).isnumeric():
-                result[segment.paviment_1] = result.get(segment.paviment_1, 0) + segment.percent_pav_1 * segment.length * self.costs.TRENCH_WIDTH
+                result[segment.paviment_1] = result.get(segment.paviment_1,
+                                                        0) + segment.percent_pav_1 * segment.length * self.costs.TRENCH_WIDTH
             if str(segment.paviment_2).isnumeric():
-                result[segment.paviment_2] = result.get(segment.paviment_2, 0) +  segment.percent_pav_2 * segment.length * self.costs.TRENCH_WIDTH
+                result[segment.paviment_2] = result.get(segment.paviment_2,
+                                                        0) + segment.percent_pav_2 * segment.length * self.costs.TRENCH_WIDTH
         return result
 
     def get_protection_ramal(self):
@@ -300,7 +302,6 @@ class QuantitiesCalculations:
         self.costs = costs
         self.costs_calculation = CostCalculation(self.costs, ramals)
 
-
     # SINALIZAÇÃO E SEGURANÇA
     def get_01_01_01(self):
         return self.costs_calculation.get_security_plate()
@@ -438,5 +439,3 @@ class QuantitiesCalculations:
 
     def get_02_02_05(self):
         return self.costs_calculation.get_connections_count().get('tee_150', 0)
-
-
