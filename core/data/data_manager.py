@@ -82,6 +82,14 @@ class ProjectDataManager:
         return CalculationInfoDAO.is_done()[0]
 
     @staticmethod
+    def should_show_costs():
+        return CostsDAO.get_show_costs()[0]
+
+    @staticmethod
+    def set_show_costs(show_costs: bool) -> bool:
+        return CostsDAO.set_show_costs(show_costs)
+
+    @staticmethod
     def get_costs():
         services = CostsDAO.get_services()[0]
 

@@ -71,6 +71,7 @@ class DockTabCosts(DockTabCostsBase):
             self.dsb_disposal_distance.setValue(0)
             self.dsb_rock_swelling.setValue(1)
             self.dsb_soil_bulking.setValue(1)
+        self.cb_show_data_costs.setChecked(ProjectDataManager.should_show_costs())
 
     def load_costs_values(self):
         if self.costs is not None:
